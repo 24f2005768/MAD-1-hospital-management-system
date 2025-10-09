@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Doctor Dashboard</title>
-        <link rel="stylesheet" href="/static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Departments</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -36,10 +36,30 @@
             </form>
         </div>
     </header>
-    
-    <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
-    </div>
+
+        <div class = 'main-content'>
+            <div class = 'heading-actions'>
+                <h2>All Departments</h2>
+            </div>
+            
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Department ID</th>
+                        <th>Name</th>
+                    </tr>
+
+                        {% for d in departments %}
+                            <tr>
+                                <td>{{ d.department_id }}</td>
+                                <td><a href = '/department/{{ d.department_id }}'>{{d.department_name}}</a></td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        </div>
 
     <footer>
         &copy;  2025 LDH Hospital

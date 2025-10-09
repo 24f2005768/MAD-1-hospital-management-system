@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Department</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>
+            
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <div class = 'main-content'>
+        <div class = 'heading-actions'>
+            <h2>Department of {{ department.department_name }}</h2>
+
+            {% if flag == True %}
+                <div class = 'action-buttons'>
+                    <a href = '/admin/department/update/{{ department.department_id }}' class = 'update-button'>Update</a>
+                    <a href = '/admin/department/delete/{{ department.department_id }}' class = 'delete-button'>Delete</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <p>{{ department.department_description }}</p>
+
+        <h3>Our Doctors</h3>
+
+        {% for d in department.doctors %}
+            <div>
+                <h3><a href = '/admin/doctor/{{ d.doctor_id }}'>{{ d.doctor_name }}</a></h3>
+                <p>{{ d.doctor_desc }}</p>
+            </div>
+        {% endfor %}
+
+        {% if flag == True %}
+            <h3>Upcoming Appointments</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Appointment ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                        </tr>
+
+                            {% if upcoming_dept_appointments | length > 0 %}
+                                {% for appointment in upcoming_dept_appointments %}
+                                    <tr>
+                                        <td><a href = '/admin/appointment/{{ appointment.patient_id }}/{{ appointment.doctor_id }}'>{{ appointment.appointment_id }}</a></td>
+                                        <td>{{ appointment.p_ref.patient_name }}</td>
+                                        <td>{{ appointment.d_ref.doctor_name }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                            {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                            {% endif %}
+                    </tbody>
+                </table>
+
+            <h3>Past Appointments</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Appointment ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                        </tr>
+
+                            {% if past_dept_appointments | length > 0 %}
+                                {% for appointment in past_dept_appointments %}
+                                    <tr>
+                                        <td><a href = '/admin/appointment/{{ appointment.patient_id }}/{{ appointment.doctor_id }}'>{{ appointment.appointment_id }}</a></td>
+                                        <td>{{ appointment.p_ref.patient_name }}</td>
+                                        <td>{{ appointment.d_ref.doctor_name }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                            {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                            {% endif %}
+                    </tbody>
+                </table>
+            {% endif %}
+    </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

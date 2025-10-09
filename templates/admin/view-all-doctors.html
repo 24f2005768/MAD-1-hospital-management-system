@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Doctors</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>
+            
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+
+            <div class = 'heading-actions'>
+                <h2>All Doctors</h2>
+
+                <div class = 'action-buttons'>
+                    <a href = '/admin/doctor/add' id = 'buttons'>Add</a>
+                </div>
+            </div>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                        <th>Available</th>
+                        <th>Blacklisted</th>
+                    </tr>
+                    
+                    {% if doctors | length > 0 %}
+                        {% for doctor in doctors %}
+                            <tr>
+                                <td><a href = '/admin/doctor/{{ doctor.doctor_id }}'>{{doctor.doctor_name}}</a></td>
+                                <td>{{doctor.dept.department_name}}</td>
+                                <td>{{doctor.doctor_contact_number}}</td>
+                                <td>{{doctor.doctor_email}}</td>
+                                <td><a href = '/admin/doctor/check-availability/{{ doctor.doctor_id  }}'>Check availability</a></td>
+                                {% if doctor.doctor_blacklisted == 0%}
+                                    <td><input type = 'checkbox' disabled></td>
+                                    {% else %}
+                                    <td><input type = 'checkbox' disabled checked ="checked"></td>
+                                {% endif %}                    
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

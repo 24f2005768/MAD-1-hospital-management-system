@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Doctor Dashboard</title>
-        <link rel="stylesheet" href="/static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Availablility</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -36,9 +36,24 @@
             </form>
         </div>
     </header>
-    
+
     <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
+        <h2>{{ doctor.doctor_name }}'s Availablility</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Date</th>
+                    <th>Slot</th>
+                </tr>
+
+                {% for s in doctor_slots %}
+                    <tr>
+                        <td>{{s.date}}</td>
+                        <td>{{s.s_sch.slot_time}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <footer>

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Doctor Dashboard</title>
-        <link rel="stylesheet" href="/static/style.css">
-</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Slots</title>
+    <link rel="stylesheet" href="/static/style.css">
 
+</head>
 <body>
+    
     <header>
         <h1><a href = '/admin'></a>LDH Hospital</a></h1>
 
@@ -36,13 +37,25 @@
             </form>
         </div>
     </header>
-    
+
     <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
+        <form action = '/doctor/provide_slots/{{d_id}}' method="POST">
+            
+            {% for d in list_of_next_7_dates %}
+                <div>
+                    <label>{{ d }}</label>
+                    {% for s in slots %}
+                        <input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}'> {{ s.slot_time }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            <input type="submit" value = "Submit" class = "login-button">
+        </form>
     </div>
 
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
+
 </body>
 </html>

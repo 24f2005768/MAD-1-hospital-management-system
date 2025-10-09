@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Confirm Appointment</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-
     <header>
         <h1><a href = '/admin'></a>LDH Hospital</a></h1>
 
@@ -38,34 +37,38 @@
         </div>
     </header>
 
-    <div class = 'main-content'>
-        <div class = 'login-container'>
-            <h1 class = 'login-heading'>Login</h1> 
+        <div class = 'main-content'>
+            <p>{{ doctor.doctor_name }}</p>
+            <div>
+                <form action = '/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
+                    
+                    <input type = 'text' class = 'patient_name' list = 'patient_list' autocomplete="on" placeholder="Patient Name" name = 'patient_name'>
 
-            <form action = '/' method = 'POST' id = 'login-form'>
-                <input class = 'login-input' type = 'text'  name = 'u_name' placeholder = 'Username' required>
+                    <datalist id = 'patient_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+                    </datalist>
 
-                <input class = 'login-input' type = 'text' name = 'u_password' placeholder = 'Password' required>
+                    {% for s in doctor_slots %}
+                        <div>
+                            <label>{{ s.date }}</label>
+                            <input type = 'checkbox' value = '{{ s.schedule_id }}' name = '{{ s.schedule_id }}'>{{ s.s_sch.slot_time }}
+                        </div>
+                    {% endfor %}
 
-                <input type = 'submit' value = 'Submit' class = 'login-button'>
-            </form>
+                    <input type="submit" value = "Submit" class = "login-button">
 
-            <p>Not a member? <a href = '/register'>Sign Up</a></p>
+                    {% if flag == True %}
+                        <p>Incorrect Patient Name, Try Again</p>
+                    {% endif %}
+                </form>
+            </div>
 
-            {% if flag1 == True %}
-                <p>Invalid username or password</p>
-            {% endif %}
-
-            {% if flag2 == True %}
-                <p>User is not registered, Sign Up instead</p>
-            {% endif %}
         </div>
-    </div>
-
 
     <footer>
-        <p>&copy;  2025 LDH Hospital</p>
+        &copy;  2025 LDH Hospital
     </footer>
-
 </body>
 </html>

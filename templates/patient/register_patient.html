@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Doctor Dashboard</title>
-        <link rel="stylesheet" href="/static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Patient</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
     <header>
         <h1><a href = '/admin'></a>LDH Hospital</a></h1>
@@ -36,9 +35,27 @@
             </form>
         </div>
     </header>
-    
+
     <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
+        <div class = 'login-container'>
+            
+            <h1>Register Patient</h1>
+            <form action = '/register' method = 'POST'>
+                <input type = 'text' name = 'u_name' placeholder ="User name*" required/>
+
+                <input type = 'text' name = 'u_password' placeholder = "User password*" required />
+
+                <input type = 'text' name = 'p_name' placeholder = "Patient's name*" required />
+
+                <input type = 'text' name = 'p_age' placeholder = "Age*" required/>
+                
+                <input type = 'text' name = 'contact_info' placeholder = "Contact number*" required />
+                
+                <input type = 'text' name = 'email' placeholder = "Email"/>
+
+                <input type = 'submit' value = 'Submit' class = 'login-button'>
+            </form>
+        </div>
     </div>
 
     <footer>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointments</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- <style>
+        
+        table {
+            align-self: center;
+            text-align: center;
+        }
+    </style> -->
+</head>
+
+<body>
+    <header>
+        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>
+            
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
+    
+    <div class = 'main-content'>
+        <table>
+            <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Department</th>
+            </tr>
+
+            <tr>
+                <td><a href = '/admin/patient/{{ patient.patient_id }}'>{{ patient.patient_name }}</a></td>
+                <td><a href = '/admin/doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></td>
+                <td><a href = '/department/{{ doctor.dept.department_id }}'>{{ doctor.dept.department_name }}</a></td>
+            </tr>
+        </table>
+
+        
+        <h2>Upcoming Appointments and Details</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+
+                {% if upcoming_appointments | length > 0 %}
+                    {% for a in upcoming_appointments %}
+                    <tr>
+                        <td>{{ a.appointment_id }}</td>
+                        <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
+                        <td>{{ a.t.status }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    
+
+    
+        <h2>Previous Appointments and Details</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Date</th>
+                    <th>Diagnosis</th>
+                    <th>Prescription</th>
+                    <th>Notes</th>
+                </tr>
+                
+                {% if past_appointments | length > 0 %}
+                    {% for a in past_appointments %}
+                        <tr>
+                            <td>{{a.appointment_id}}</td>
+                            <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
+                            <td>{{a.t.diagnosis}}</td>
+                            <td>{{a.t.prescription}}</td>
+                            <td>{{a.t.notes}}</td>
+                        </tr>
+                    {% endfor %}
+                
+                {% else %}
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

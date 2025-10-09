@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>View All Patients</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-
     <header>
         <h1><a href = '/admin'></a>LDH Hospital</a></h1>
 
@@ -38,34 +37,45 @@
         </div>
     </header>
 
-    <div class = 'main-content'>
-        <div class = 'login-container'>
-            <h1 class = 'login-heading'>Login</h1> 
+        <div class = 'main-content'>
 
-            <form action = '/' method = 'POST' id = 'login-form'>
-                <input class = 'login-input' type = 'text'  name = 'u_name' placeholder = 'Username' required>
+            <div class = 'heading-actions'>
+                <h2>All Patients</h2>
 
-                <input class = 'login-input' type = 'text' name = 'u_password' placeholder = 'Password' required>
+                <div class = 'action-buttons'>
+                    <a href = '/register' id = 'buttons'>Add</a>
+                </div>
+            </div>
 
-                <input type = 'submit' value = 'Submit' class = 'login-button'>
-            </form>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Contact number</th>
+                        <th>Email</th>
+                        <th>Blacklisted</th>
+                    </tr>
 
-            <p>Not a member? <a href = '/register'>Sign Up</a></p>
-
-            {% if flag1 == True %}
-                <p>Invalid username or password</p>
-            {% endif %}
-
-            {% if flag2 == True %}
-                <p>User is not registered, Sign Up instead</p>
-            {% endif %}
+                    {% for p in patients %}
+                    <tr>
+                        <td>{{ p.patient_id }}</td>
+                        <td><a href = '/admin/patient/{{ p.patient_id }}'>{{p.patient_name}}</a></td>
+                        <td>{{ p.contact_info }}</td>
+                        <td>{{ p.patient_email }}</td>
+                        {% if p.patient_blacklisted == 0%}
+                             <td><input type = 'checkbox' disabled></td>
+                            {% else %}
+                             <td><input type = 'checkbox' disabled checked ="checked"></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </div>
-
 
     <footer>
-        <p>&copy;  2025 LDH Hospital</p>
+        &copy;  2025 LDH Hospital
     </footer>
-
 </body>
 </html>

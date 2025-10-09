@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Doctor Dashboard</title>
-        <link rel="stylesheet" href="/static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Department</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -36,13 +36,29 @@
             </form>
         </div>
     </header>
-    
-    <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
-    </div>
+
+        <div class = 'main-content'>
+            <div class = 'login-container'>
+                <h1>Update Department</h1>
+
+                <div class = 'form-fields'>
+                    <form action = '/admin/department/update/{{ department.department_id }}' method = 'POST'>
+                        <input type = 'text' name = 'dept_id' value = '{{department.department_id}}' style="height:3vh; width:15vw;" disabled />
+
+                        <input type = 'text' name = 'dept_name' value = '{{department.department_name}}' placeholder = "Department Name" style="height:3vh; width:15vw;">
+
+                        <input type = 'text' name = 'dept_description' value = '{{department.department_description}}' placeholder = "Department Description" style="height:20vh; width:15vw;">
+
+                        <input type = 'submit' value = "Submit" class = 'login-button'>
+                    </form>
+                </div>
+            </div>
+
+        </div>
 
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
+    
 </body>
 </html>

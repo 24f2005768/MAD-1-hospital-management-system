@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 header {
-    background-color: #5DB996;
+    background-color: #313866;
     padding-left: 15px;
     width: 100vw;
     justify-self: start;
+    /* top: 0; */
+    /* position: fixed; */
     margin-top: 0px;
+    color: white;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8));
+    font-family: "Montserrat", sans-serif;
 }
 
 body {
@@ -12,25 +20,300 @@ body {
     flex-direction: column;
     height: 100vh;
     margin: 0;
+    /* background-color: #faf9f9; */
+    background-color: #fffcfc;
+    font-family:  "Work Sans", sans-serif;
+}
+
+h1 {
+    font-family: "Montserrat", sans-serif;;
+}
+
+h2 {
+    align-self: flex-start;
+    font-family: "Montserrat", sans-serif;
+}
+
+table {
+    text-align: center;
+    width: 60vw;
+    background-color: white;
+    /* border: 1px solid lightgray; */
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 0;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+}
+
+tr:nth-child(odd) {
+    background-color: #f5d4f3;
+}
+
+td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 15px;
+}
+
+th {
+    background-color: #774c71;
+    color: white;
+    font-size: 17px;
 }
 
 footer {
-    background-color: #5DB996;
-    position: fixed;
+    background-color: #313866;
+    /* position: fixed; */
     bottom: 0;
     padding-top: 10px;
     padding-bottom: 10px;
     width: 100vw;
     margin-bottom: 0px;
+    color: white;
+    text-align: center;
+}
+
+#dept-card {
+    font-size: 17px;
+}
+
+#buttons {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    background-color: #fcd6d6;    
+}
+
+#message {
+    align-self: center;
+}
+
+.buttons {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    background-color: #fcd6d6;    
 }
 
 .main-content {
     padding-bottom: 100px;
-    margin-top: 70px;
+    margin-top: 20px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     flex-grow: 1;
     width: 60vw;
+}
+
+.heading-actions {
+    align-self: flex-start; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.action-buttons {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5px;
+    /* width: 135px; */
+    /* background-color: #5DB996; */
+}
+
+.delete-button {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    background-color: #fcd6d6;
+    color: red;
+    border-bottom: 1px solid #ff6d6d;
+}
+
+.update-button {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    background-color: #d6d7fa;
+    color: blue;
+    border-bottom: 1px solid #6d6fff;
+}
+
+.all-dept-cards {
+    display: flex;
+    align-self: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.dept-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    background-color: #9dafec;
+    text-align: center;
+    width: 30%;
+    max-width: 300px;
+    /* min-width: 150px; */
+    height: 80px;
+    border-radius: 15px;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8))
+
+}
+
+.info-cards {
+    display: flex;
+    align-self: center;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    min-width: 120px;
+    height: 15vh;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8));
+    background-color: #e7e7e7;
+    border-radius: 15px;
+    align-items: center;
+    min-height: 115px;
+}
+
+.info-card-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    /* background-color: #9dafec; */
+    background-color: #a5a3e8;
+    text-align: center;
+    width: 12vw;
+    /* max-width: 300px; */
+    min-width: 95px;
+    height: 80px;
+    border-radius: 15px;
+    font-size: 10px;
+    /* filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8)) */
+
+}
+
+.info-card-texts {
+    font-size: 40px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+/* for login */
+.login-button {
+    margin-bottom: 7px;
+    margin-top: 25px;    
+    border-radius: 40px;
+    border: 1px;
+    padding: 15px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    /* background: linear-gradient(to bottom right, #EF4765, #FF9A5A); */
+    /* background: linear-gradient(to bottom right, #756AB6, #AC87C5); */
+    /* background: linear-gradient(to bottom right, #EF5A6F, #FF90BC); */
+    /* background-color : #AE445A; */
+    background-color : #da3b5a;
+    /* background-color : #9c3449; */
+    color: white;
+    max-width: 150px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-input {
+    border: none;
+    /* background-color: #D2F5E3; */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+input {
+    border: none;
+    /* background-color: #D2F5E3; */
+    background-color: #f5eeee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.login-container {
+    /* background-color: #FFEAEA; */
+    background-color: #f5cdcd;
+    border-radius: 10px;
+    width: 35vw;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+    min-width: 35vw;
+    /* margin-top: 25vh; */
+    flex-grow: 1;
+}
+
+.login-heading {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 50px;    
+}
+
+.error-message {
+    color: red;
+}
+
+.form-text {
+    font-family: "Montserrat", sans-serif;
+}
+
+.form-fields {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.clickable-links {
+    text-decoration: none;
+}
+
+.search_bar {
+    padding-right: 50px;
+    float: right;
+}
+
+.update-form-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 280px;
+    /* width: 20vw; */
+}
+
+.dept-dropdown {
+    background-color: #f5eeee;
+    padding: 10px;
+    width:175px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
 }

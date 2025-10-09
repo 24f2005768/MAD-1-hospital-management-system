@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>
+            
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+
+            <h2 id = 'message'>Search results for: {{input_value}}</h2>
+
+                <div class = 'info-cards'>
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ patients | length }}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
+                    </div>
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ appointments_by_doctor_name | length + appointments_by_patient_name | length}}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                    </div>
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ doctors | length }}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p>
+                    </div>            
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ departments | length}}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p>
+                    </div>
+                    
+                </div>
+
+            <div style ="margin-top: 50px;">
+                <div class = 'heading-actions'>
+                    <h2>Patients</h2>
+                </div>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Contact number</th>
+                            <th>Email</th>
+                            <th>Blacklisted</th>
+                        </tr>
+                        
+                        {% if patients | length > 0 %}
+                            {% for p in patients %}
+                                    <tr>
+                                        <td>{{p.patient_id}}</td>
+                                        <td><a href = '/admin/patient/{{ p.patient_id }}'>{{p.patient_name}}</a></td>
+                                        <td>{{p.contact_info}}</td>
+                                        <td>{{p.patient_email}}</td>
+                                        {% if p.patient_blacklisted == 0%}
+                                            <td><input type = 'checkbox' disabled></td>
+                                            {% else %}
+                                            <td><input type = 'checkbox' disabled checked ="checked"></td>
+                                        {% endif %}
+                                    </tr>
+                            {% endfor %}
+
+                        {% else %}
+                            <tr>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if patients | length > 0 %}
+                <div style ="margin-top: 50px;">
+                    <div class = 'heading-actions'>
+                        <h2>Appointments by Patient</h2>
+                    </div>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                            </tr>
+                            {% if patients | length > 0 %}
+
+                                {% for a in appointments_by_patient_name %}
+                                <tr>
+                                    <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
+                                    <td>{{a.p_ref.patient_name}}</td>
+                                    <td>{{a.d_ref.doctor_name}}</td>
+                                    <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
+                                </tr>
+                                {% endfor %}
+
+                            {% else %}
+                            <tr>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+        
+
+            <div style ="margin-top: 50px;">
+                <div class = 'heading-actions'>
+                    <h2>Doctors</h2>
+                </div>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Contact number</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Availablility</th>
+                            <th>Blacklisted</th>
+                        </tr>
+                        
+                        {% if doctors | length > 0 %}    
+                            {% for d in doctors %}
+                                <tr>
+                                    <td>{{d.doctor_id}}</td>
+                                    <td><a href = '/admin/doctor/{{ d.doctor_id }}'>{{d.doctor_name}}</a></td>
+                                    <td>{{d.doctor_contact_number}}</td>
+                                    <td>{{d.doctor_email}}</td>
+                                    <td>{{d.dept.department_name}}</td>    
+                                    <td><a href = '/admin/doctor/check-availability/{{ d.doctor_id }}'>Check</a></td>
+                                    {% if d.doctor_blacklisted == 0%}
+                                        <td><input type = 'checkbox' disabled></td>
+                                        {% else %}
+                                        <td><input type = 'checkbox' disabled checked ="checked"></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+
+                        {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            {% if doctors | length > 0 %}
+                <div style ="margin-top: 50px;">
+                    <div class = 'heading-actions'>
+                        <h2>Appointments by Doctor</h2>
+                    </div>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                            </tr>
+
+                            {% if doctors | length > 0 %}
+                                {% for a in appointments_by_doctor_name %}
+                                <tr>
+                                    <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
+                                    <td>{{a.p_ref.patient_name}}</td>
+                                    <td>{{a.d_ref.doctor_name}}</td>
+                                    <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
+                                </tr>
+                                {% endfor %}
+
+                            {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+
+            <div style ="margin-top: 50px;">
+                <div class = 'heading-actions'>
+                    <h2>Departments</h2>
+                </div>
+                
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Department ID</th>
+                            <th>Name</th>
+                        </tr>
+
+                        {% if departments | length > 0 %}
+                            {% for d in departments %}
+                                <tr>
+                                    <td>{{d.department_id}}</td>
+                                    <td><a href = '/department/{{ d.department_id }}'>{{d.department_name}}</a></td>
+                                </tr>
+                            {% endfor %}
+
+                        {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

@@ -41,7 +41,6 @@ class Doctor(db.Model):
     doctor_contact_number = db.Column(db.String, nullable = False)
     doctor_email = db.Column(db.String)
     doctor_blacklisted = db.Column(db.Boolean, default = False)
-    doctor_exp = db.Column(db.String)
     doctor_desc = db.Column(db.String)
 
     department_id = db.Column(db.Integer, db.ForeignKey(Department.department_id))
@@ -49,7 +48,7 @@ class Doctor(db.Model):
 
     dept = db.relationship('Department', back_populates = 'doctors')
     d = db.relationship('User', back_populates = 'doctor_relationship')
-    appointment_d = db.relationship('Appointment', back_populates = 'd_ref', uselist = False)
+    appointment_d = db.relationship('Appointment', back_populates = 'd_ref')
     doctor_slot = db.relationship('SlotSchedules', back_populates = 'slot_doctor')
 
 class Patient(db.Model):
@@ -70,7 +69,7 @@ class Patient(db.Model):
 class Appointment(db.Model):
     __tablename__ = 'appointment'
     appointment_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    date_time = db.Column(db.DateTime, nullable = False, default = datetime.now)
+    date_time = db.Column(db.Date, nullable = False, default = datetime.now)
 
     t_id = db.Column(db.Integer, db.ForeignKey('treatment.treatment_id'))
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
@@ -83,6 +82,7 @@ class Appointment(db.Model):
 class Treatment(db.Model):
     __tablename__ = 'treatment'
     treatment_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    status = db.Column(db.String)
     diagnosis = db.Column(db.String) 
     prescription = db.Column(db.String)
     notes = db.Column(db.String)    

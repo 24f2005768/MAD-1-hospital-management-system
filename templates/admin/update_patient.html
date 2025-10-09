@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Patient</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
-
     <header>
         <h1><a href = '/admin'></a>LDH Hospital</a></h1>
 
@@ -40,32 +38,34 @@
 
     <div class = 'main-content'>
         <div class = 'login-container'>
-            <h1 class = 'login-heading'>Login</h1> 
+            <h1>Update Patient</h1>
+            <form action = '/admin/patient/update/{{ pid }}' method = 'POST'>
+                <input type = 'text' name = 'u_id' value = '{{ pid }}' placeholder = "ID" disabled />
 
-            <form action = '/' method = 'POST' id = 'login-form'>
-                <input class = 'login-input' type = 'text'  name = 'u_name' placeholder = 'Username' required>
+                <input type = 'text' name = 'p_name' value = '{{ old_data.patient_name }}' placeholder = "Name" />
 
-                <input class = 'login-input' type = 'text' name = 'u_password' placeholder = 'Password' required>
+                <input type = 'text' name = 'contact_info' value = '{{ old_data.contact_info }}' placeholder = "Contact number" />
 
-                <input type = 'submit' value = 'Submit' class = 'login-button'>
+                <input type = 'text' name = 'email' value = '{{ old_data.patient_email }}' placeholder = "Email" />
+
+                <div>
+                    <span>Blacklist:</span>
+                    <input type = 'checkbox' id = 'option1' name = 'blacklist' value = 'True'/>
+                    <label for = 'option1'>True</label>
+
+                    <input type = 'checkbox' id = 'option2' name = 'blacklist' value = 'False'/>
+                    <label for = 'option2'>False</label><br>
+                </div>
+
+            <input type="submit" value = "Submit" class = "login-button">
+
             </form>
-
-            <p>Not a member? <a href = '/register'>Sign Up</a></p>
-
-            {% if flag1 == True %}
-                <p>Invalid username or password</p>
-            {% endif %}
-
-            {% if flag2 == True %}
-                <p>User is not registered, Sign Up instead</p>
-            {% endif %}
         </div>
     </div>
 
-
     <footer>
-        <p>&copy;  2025 LDH Hospital</p>
+        &copy;  2025 LDH Hospital
     </footer>
-
+    
 </body>
 </html>
