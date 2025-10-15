@@ -38,7 +38,63 @@
     </header>
     
     <div class = 'main-content'>
-        <h1>This is doctor's dashboard</h1>
+        <h2 id = 'message'>Hi! {{doctor.doctor_name}}</h2>    
+        <div class = 'info-cards'>
+
+                <div class = 'info-card-details'>
+                    <!-- <p class = 'info-card-texts'>Patients</p> -->
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
+                </div>
+
+                <div class = 'info-card-details'>
+                    <!-- <p class = 'info-card-texts'>Appointments</p> -->
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                </div>
+
+                <div class = 'info-card-details'>
+                    <!-- <p class = 'info-card-texts'>Profile</p> -->
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Profile</p>
+                </div>            
+
+                <div class = 'info-card-details'>
+                    <!-- <p class = 'info-card-texts'>Availablility</p> -->
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p>
+                </div>
+
+        </div>
+
+        <div style ="margin-top: 50px;">
+            <div class = 'heading-actions'>
+                <h2>Patients</h2>
+            </div>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                    </tr>
+
+                    {% if show_patients | length > 0 %}
+                        {% for p in show_patients %}
+                            <tr>
+                                <td>{{ p.p_ref.patient_name }}</td>
+                                <td>{{ p.p_ref.contact_info }}</td>
+                                <td>{{ p.p_ref.patient_email }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                            <tr>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <footer>

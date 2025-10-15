@@ -56,6 +56,7 @@ class Patient(db.Model):
     patient_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     patient_name = db.Column(db.String, nullable = False)
     contact_info = db.Column(db.String(10), nullable = False)
+    patient_gender = db.Column(db.String)
     patient_email = db.Column(db.String)
     patient_blacklisted = db.Column(db.Boolean, default = False)
     patient_age = db.Column(db.Integer)
@@ -93,6 +94,7 @@ class Treatment(db.Model):
 class Slot(db.Model):
     __tablename__ = 'slot'
     slot_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    slot_name = db.Column(db.String)
     slot_time = db.Column(db.String)
 
     s_schedule = db.relationship('SlotSchedules', back_populates = 's_sch')

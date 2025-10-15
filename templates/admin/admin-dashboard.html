@@ -40,7 +40,6 @@
     <div class = 'main-content'>
 
         <h2 id = 'message'>Hi! {{ admin_name.admin_name }}</h2>
-
         <div class = 'info-cards'>
 
             <div class = 'info-card-details'>
@@ -88,10 +87,10 @@
                     {% if patients_first_five | length > 0 %}
                         {% for p in patients_first_five %}
                                 <tr>
-                                    <td>{{p.patient_id}}</td>
+                                    <td>{{ p.patient_id }}</td>
                                     <td><a href = '/admin/patient/{{ p.patient_id }}'>{{p.patient_name}}</a></td>
-                                    <td>{{p.contact_info}}</td>
-                                    <td>{{p.patient_email}}</td>
+                                    <td>{{ p.contact_info }}</td>
+                                    <td>{{ p.patient_email }}</td>
                                     {% if p.patient_blacklisted == 0%}
                                         <td><input type = 'checkbox' disabled></td>
                                         {% else %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <a href = '/admin'><h1 style = "color: white">LDH Hospital</h1></a>
+    </header>
+
+        <div class = 'main-content'>
+            <div>
+                <h2>Patient Details</h2>
+                <p>Name: {{ patient.p_ref.patient_name }}</p>
+                <p>Age: {{ patient.p_ref.patient_age }}</p>
+                <p>Gender: {{ patient.p_ref.patient_gender }}</p>
+                <p>Last Visit: {{ last_visit }}</p>
+            </div>
+
+            <h2>Upcoming Appointments</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>S. No.</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+
+                    {% if upcoming_appointments | length > 0 %}
+                        {% for a in upcoming_appointments %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
+                                <td>{{ a.t.status }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    {% else %}
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+            <h2>Past Appointments</h2>
+            <!-- <table>
+                <tbody>
+                    <tr>
+                        <th>S. No.</th>
+                        <th>Date</th>
+                        <th>Diagnosis</th>
+                        <th>Notes</th>
+                        <th>Prescription</th>
+                        <th>Tests</th>
+                        <th>Update</th>
+                    </tr>
+
+                    {% for a in past_appointments %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ a.date_time }}</td>
+                            <td>{{ a.t.diagnosis }}</td>
+                            <td>{{ a.t.notes }}</td>
+                            <td>{{ a.t.prescription }}</td>
+                            <td>{{ a.t.tests }}</td>
+                            <td><a href = ''>Update</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table> -->
+
+            <div style="text-align: left; width: 100%;">
+                <ol>
+                    {% for a in past_appointments %}
+                    <li>
+                        <p><strong><i>{{ a.date_time }}</i></strong></p>
+                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                        <p>Notes: {{ a.t.notes }}</p>
+                        <p>Prescription: {{ a.t.prescription }}</p>
+                        <p>Tests: {{ a.t.tests }}</p>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

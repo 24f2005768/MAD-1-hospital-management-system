@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Treatment Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <a href = '/admin'><h1 style = "color: white">LDH Hospital</h1></a>
+    </header>
+
+        <div class = 'main-content'>
+            <div class = 'login-container'>
+                <h1>Update Treatment Details</h1>
+                <form action = '' method = "POST">
+                    <div class = 'update-form-details'>
+                        <label for = 'patient_name'>Patient Name</label>
+                        <input type = 'text' name = 'patient_name' value = '{{ treatment.ap[0].p_ref.patient_name }}' disabled />
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'diagnosis'>Diagnosis</label>
+                        <input type = 'text' name = 'diagnosis' value = '{{ treatment.diagnosis }}' placeholder = "Diagnosis">
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'notes'>Notes</label>
+                        <input type = 'text' name = 'notes' value = '{{ treatment.notes }}' placeholder = "Notes">
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'tests'>Tests</label>
+                        <input type = 'text' name = 'tests' value = '{{  treatment.tests }}' placeholder = "Tests">
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'prescription'>Prescription</label>
+                        <input type = 'text' name = 'prescription' value = '{{ treatment.prescription }}' placeholder = "Prescription">
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'status'>Status</label>
+                        <select name = 'status' class = 'dept-dropdown'>
+                            {% for option_choice in list_of_options %}
+                                {% if option_choice == treatment_status %}
+                                    <option value = '{{ option_choice }}' selected>{{ option_choice }}</option>
+                                {% else %}
+                                    <option value = '{{ option_choice }}'>{{ option_choice }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <input type ="submit" value = "Submit" class = 'login-button'>
+                </form>
+            </div>
+
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

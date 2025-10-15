@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, distinct
 from application.models import *
 from app import app
 import datetime
@@ -56,7 +56,6 @@ def view_appointment_patient_doctor(pid, did):
     doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
     past_appointments = Appointment.query.filter(and_(Appointment.patient_id == pid, Appointment.doctor_id == did, Appointment.date_time <= date_today)).all()
     upcoming_appointments = Appointment.query.filter(and_(Appointment.patient_id == pid, Appointment.doctor_id == did, Appointment.date_time >= date_today)).all()
-    # print(upcoming_appointments)
     return render_template('admin/view-appointment-p-d.html', past_appointments = past_appointments, doctor = doctor, patient = patient, pid = pid, did = did, upcoming_appointments = upcoming_appointments)
 
 @app.route('/admin/view-all-appointments', methods = ['GET'])
@@ -244,7 +243,7 @@ def check_availabilty(did):
 # admin - patient: view - view_all - update - delete
 
 @app.route('/admin/patient/<int:pid>', methods = ['GET'])
-def view_patient(pid):
+def view_patient_admin(pid):
     global date_today 
     patient = db.get_or_404(Patient, pid)
     past_appointments = Appointment.query.filter(and_(Appointment.date_time <= date_today, Appointment.patient_id == patient.patient_id)).all()
@@ -347,12 +346,53 @@ def search():
                                appointments_by_patient_name = appointments_by_patient_name, appointments_by_doctor_name = appointments_by_doctor_name)   
 
 # Doctor    
-@app.route('/doctor/<int:d_id>', methods = ['GET'])
-def doctor_dashboard(d_id):
+@app.route('/doctor/<int:did>', methods = ['GET'])
+def doctor_dashboard(did):
     if request.method == 'GET':
-        doctor = Doctor.query.filter(Doctor.doctor_id == d_id).first()
-        return render_template('doctor/doctor-dashboard.html')
-    
+        patients_list = []
+        show_patients = []
+
+        doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
+        patients_first_five = Appointment.query.filter(Appointment.doctor_id == did).all()
+
+        for a in patients_first_five:
+            if a.p_ref.patient_name not in patients_list:
+                patients_list += [a.p_ref.patient_name]
+                show_patients += [a]
+        return render_template('doctor/doctor-dashboard.html', doctor = doctor, show_patients = show_patients)
+
+@app.route('/doctor/view-patient/<int:pid>/<int:did>', methods = ['GET'])
+def view_patient_doctor(pid, did):
+    global date_today
+
+    patient = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid)).first()
+    past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time <= date_today)).order_by(Appointment.date_time).all()
+    upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
+    if len(past_appointments) == 1:
+        last_visit = past_appointments[0].date_time
+    else:
+        last_visit = past_appointments[-1].date_time
+
+    return render_template('doctor/view-patient.html', patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments)
+
+@app.route('/doctor/update-treatment-details/<int:did>/<int:tid>', methods = ['GET', 'POST'])
+def update_treatment_details(tid, did):
+    if request.method == 'GET':
+        treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
+        list_of_options = ['Completed', 'Booked', 'Cancelled'] 
+        treatment_status = treatment.status
+        return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+    else:
+        new_data = Treatment.query.filter(Treatment.treatment_id == tid).first()
+        new_data.diagnosis = request.form['diagnosis']
+        new_data.status = request.form['status']
+        new_data.prescription = request.form['prescription']
+        new_data.notes = request.form['notes']
+        new_data.tests = request.form['tests']
+
+        db.session.commit()
+        return redirect(f'/doctor/{did}')
+
 @app.route('/doctor/provide_slots/<int:d_id>', methods = ['GET', 'POST'])
 def provide_availability(d_id):
     if request.method == 'GET':
@@ -380,36 +420,7 @@ def provide_availability(d_id):
 
         return redirect(f'/doctor/{d_id}')
 
-# for personal use
-# to populate past appointments
-@app.route('/doctor/provide_past_slots/<int:d_id>', methods = ['GET', 'POST'])
-def provide_past_availability(d_id):
-    if request.method == 'GET':
-        d_id = d_id
-        date_today = date.today()
-        list_of_past_7_dates = l = [(date_today + timedelta(days = -i)) for i in range(8)]
-        slots = Slot.query.all()
-        return render_template('doctor/provide_past_slots.html', list_of_past_7_dates = list_of_past_7_dates, slots = slots, d_id = d_id)
-    
-    else:
-        availability = request.form
-        # print(availability)
-        a = availability.to_dict(flat=False)
-        print(a)
-        slots = Slot.query.all()
 
-        for s in a.keys():
-            slot_id = Slot.query.filter(Slot.slot_id == s).first()
-            for x in a[s]:
-                y = int(x[0:4])
-                m = int(x[5:7])
-                d = int(x[8:10])
-                slot_date = datetime.date(y,m,d)
-                slot = SlotSchedules(slot_doctor_id = d_id, schedule_slot_id = slot_id.slot_id, date = slot_date)
-                db.session.add(slot)
-        db.session.commit()
-
-        return redirect(f'/doctor/{d_id}')
 
 # Patient: dashboard - register - book_appointment - confirm_appointment
 @app.route('/patient/<int:pid>', methods = ['GET'])

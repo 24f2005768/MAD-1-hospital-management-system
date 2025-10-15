@@ -63,7 +63,7 @@ th {
 
 footer {
     background-color: #313866;
-    /* position: fixed; */
+    position: fixed;
     bottom: 0;
     padding-top: 10px;
     padding-bottom: 10px;

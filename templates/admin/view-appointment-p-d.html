@@ -93,21 +93,23 @@
         <table>
             <tbody>
                 <tr>
-                    <th>Appointment ID</th>
+                    <th>ID</th>
                     <th>Date</th>
                     <th>Diagnosis</th>
-                    <th>Prescription</th>
                     <th>Notes</th>
+                    <th>Prescription</th>
+                    <th>Tests</th>
                 </tr>
                 
                 {% if past_appointments | length > 0 %}
                     {% for a in past_appointments %}
                         <tr>
-                            <td>{{a.appointment_id}}</td>
-                            <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
-                            <td>{{a.t.diagnosis}}</td>
-                            <td>{{a.t.prescription}}</td>
-                            <td>{{a.t.notes}}</td>
+                            <td>{{ a.appointment_id }}</td>
+                            <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
+                            <td>{{ a.t.diagnosis }}</td>
+                            <td>{{ a.t.notes }}</td>
+                            <td>{{ a.t.prescription }}</td>
+                            <td>{{ a.t.tests }}</td>
                         </tr>
                     {% endfor %}
                 

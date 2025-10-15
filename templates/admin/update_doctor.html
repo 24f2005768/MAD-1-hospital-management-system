@@ -65,9 +65,9 @@
                     <select name = 'dept' class = 'dept-dropdown'>
                         {% for d in departments %}
                             {% if d.department_name == old_data.dept.department_name %}
-                                <option value = '{{d.department_name}}' selected>{{d.department_name}}</option>
+                                <option value = '{{ d.department_name }}' selected>{{ d.department_name }}</option>
                             {% else %}
-                                <option value = '{{d.department_name}}'>{{d.department_name}}</option>
+                                <option value = '{{ d.department_name }}'>{{ d.department_name }}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
