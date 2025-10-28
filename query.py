@@ -1,6 +1,10 @@
 from app import *
 from sqlalchemy import and_, or_
 from datetime import date
+
+date_today = date.today()
+list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
+
 '''
 a = Appointment.query.first()
 p_id  = a.patient_id
@@ -193,10 +197,126 @@ db.session.commit()
 # else:
 #     print(patient[-1].date_time)
 
-tid = 1
-list_of_options = ['Completed', 'Booked', 'Cancelled']
-treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
-# print(treatment.status)
-for option in list_of_options:
-    if option == treatment.status:
-        print('HI', option)
+# tid = 1
+# list_of_options = ['Completed', 'Booked', 'Cancelled']
+# treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
+# # print(treatment.status)
+# for option in list_of_options:
+#     if option == treatment.status:
+#         print('HI', option)
+
+
+# sid = 31
+
+# slot = SlotSchedules.query.filter(SlotSchedules.schedule_id == sid).first()
+# # print(slot.date)
+# slot_date = slot.date
+
+# all_appointments = SlotSchedules.query.filter(and_(SlotSchedules.date == slot_date, SlotSchedules.schedule_slot_id == slot.schedule_slot_id)).all()
+# # print(all_appointments)
+
+# date_today = date.today()
+# did = 2
+
+# appointments_today = SlotSchedules.query.filter(and_(SlotSchedules.date == date_today, SlotSchedules.slot_doctor_id == did)).all()
+# list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+
+# for d in list_of_next_7_dates:
+#     print(SlotSchedules.query.filter(and_(SlotSchedules.date == d, SlotSchedules.slot_doctor_id == did)).all())
+'''
+list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+# print(list_of_next_7_dates)
+
+slot1 = db.get_or_404(Slot, 1)
+slot2 = db.get_or_404(Slot, 2)
+slot3 = db.get_or_404(Slot, 3)
+
+patient1 = db.get_or_404(Patient, 1)
+patient2 = db.get_or_404(Patient, 2)
+patient3 = db.get_or_404(Patient, 3)
+patient4 = db.get_or_404(Patient, 4)
+patient5 = db.get_or_404(Patient, 5)
+patient6 = db.get_or_404(Patient, 6)
+patient7 = db.get_or_404(Patient, 7)
+patient8 = db.get_or_404(Patient, 8)
+patient9 = db.get_or_404(Patient, 9)
+
+# D1
+doctor = db.get_or_404(Doctor, 1)
+# slot_for_doctor1 = SlotSchedules(date = date.today(), slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient1.patient_id)
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient8.patient_id)
+# slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[2], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id)
+# slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id)
+# db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+# db.session.add(slot_for_doctor3)
+# db.session.add(slot_for_doctor4)
+
+available_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).all()
+
+# today's appointments for D1
+# if slot_for_doctor1.slot_patient_id != None:
+#     book_slot1 = available_slots[0]
+#     slot = book_slot1
+#     new_entry1 = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient2.patient_id, schedule_slot_id = slot.schedule_slot_id)
+#     db.session.add(new_entry1)
+#     appointment = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+#     appointment.t = Treatment(status = 'Booked')
+#     db.session.add(appointment)
+
+#     new_entry2 = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient3.patient_id, schedule_slot_id = slot.schedule_slot_id)
+#     db.session.add(new_entry2)
+#     appointment = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
+#     appointment.t = Treatment(status = 'Booked')
+#     db.session.add(appointment)
+
+
+# next week's appointments for D1
+if slot_for_doctor2.slot_patient_id != None:
+    book_slot1 = available_slots[1]
+    slot = book_slot1
+    new_entry1 = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient1.patient_id, schedule_slot_id = slot.schedule_slot_id)
+    db.session.add(new_entry1)
+    appointment = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+    appointment.t = Treatment(status = 'Booked')
+    db.session.add(appointment)
+
+db.session.commit()
+'''
+did = 3
+slots = Slot.query.all()
+
+# from database
+past_state = SlotSchedules.query.filter(and_(SlotSchedules.date > date_today, SlotSchedules.slot_doctor_id == did, SlotSchedules.slot_patient_id != None)).all()
+# print(past_state)
+
+past_state_list = []
+delete_past_appointments_list = []
+for p in past_state:
+    past_state_list += [(str(p.schedule_slot_id), p.date.strftime("%Y-%m-%d"))]
+    delete_past_appointments_list += [(p.schedule_id, p.slot_patient_id)]
+print(past_state_list)
+# print(delete_past_appointments_list)
+
+# from html
+present_state = {'1': ['2025-11-02', '2025-11-04'], '3': ['2025-11-02', '2025-11-03', '2025-11-04'], '2': ['2025-11-03']}
+present_state_list = []
+for pr in present_state.keys():
+    for i in range(len(present_state[pr])):
+        present_state_list += [(pr, present_state[pr][i])]
+print(present_state_list)
+
+unionList = []
+deleteList = []
+
+for i in present_state_list:
+    if (i not in unionList) and (i in past_state_list): #add patients and store separately in a list, then later delete
+        unionList += [i]
+    elif (i not in unionList) and (i not in past_state_list): #add directly
+        unionList += [i]
+
+
+for j in past_state_list:
+    if (j not in deleteList) and (j not in present_state_list):
+        deleteList += [j]
+print(deleteList)

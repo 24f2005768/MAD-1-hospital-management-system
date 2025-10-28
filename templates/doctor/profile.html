@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provide Slots</title>
+    <title>Doctor Profile</title>
     <link rel="stylesheet" href="/static/style.css">
-
 </head>
-<body>
-    
-    <header>
-        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
 
-        <div class = 'search_bar'>
-            
+<body>
+    <header>
+         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>      
             <form action = '/admin/search' method = 'POST'>
                 <div>
                     <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
@@ -38,24 +36,26 @@
         </div>
     </header>
 
-    <div class = 'main-content'>
-        <form action = '/doctor/provide_slots/{{d_id}}' method="POST">
-            
-            {% for d in list_of_next_7_dates %}
-                <div>
-                    <label>{{ d }}</label>
-                    {% for s in slots %}
-                        <input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}'> {{ s.slot_time }}
-                        {% endfor %}
+        <div class = 'main-content'>
+            <div class = 'wrapper'>
+                <div class = 'profile-picture-display'>
+                    <img src ="{{ url_for('static',filename='images/1.jpg') }}" alt="Profile Picture" height="240px" width="300px">
+                </div>
+
+                <div class = 'profile-content'>
+                    <div class = 'heading-actions'>
+                        <h2>{{ doctor.doctor_name }}</h2>
+                        <a href = '/doctor/{{ doctor.doctor_id }}/doctor-profile/update' class = 'action-buttons update-button'>Update Profile</a>
                     </div>
-                {% endfor %}
-            <input type="submit" value = "Submit" class = "login-button">
-        </form>
-    </div>
+                    <p><strong>{{ doctor.dept.department_name }}</strong></p>
+                    <p>{{ doctor.doctor_desc }}</p>
+                </div>
+            </div>
+
+        </div>
 
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
-
 </body>
 </html>

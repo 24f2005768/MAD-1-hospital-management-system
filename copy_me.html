@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Appointment</title>
+    <title>Document</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
     <header>
-        <h1><a href = '/admin' class = 'page_heading_hyperlink'>LDH Hospital</a></h1>
+        <h1><a href = '/admin'>LDH Hospital</a></h1>
 
         <div class = 'search_bar'>
             
@@ -36,34 +36,59 @@
             </form>
         </div>
     </header>
-
         <div class = 'main-content'>
-            <p>{{ doctor.doctor_name }}</p>
-            <div>
-                <form action = '/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
-                    
-                    <input type = 'text' class = 'patient_name' list = 'patient_list' autocomplete="on" placeholder="Patient Name" name = 'patient_name'>
 
-                    <datalist id = 'patient_list'>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>
+
+
+DOCTOR DASH
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>      
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
                         {% for patient in patients %}
                             <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
                         {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
                     </datalist>
 
-                    {% for s in doctor_slots %}
-                        <div>
-                            <label>{{ s.date }}</label>
-                            <input type = 'checkbox' value = '{{ s.schedule_id }}' name = '{{ s.schedule_id }}'>{{ s.s_sch.slot_time }}
-                        </div>
-                    {% endfor %}
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
 
-                    <input type="submit" value = "Submit" class = "login-button">
-
-                    {% if flag == True %}
-                        <p>Incorrect Patient Name, Try Again</p>
-                    {% endif %}
-                </form>
-            </div>
+        <div class = 'main-content'>
 
         </div>
 

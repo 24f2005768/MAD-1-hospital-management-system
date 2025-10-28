@@ -9,74 +9,48 @@
 
 <body>
     <header>
-        <a href = '/admin'><h1 style = "color: white">LDH Hospital</h1></a>
+         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
     </header>
 
         <div class = 'main-content'>
             <div>
-                <h2>Patient Details</h2>
-                <p>Name: {{ patient.p_ref.patient_name }}</p>
-                <p>Age: {{ patient.p_ref.patient_age }}</p>
-                <p>Gender: {{ patient.p_ref.patient_gender }}</p>
-                <p>Last Visit: {{ last_visit }}</p>
+                <h2 class = 'centered-headings'>Patient Details</h2>
             </div>
+            
+            <div style = "width: 100%;">
+                    <p>Name: {{ patient.p_ref.patient_name }}</p>
+                    <p>Age: {{ patient.p_ref.patient_age }}</p>
+                    <p>Gender: {{ patient.p_ref.patient_gender }}</p>
+                    <p>Contact Number: {{ patient.p_ref.contact_info }}</p>
+                    <p>Email: {{ patient.p_ref.patient_email }}</p>
+                    <p>Last Visit: {{ last_visit }}</p>
+                </div>
 
             <h2>Upcoming Appointments</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>S. No.</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
 
+                <div class = 'show-appointments'>
                     {% if upcoming_appointments | length > 0 %}
-                        {% for a in upcoming_appointments %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
-                                <td>{{ a.t.status }}</td>
-                            </tr>
-                        {% endfor %}
+                        <ol>
+                            {% for a in upcoming_appointments %}
+                                <li>
+                                <div class = 'list-items'>
+                                    <p><strong><i>{{ a.date_time }}</i></strong></p>
+                                    <div class = 'action-buttons'>
+                                        <a href = '/doctor/cancel-appointment/{{ doctor.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
+                                    </div>
+                                </div>
+                                <p>Status: {{ a.t.status }}</p>                        
 
+                                </li>
+                            {% endfor %}
+                        </ol>
                     {% else %}
-                        <tr>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
+                        <p><em>No upcoming appointments</em></p>
                     {% endif %}
-                </tbody>
-            </table>
+                </div>
 
             <h2>Past Appointments</h2>
-            <!-- <table>
-                <tbody>
-                    <tr>
-                        <th>S. No.</th>
-                        <th>Date</th>
-                        <th>Diagnosis</th>
-                        <th>Notes</th>
-                        <th>Prescription</th>
-                        <th>Tests</th>
-                        <th>Update</th>
-                    </tr>
-
-                    {% for a in past_appointments %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ a.date_time }}</td>
-                            <td>{{ a.t.diagnosis }}</td>
-                            <td>{{ a.t.notes }}</td>
-                            <td>{{ a.t.prescription }}</td>
-                            <td>{{ a.t.tests }}</td>
-                            <td><a href = ''>Update</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table> -->
-
-            <div style="text-align: left; width: 100%;">
+            <div class = 'show-appointments'>
                 <ol>
                     {% for a in past_appointments %}
                     <li>

@@ -61,9 +61,23 @@ th {
     font-size: 17px;
 }
 
+input {
+    border: none;
+    background-color: #f5eeee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 footer {
     background-color: #313866;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -77,15 +91,6 @@ footer {
     font-size: 17px;
 }
 
-#buttons {
-    text-decoration: none;
-    padding: 5px;
-    padding-left: 9px;
-    padding-right: 9px;
-    border-radius: 10px;
-    background-color: #fcd6d6;    
-}
-
 #message {
     align-self: center;
 }
@@ -96,7 +101,9 @@ footer {
     padding-left: 9px;
     padding-right: 9px;
     border-radius: 10px;
-    background-color: #fcd6d6;    
+    background-color: #d6d7fa;   
+    border: none; 
+    cursor: pointer;
 }
 
 .main-content {
@@ -176,7 +183,6 @@ footer {
 
 .info-cards {
     display: flex;
-    align-self: center;
     flex-direction: row;
     justify-content: space-around;
     width: 100%;
@@ -214,6 +220,16 @@ footer {
     margin-top: 0px;
 }
 
+.show-appointments {
+    text-align: left;
+    width: 100%;
+}
+
+.list-items {
+    display: flex;
+    justify-content: space-between;
+}
+
 /* for login */
 .login-button {
     margin-bottom: 7px;
@@ -234,24 +250,9 @@ footer {
     max-width: 150px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .login-input {
     border: none;
     /* background-color: #D2F5E3; */
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-}
-
-input {
-    border: none;
-    /* background-color: #D2F5E3; */
-    background-color: #f5eeee;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
@@ -306,7 +307,6 @@ input {
     justify-content: space-between;
     align-items: center;
     width: 280px;
-    /* width: 20vw; */
 }
 
 .dept-dropdown {
@@ -316,4 +316,26 @@ input {
     height: 36px;
     border-radius: 10px;
     border: none;
+}
+
+.page_heading_hyperlink {
+    text-decoration: none;
+    color: white;
+}
+
+.doctor-appointments-ribbon {
+    display: flex;
+    align-items: center;
+    height: 6vh;
+    background: #d6d7fa;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.profile-picture-display {
+    width: 30vw
 }

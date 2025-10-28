@@ -42,6 +42,7 @@ class Doctor(db.Model):
     doctor_email = db.Column(db.String)
     doctor_blacklisted = db.Column(db.Boolean, default = False)
     doctor_desc = db.Column(db.String)
+    doctor_profile_picture = db.Column(db.Integer, default = 1)
 
     department_id = db.Column(db.Integer, db.ForeignKey(Department.department_id))
     doctor_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
@@ -60,6 +61,7 @@ class Patient(db.Model):
     patient_email = db.Column(db.String)
     patient_blacklisted = db.Column(db.Boolean, default = False)
     patient_age = db.Column(db.Integer)
+    patient_profile_picture = db.Column(db.Integer, default = 1)
 
     patient_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 

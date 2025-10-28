@@ -1,0 +1,30 @@
+CSS classes
+
+1. main-content: keep everything aligned and in middle
+2. wrapper
+3. profile-picture-display
+4. profile-content
+
+- Buttons and actions
+1. heading-actions: align heading and buttons
+2. action-buttons: give gap and align buttons (only baseline, further stylingneeds to be done)
+3. update-button
+4. update-button 
+
+- Forms 
+1. login-container: follow uniform styling throughout all forms in the app
+2. update-form-details: all input fields div 
+
+- Admin dashboard
+1. info-cards: ribbon to show patients etc
+2. info-card-details
+3. info-card-texts
+4. dept-dropdown
+
+- Doctor dashboard
+1. doctor-appointments-ribbon
+
+- extra
+1. centered-headings: align headings in div 
+2. page_heading_hyperlink
+3. clickable-links

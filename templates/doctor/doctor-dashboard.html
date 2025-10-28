@@ -9,7 +9,7 @@
 
 <body>
     <header>
-        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+        <h1>LDH Hospital</h1>
 
         <div class = 'search_bar'>
             
@@ -21,14 +21,6 @@
                         {% for patient in patients %}
                             <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
                         {% endfor %}
-
-                        {% for doctor in doctors %}
-                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
-                        {% endfor %}
-
-                        {% for dept in departments %}
-                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
-                        {% endfor %}
                     </datalist>
 
                     <input type ="submit" value = "Search">
@@ -38,32 +30,151 @@
     </header>
     
     <div class = 'main-content'>
-        <h2 id = 'message'>Hi! {{doctor.doctor_name}}</h2>    
+        <h2 id = 'message'>Hi! {{ doctor.doctor_name }}</h2>    
         <div class = 'info-cards'>
 
                 <div class = 'info-card-details'>
-                    <!-- <p class = 'info-card-texts'>Patients</p> -->
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ doctor.doctor_id }}/doctor-profile'>Profile</a></p>
                 </div>
 
                 <div class = 'info-card-details'>
-                    <!-- <p class = 'info-card-texts'>Appointments</p> -->
                     <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
                 </div>
 
                 <div class = 'info-card-details'>
-                    <!-- <p class = 'info-card-texts'>Profile</p> -->
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Profile</p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p>
                 </div>            
 
                 <div class = 'info-card-details'>
-                    <!-- <p class = 'info-card-texts'>Availablility</p> -->
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
                 </div>
 
         </div>
 
-        <div style ="margin-top: 50px;">
+        <div style ="margin-top: 50px; width: 100%;">
+            <div class = 'heading-actions'>
+                <h2>Appointments</h2>
+            </div>
+
+            <div class = 'doctor-appointments-ribbon'>
+                <button onclick = 'hideShowToday()' id = 'doctor-appointments-buttons' class = 'buttons'>Today</button>
+                <button onclick = 'hideShowThisWeek()' id = 'doctor-appointments-buttons' class = 'buttons'>This Week</button>
+                <button onclick = 'hideShowPastAppointments()' id = 'doctor-appointments-buttons' class = 'buttons'>Past Appointments</button>
+            </div>
+
+            <div id = 'todays-appointments'>
+                {% if appointments_today | length == 0 %}
+                    <p>No appointments scheduled today</p>
+                {% else %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Patient Name</th>
+                                <th>Time</th>
+                            </tr>
+
+                            {% for a in appointments_today %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ a.slot_patient.patient_name }}</td>
+                                    <td>{{ a.s_sch.slot_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <div id = 'this-weeks-appointments' style ="display: none;">
+                {% if appointments_this_week | length == 0 %}
+                    <p>No appointments scheduled this week</p>
+                {% else %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Date</th>
+                                <th>Patient Name</th>
+                                <th>Time</th>
+                            </tr>
+
+                            {% for a in appointments_this_week %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.slot_patient.patient_name }}</td>
+                                    <td>{{ a.s_sch.slot_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <div id = 'past-appointments' style ="display: none;">
+                {% if past_appointments | length == 0 %}
+                    <p>No Past appointments</p>
+                {% else %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Date</th>
+                                <th>Patient Name</th>
+                                <th>Time</th>
+                            </tr>
+
+                            {% for a in past_appointments %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.slot_patient.patient_name }}</td>
+                                    <td>{{ a.s_sch.slot_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div style = 'margin-top: 50px; width: 100%;'>
+            <div class = 'heading-actions'>
+                <h2>Availablility</h2>
+            </div>
+
+                {% if availabilty_list | length <= 0 %}
+                    <p>Not provided</p>
+
+                {% else %}
+                <table>
+                        <tbody>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Date</th>
+                                <th>Slot</th>
+                                <th>Patients</th>
+                            </tr>
+
+                            {% for s in availabilty_list %}
+                                <tr>
+                                    <td><a href = '/doctor/patients-by-slot/{{ doctor.doctor_id }}/{{ s.schedule_id }}'>{{ loop.index }}</a></td>
+                                    <td>{{ s.date }}</td>
+                                    <td>{{ s.s_sch.slot_name }}</td>
+                                    <td>{{ slot_patients_dict[s.date][s.schedule_slot_id] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
+
+                <a href = '/doctor/provide_slots/{{ doctor.doctor_id }}'>Provide Availablility</a>
+        </div>
+
+        <div style ="margin-top: 50px; width: 100%;">
             <div class = 'heading-actions'>
                 <h2>Patients</h2>
             </div>
@@ -79,7 +190,7 @@
                     {% if show_patients | length > 0 %}
                         {% for p in show_patients %}
                             <tr>
-                                <td>{{ p.p_ref.patient_name }}</td>
+                                <td><a href = '/doctor/view-patient/{{ p.patient_id }}/{{ doctor.doctor_id }}'>{{ p.p_ref.patient_name }}</a></td>
                                 <td>{{ p.p_ref.contact_info }}</td>
                                 <td>{{ p.p_ref.patient_email }}</td>
                             </tr>
@@ -94,6 +205,32 @@
                 </tbody>
             </table>
         </div>
+
+
+    <script>
+        var todays_appointments = document.getElementById('todays-appointments');
+        var weeks_appointments = document.getElementById('this-weeks-appointments');
+        var past_appointments = document.getElementById('past-appointments');
+        
+        function hideShowToday() {
+            todays_appointments.style.display = 'block';
+            weeks_appointments.style.display = 'none';
+            past_appointments.style.display = 'none';
+
+        }
+
+        function hideShowThisWeek() {
+            todays_appointments.style.display = 'none';
+            weeks_appointments.style.display = 'block';
+            past_appointments.style.display = 'none';
+        }
+
+        function hideShowPastAppointments() {
+            todays_appointments.style.display = 'none';
+            weeks_appointments.style.display = 'none';
+            past_appointments.style.display = 'block';
+        }
+    </script>
 
     </div>
 

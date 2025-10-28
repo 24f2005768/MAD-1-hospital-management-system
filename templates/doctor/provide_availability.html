@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Availablility</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
+
+        <div class = 'search_bar'>      
+            <form action = '/admin/search' method = 'POST'>
+                <div>
+                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+
+                    <datalist id = 'search_list'>
+                        {% for patient in patients %}
+                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                        {% endfor %}
+
+                        {% for doctor in doctors %}
+                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
+                        {% endfor %}
+
+                        {% for dept in departments %}
+                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <input type ="submit" value = "Search">
+                </div>
+            </form>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div>
+                <form action = '/doctor/provide_slots/{{ doctor.doctor_id }}' method="POST">
+                    <div class = 'centered-headings'>
+                        <h2>Provide Availablility</h2>
+                    </div>
+                    
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Date</th>
+                                {% for s in slots %}
+                                    <th>{{ s.slot_name }}</th>
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+                                {% for d in list_of_next_7_dates %}
+                                        <td>{{ d.strftime('%d/%m/%y') }}</td>
+                                        {% for s in slots %}
+                                            {% if appointments_dict[d][s] | length > 0 %}
+                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' checked>{{ s.slot_time }}</td>
+                                            {% else %}
+                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}'>{{ s.slot_time }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <input type="submit" value = "Submit" class = "login-button">
+                </form>
+            </div>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

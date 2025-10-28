@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Patients by Slot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
+    </header>
+
+        <div class = 'main-content'>
+            <div>
+                <h2>Slot Details</h2>
+                <p>Date: {{ slot.date }}</p>
+                <p>Time: {{ slot.s_sch.slot_name }}</p>
+            </div>
+
+            <div class = 'show-appointments'>
+                <ol>
+                    {% for a in all_appointments %}
+                        <li>
+                            <p>Patient Name: {{ a.slot_patient.patient_name }}</p>
+                            <p>Visit Patient Profile</p>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

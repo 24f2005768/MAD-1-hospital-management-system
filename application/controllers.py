@@ -3,6 +3,7 @@ from sqlalchemy import and_, or_, distinct
 from application.models import *
 from app import app
 import datetime
+import os
 
 date_today = date.today()
 
@@ -81,7 +82,6 @@ def view_department(dept_id):
     past_dept_appointments = []
     for doc in dept_doctors:
         past_dept_appointments += Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.date_time <= date_today)).all()
-    # print(past_dept_appointments)
     return render_template('view_department.html', department = department, upcoming_dept_appointments = upcoming_dept_appointments, past_dept_appointments = past_dept_appointments, flag = True)
 
 @app.route('/all-dept', methods = ['GET'])
@@ -125,8 +125,6 @@ def delete_dept(dept_id):
             user = doctor.d 
             doctor_appointments = doctor.appointment_d
             doctor_slots = doctor.doctor_slot 
-
-            print(doctor_appointments)
 
             for slot in doctor_slots:
                 db.session.delete(slot)
@@ -221,7 +219,6 @@ def delete_doctor(did):
     user = doctor.d 
     doctor_appointments = doctor.appointment_d
     doctor_slots = doctor.doctor_slot 
-    print(doctor_appointments)
     for slot in doctor_slots:
         db.session.delete(slot)
 
@@ -345,26 +342,87 @@ def search():
         return render_template('admin/search.html', input_value = input_value, patients = patients, doctors = doctors, departments = departments, 
                                appointments_by_patient_name = appointments_by_patient_name, appointments_by_doctor_name = appointments_by_doctor_name)   
 
-# Doctor    
+# Doctor   
+ 
 @app.route('/doctor/<int:did>', methods = ['GET'])
 def doctor_dashboard(did):
     if request.method == 'GET':
+        global date_today
         patients_list = []
         show_patients = []
+        helper_lst = []
+        availabilty_list = []
+        appointments_today = []
+        appointments_this_week = []
+        slot_patients_dict = {}
 
         doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
-        patients_first_five = Appointment.query.filter(Appointment.doctor_id == did).all()
+        patients = Appointment.query.filter(Appointment.doctor_id == did).all()
+        # availabilty = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today, SlotSchedules.slot_patient_id != None)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+        availabilty = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
 
-        for a in patients_first_five:
+        # patients who have booked an appointment with doctor atleast once
+        for a in patients:
             if a.p_ref.patient_name not in patients_list:
                 patients_list += [a.p_ref.patient_name]
                 show_patients += [a]
-        return render_template('doctor/doctor-dashboard.html', doctor = doctor, show_patients = show_patients)
+
+        # group slots by date and time, so count of patients can be shown
+        for a in availabilty:
+            if [a.date, a.s_sch.slot_name] not in helper_lst:
+                helper_lst += [[a.date, a.s_sch.slot_name]]
+                availabilty_list += [a]
+
+        # how many patients are scheduled to see the doctor in a slot
+        for a in availabilty:
+            if a.date not in slot_patients_dict.keys():
+                slot_patients_dict[a.date] = {1:0, 2:0, 3:0}
+            if a.slot_patient_id == None:
+                slot_patients_dict[a.date][a.schedule_slot_id] += 0
+            else:
+                slot_patients_dict[a.date][a.schedule_slot_id] += 1
+        # print(slot_patients_dict)
+
+        # appointments scheduled today
+        appointments_today = SlotSchedules.query.filter(and_(SlotSchedules.date == date_today, SlotSchedules.slot_doctor_id == did, SlotSchedules.slot_patient_id != None)).all()
+        
+        # appointments scheduled this week 
+        list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+        for d in list_of_next_7_dates:
+            appointments_this_week += SlotSchedules.query.filter(and_(SlotSchedules.date == d, SlotSchedules.slot_doctor_id == did,  SlotSchedules.slot_patient_id != None)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+
+        # past appointments
+        past_appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date < date_today, SlotSchedules.slot_patient_id != None)).all()
+
+        return render_template('doctor/doctor-dashboard.html', doctor = doctor, show_patients = show_patients, availabilty_list = availabilty_list, slot_patients_dict = slot_patients_dict, 
+                               appointments_today = appointments_today, appointments_this_week = appointments_this_week, past_appointments = past_appointments)
+
+@app.route('/doctor/<int:did>/doctor-profile', methods = ['GET'])
+def view_doctor_profile(did):
+    profile_picture = os.path.join(app.config["UPLOAD_FOLDER"], "1")
+    doctor = db.get_or_404(Doctor, did)
+    return render_template('doctor/profile.html', doctor = doctor, profile_picture = profile_picture)
+
+@app.route('/doctor/<int:did>/doctor-profile/update', methods = ['GET', 'POST'])
+def update_doctor_profile(did):
+    if request.method == 'GET':
+        doctor = db.get_or_404(Doctor, did)
+        return render_template('doctor/update_profile.html', doctor = doctor, did = did)
+    else:
+        did = did
+        doctor = db.get_or_404(Doctor, did)
+        doctor.doctor_name = request.form['d_name']
+        doctor.doctor_desc = request.form['descprition']
+        doctor.doctor_email = request.form['email']
+        doctor.doctor_contact_number = request.form['contact_info']
+        db.session.commit()
+        return redirect(f'/doctor/{did}')
 
 @app.route('/doctor/view-patient/<int:pid>/<int:did>', methods = ['GET'])
 def view_patient_doctor(pid, did):
     global date_today
 
+    doctor = db.get_or_404(Doctor, did)
     patient = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid)).first()
     past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time <= date_today)).order_by(Appointment.date_time).all()
     upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
@@ -373,7 +431,15 @@ def view_patient_doctor(pid, did):
     else:
         last_visit = past_appointments[-1].date_time
 
-    return render_template('doctor/view-patient.html', patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments)
+    return render_template('doctor/view-patient.html', doctor = doctor, patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments)
+
+@app.route('/doctor/patients-by-slot/<int:did>/<int:sid>', methods = ['GET'])
+def view_patients_by_slots(did, sid):
+    doctor = db.get_or_404(Doctor, did)
+    slot = SlotSchedules.query.filter(SlotSchedules.schedule_id == sid).first()
+    slot_date = slot.date
+    all_appointments = SlotSchedules.query.filter(and_(SlotSchedules.date == slot_date, SlotSchedules.schedule_slot_id == slot.schedule_slot_id)).all()
+    return render_template('doctor/view-patients-by-slot.html', slot = slot, all_appointments = all_appointments, doctor = doctor)
 
 @app.route('/doctor/update-treatment-details/<int:did>/<int:tid>', methods = ['GET', 'POST'])
 def update_treatment_details(tid, did):
@@ -392,19 +458,38 @@ def update_treatment_details(tid, did):
 
         db.session.commit()
         return redirect(f'/doctor/{did}')
+    
+@app.route('/doctor/cancel-appointment/<int:did>/<int:tid>', methods = ['GET'])
+def cancel_appointment_doctor(tid, did):
+    treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
+    doctor = db.get_or_404(Doctor, did)
+    patient = treatment.ap[0].p_ref
+    if treatment.status == 'Booked':
+        treatment.status = 'Cancelled'
+        db.session.commit()
 
-@app.route('/doctor/provide_slots/<int:d_id>', methods = ['GET', 'POST'])
-def provide_availability(d_id):
+    return redirect(f"/doctor/view-patient/{ patient.patient_id }/{ doctor.doctor_id }")
+    
+@app.route('/doctor/provide_slots/<int:did>', methods = ['GET', 'POST'])
+def provide_availability(did):
     if request.method == 'GET':
-        d_id = d_id
-        date_today = date.today()
+        doctor = db.get_or_404(Doctor, did)
         list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
         slots = Slot.query.all()
-        return render_template('doctor/provide_slots.html', list_of_next_7_dates = list_of_next_7_dates, slots = slots, d_id = d_id)
+
+        appointments_dict = {}
+        for d in list_of_next_7_dates:
+            appointments_dict[d] = {}
+            for s in slots:
+                appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id)).all()
+                appointments_dict[d][s] = appointments
+        return render_template('/doctor/provide_availability.html', appointments_dict = appointments_dict, doctor = doctor, slots = slots, list_of_next_7_dates = list_of_next_7_dates)
     
     else:
+        doctor = db.get_or_404(Doctor, did)
         availability = request.form
         a = availability.to_dict(flat=False)
+        print(a)
         slots = Slot.query.all()
 
         for s in a.keys():
@@ -414,13 +499,10 @@ def provide_availability(d_id):
                 m = int(x[5:7])
                 d = int(x[8:10])
                 slot_date = datetime.date(y,m,d)
-                slot = SlotSchedules(slot_doctor_id = d_id, schedule_slot_id = slot_id.slot_id, date = slot_date)
+                slot = SlotSchedules(slot_doctor_id = did, schedule_slot_id = slot_id.slot_id, date = slot_date)
                 db.session.add(slot)
         db.session.commit()
-
-        return redirect(f'/doctor/{d_id}')
-
-
+        return redirect(f'/doctor/{ doctor.doctor_id }')
 
 # Patient: dashboard - register - book_appointment - confirm_appointment
 @app.route('/patient/<int:pid>', methods = ['GET'])
@@ -494,13 +576,14 @@ def confirm_appointment(did):
                 slot.slot_patient_id = patient.patient_id
                 db.session.add(slot)
                 appointment = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-                appointment.t = Treatment(status = 'I am working')
+                appointment.t = Treatment(status = 'Booked')
                 db.session.add(appointment)
             else:
-                new_entry = SlotSchedules(date = slot.date, status = 'Booked', slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = slot.schedule_slot_id)
+                new_entry = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = slot.schedule_slot_id)
                 db.session.add(new_entry)
                 appointment = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-                appointment.t = Treatment(status = 'I am working')
+                appointment.t = Treatment(status = 'Booked')
                 db.session.add(appointment)
+
         db.session.commit()
         return redirect('/admin')

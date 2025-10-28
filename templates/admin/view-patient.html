@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1><a href = '/admin'></a>LDH Hospital</a></h1>
+        <h1><a href = '/admin' class = 'page_heading_hyperlink'>LDH Hospital</a></h1>
 
         <div class = 'search_bar'>
             
@@ -98,11 +98,11 @@
                 <tr>
                     <th>ID</th>
                     <th>Doctor Name</th>
-                    <th>Department</th>
+                    <!-- <th>Department</th> -->
                     <th>Diagnosis</th>
-                    <th>Notes</th>
+                    <!-- <th>Notes</th> -->
                     <th>Prescription</th>
-                    <th>Tests</th>
+                    <!-- <th>Tests</th> -->
                 </tr>
 
                 {% if past_appointments | length > 0 %}
@@ -110,11 +110,11 @@
                         <tr>
                             <td><a href = '/admin/appointment/{{ a.patient_id }}/{{ a.doctor_id }}'>{{a.appointment_id}}</a></td>
                             <td><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{a.d_ref.doctor_name}}</a></td>
-                            <td>{{a.d_ref.dept.department_name}}</td>
+                            <!-- <td>{{a.d_ref.dept.department_name}}</td> -->
                             <td>{{a.t.diagnosis}}</td>
-                            <td>{{a.t.notes}}</td>
+                            <!-- <td>{{a.t.notes}}</td> -->
                             <td>{{a.t.prescription}}</td>
-                            <td>{{a.t.tests}}</td>
+                            <!-- <td>{{a.t.tests}}</td> -->
                         </tr>
                     {% endfor %}
                 {% else %}
