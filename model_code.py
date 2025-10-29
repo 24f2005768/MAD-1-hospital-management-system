@@ -64,11 +64,11 @@ dept1 = Department(department_name = 'Cardiology', department_description = 'LDH
 db.session.add(dept1)
 
 user1 = User(user_name = 'Ganesh_heart', user_password = 'ganesh', user_role = 'Doctor')
-user1.doctor_relationship = Doctor(doctor_name = 'Ganesh Rathi', doctor_contact_number = '5746160792',
+user1.doctor_relationship = Doctor(doctor_name = 'Ganesh Rathi', doctor_contact_number = '5746160792', doctor_gender = 'Male',
                                    doctor_email = 'g@email.com', department_id = 1, doctor_desc = "Dr. Ganesh is a board-certified cardiologist with over 25 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Ganesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
 
 user2 = User(user_name = 'Vignesh_heart', user_password = 'vignesh', user_role = 'Doctor')
-user2.doctor_relationship = Doctor(doctor_name = 'Vignesh Kumar', doctor_contact_number = '8166956143',
+user2.doctor_relationship = Doctor(doctor_name = 'Vignesh Kumar', doctor_contact_number = '8166956143', doctor_gender = 'Male',
                                    doctor_email = 'v@email.com', department_id = 1, doctor_desc = "Dr. Vignesh is a board-certified cardiologist with over 7 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Vignesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
 
 
@@ -77,11 +77,11 @@ dept2 = Department(department_name = 'Pediatrics', department_description = "LDH
 db.session.add(dept2)
 
 user3 = User(user_name = 'Preeti_pediatrics', user_password = 'preeti', user_role = 'Doctor')
-user3.doctor_relationship = Doctor(doctor_name = 'Preeti Rai', doctor_contact_number = '9370595052',
+user3.doctor_relationship = Doctor(doctor_name = 'Preeti Rai', doctor_contact_number = '9370595052', doctor_gender = 'Female',
                                    doctor_email = 'p@email.com', department_id = 2, doctor_desc = "Dr. Preeti is a board-certified pediatrician with over 19 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for her warm and compassionate approach, she specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Preeti believes in building strong, trusting relationships with both her young patients and their families to foster a lifetime of good health.")
 
 user4 = User(user_name = 'Raju_pediatrics', user_password = 'raju', user_role = 'Doctor')
-user4.doctor_relationship = Doctor(doctor_name = 'Raju Desai', doctor_contact_number = '7996673737',
+user4.doctor_relationship = Doctor(doctor_name = 'Raju Desai', doctor_contact_number = '7996673737', doctor_gender = 'Male',
                                    doctor_email = 'r@email.com', department_id = 2, doctor_desc = "Dr. Raju is a board-certified pediatrician with over 10 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for his warm and compassionate approach, he specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Raju believes in building strong, trusting relationships with both his young patients and their families to foster a lifetime of good health.")
 
 
@@ -90,11 +90,11 @@ dept3 = Department(department_name = 'General Surgery', department_description =
 db.session.add(dept3)
 
 user5 = User(user_name = 'Dev_surgery', user_password = 'dev', user_role = 'Doctor')
-user5.doctor_relationship = Doctor(doctor_name = 'Dev Sharma', doctor_contact_number = '1059832795',
+user5.doctor_relationship = Doctor(doctor_name = 'Dev Sharma', doctor_contact_number = '1059832795', doctor_gender = 'Male',
                                    doctor_email = 'd@email.com', department_id = 3, doctor_desc = "Dr. Dev is a board-certified General Surgeon with over 15 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Dev is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
 
 user6 = User(user_name = 'Vikas_surgery', user_password = 'vikas', user_role = 'Doctor')
-user6.doctor_relationship = Doctor(doctor_name = 'Vikas Jindal', doctor_contact_number = '2073880656',
+user6.doctor_relationship = Doctor(doctor_name = 'Vikas Jindal', doctor_contact_number = '2073880656', doctor_gender = 'Male',
                                    doctor_email = 'vk@email.com', department_id = 3, doctor_desc = "Dr. Vikas is a board-certified General Surgeon with over 13 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Vikas is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
 
 dept4 = Department(department_name = 'Gastrology', department_description = "LDH's Gastrology department is dedicated to providing high-quality, comprehensive care for a wide spectrum of gastrointestinal conditions, including colon cancer, acid reflux, and other complex digestive disorders. We offer a full range of advanced diagnostic and therapeutic procedures to accurately identify and effectively manage issues affecting your digestive health. Our expertise also extends to personalized nutritional guidance, ensuring a holistic approach to your well-being. You can trust our specialized team to deliver exceptional, patient-centered care for all your digestive health needs.")

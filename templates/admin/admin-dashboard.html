@@ -186,7 +186,7 @@
                                 <td>{{d.doctor_contact_number}}</td>
                                 <td>{{d.doctor_email}}</td>
                                 <td>{{d.dept.department_name}}</td>    
-                                <td><a href = '/admin/doctor/check-availability/{{ d.doctor_id }}'>Check</a></td>
+                                <td><a class = 'buttons' href = '/admin/doctor/check-availability/{{ d.doctor_id }}'>Check</a></td>
                                 {% if d.doctor_blacklisted == 0%}
                                     <td><input type = 'checkbox' disabled></td>
                                     {% else %}

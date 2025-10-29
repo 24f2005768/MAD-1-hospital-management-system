@@ -24,7 +24,7 @@
                     {% for a in all_appointments %}
                         <li>
                             <p>Patient Name: {{ a.slot_patient.patient_name }}</p>
-                            <p>Visit Patient Profile</p>
+                            <a href = '/admin/patient/{{ a.slot_patient.patient_id }}'>Visit Patient Profile</a>
                         </li>
                     {% endfor %}
                 </ol>

@@ -1,9 +1,10 @@
 CSS classes
 
 1. main-content: keep everything aligned and in middle
-2. wrapper
-3. profile-picture-display
-4. profile-content
+2. #align-items-in-centre: use with main-content to centre stuff
+3. wrapper
+4. profile-picture-display
+5. profile-content
 
 - Buttons and actions
 1. heading-actions: align heading and buttons

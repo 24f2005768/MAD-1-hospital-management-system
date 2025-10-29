@@ -36,10 +36,14 @@
         </div>
     </header>
 
-        <div class = 'main-content'>
+        <div class = 'main-content' id = 'align-items-in-centre'>
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
-                    <img src ="{{ url_for('static',filename='images/1.jpg') }}" alt="Profile Picture" height="240px" width="300px">
+                    {% if doctor.doctor_gender == 'Male' %}
+                        <img src ="{{ url_for('static',filename='images/MaleDoctor.jpg') }}" alt="Profile Picture" height="240px" width="300px">
+                    {% else %}
+                        <img src ="{{ url_for('static',filename='images/FemaleDoctor.jpg') }}" alt="Profile Picture" height="240px" width="300px">
+                    {% endif %}
                 </div>
 
                 <div class = 'profile-content'>

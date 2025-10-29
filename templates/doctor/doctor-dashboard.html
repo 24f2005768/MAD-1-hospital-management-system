@@ -9,23 +9,27 @@
 
 <body>
     <header>
-        <h1>LDH Hospital</h1>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
 
-        <div class = 'search_bar'>
-            
-            <form action = '/admin/search' method = 'POST'>
-                <div>
-                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/admin/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
 
-                    <datalist id = 'search_list'>
-                        {% for patient in patients %}
-                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
-                        {% endfor %}
-                    </datalist>
+                            <datalist id = 'search_list'>
+                                {% for patient in patients %}
+                                    <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
+                                {% endfor %}
+                            </datalist>
 
-                    <input type ="submit" value = "Search">
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </header>
     
@@ -57,12 +61,12 @@
             </div>
 
             <div class = 'doctor-appointments-ribbon'>
-                <button onclick = 'hideShowToday()' id = 'doctor-appointments-buttons' class = 'buttons'>Today</button>
-                <button onclick = 'hideShowThisWeek()' id = 'doctor-appointments-buttons' class = 'buttons'>This Week</button>
-                <button onclick = 'hideShowPastAppointments()' id = 'doctor-appointments-buttons' class = 'buttons'>Past Appointments</button>
+                <button onclick = 'hideShowToday()' id = 'doctor-appointments-buttons-today' class = 'doctor-appointments-buttons' style="background-color: #989aca;">Today</button>
+                <button onclick = 'hideShowThisWeek()' id = 'doctor-appointments-buttons-week' class = 'doctor-appointments-buttons'>This Week</button>
+                <button onclick = 'hideShowPastAppointments()' id = 'doctor-appointments-buttons-past' class = 'doctor-appointments-buttons'>Past Appointments</button>
             </div>
 
-            <div id = 'todays-appointments'>
+            <div id = 'todays-appointments' style = 'margin-top: 12px;'>
                 {% if appointments_today | length == 0 %}
                     <p>No appointments scheduled today</p>
                 {% else %}
@@ -86,7 +90,7 @@
                 {% endif %}
             </div>
 
-            <div id = 'this-weeks-appointments' style ="display: none;">
+            <div id = 'this-weeks-appointments' style ="display: none; margin-top: 12px">
                 {% if appointments_this_week | length == 0 %}
                     <p>No appointments scheduled this week</p>
                 {% else %}
@@ -102,7 +106,7 @@
                             {% for a in appointments_this_week %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.date.strftime('%d/%m/%y') }}</td>
                                     <td>{{ a.slot_patient.patient_name }}</td>
                                     <td>{{ a.s_sch.slot_name }}</td>
                                 </tr>
@@ -112,7 +116,7 @@
                 {% endif %}
             </div>
 
-            <div id = 'past-appointments' style ="display: none;">
+            <div id = 'past-appointments' style ="display: none; margin-top: 12px;">
                 {% if past_appointments | length == 0 %}
                     <p>No Past appointments</p>
                 {% else %}
@@ -128,7 +132,7 @@
                             {% for a in past_appointments %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ a.date }}</td>
+                                    <td>{{ a.date.strftime('%d/%m/%y') }}</td>
                                     <td>{{ a.slot_patient.patient_name }}</td>
                                     <td>{{ a.s_sch.slot_name }}</td>
                                 </tr>
@@ -143,9 +147,14 @@
         <div style = 'margin-top: 50px; width: 100%;'>
             <div class = 'heading-actions'>
                 <h2>Availablility</h2>
+
+                <div class = 'action-buttons'>
+                    <a href = '/doctor/provide_slots/{{ doctor.doctor_id }}' class = 'buttons'>Provide Availablility</a>
+                </div>
+
             </div>
 
-                {% if availabilty_list | length <= 0 %}
+                {% if availabilty_list | length == 0 %}
                     <p>Not provided</p>
 
                 {% else %}
@@ -161,7 +170,7 @@
                             {% for s in availabilty_list %}
                                 <tr>
                                     <td><a href = '/doctor/patients-by-slot/{{ doctor.doctor_id }}/{{ s.schedule_id }}'>{{ loop.index }}</a></td>
-                                    <td>{{ s.date }}</td>
+                                    <td>{{ s.date.strftime('%d/%m/%y') }}</td>
                                     <td>{{ s.s_sch.slot_name }}</td>
                                     <td>{{ slot_patients_dict[s.date][s.schedule_slot_id] }}</td>
                                 </tr>
@@ -170,8 +179,6 @@
                     </table>
 
                 {% endif %}
-
-                <a href = '/doctor/provide_slots/{{ doctor.doctor_id }}'>Provide Availablility</a>
         </div>
 
         <div style ="margin-top: 50px; width: 100%;">
@@ -211,11 +218,17 @@
         var todays_appointments = document.getElementById('todays-appointments');
         var weeks_appointments = document.getElementById('this-weeks-appointments');
         var past_appointments = document.getElementById('past-appointments');
+        var today_appointment_color_change = document.getElementById('doctor-appointments-buttons-today');
+        var weeks_appointment_color_change = document.getElementById('doctor-appointments-buttons-week');
+        var past_appointment_color_change = document.getElementById('doctor-appointments-buttons-past');
         
         function hideShowToday() {
             todays_appointments.style.display = 'block';
             weeks_appointments.style.display = 'none';
             past_appointments.style.display = 'none';
+            today_appointment_color_change.style.backgroundColor = '#989aca';
+            weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            past_appointment_color_change.style.backgroundColor = '#d6d7fa';
 
         }
 
@@ -223,12 +236,18 @@
             todays_appointments.style.display = 'none';
             weeks_appointments.style.display = 'block';
             past_appointments.style.display = 'none';
+            weeks_appointment_color_change.style.backgroundColor = '#989aca';
+            today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            past_appointment_color_change.style.backgroundColor = '#d6d7fa';
         }
 
         function hideShowPastAppointments() {
             todays_appointments.style.display = 'none';
             weeks_appointments.style.display = 'none';
             past_appointments.style.display = 'block';
+            past_appointment_color_change.style.backgroundColor = '#989aca';
+            today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
         }
     </script>
 

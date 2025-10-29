@@ -283,40 +283,10 @@ if slot_for_doctor2.slot_patient_id != None:
 
 db.session.commit()
 '''
-did = 3
-slots = Slot.query.all()
+doctors = Doctor.query.all()
+appointment_dict = {i: len(SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == i.doctor_id, SlotSchedules.date >= date_today)).all()) for i in doctors}
+print(appointment_dict)
 
-# from database
-past_state = SlotSchedules.query.filter(and_(SlotSchedules.date > date_today, SlotSchedules.slot_doctor_id == did, SlotSchedules.slot_patient_id != None)).all()
-# print(past_state)
-
-past_state_list = []
-delete_past_appointments_list = []
-for p in past_state:
-    past_state_list += [(str(p.schedule_slot_id), p.date.strftime("%Y-%m-%d"))]
-    delete_past_appointments_list += [(p.schedule_id, p.slot_patient_id)]
-print(past_state_list)
-# print(delete_past_appointments_list)
-
-# from html
-present_state = {'1': ['2025-11-02', '2025-11-04'], '3': ['2025-11-02', '2025-11-03', '2025-11-04'], '2': ['2025-11-03']}
-present_state_list = []
-for pr in present_state.keys():
-    for i in range(len(present_state[pr])):
-        present_state_list += [(pr, present_state[pr][i])]
-print(present_state_list)
-
-unionList = []
-deleteList = []
-
-for i in present_state_list:
-    if (i not in unionList) and (i in past_state_list): #add patients and store separately in a list, then later delete
-        unionList += [i]
-    elif (i not in unionList) and (i not in past_state_list): #add directly
-        unionList += [i]
-
-
-for j in past_state_list:
-    if (j not in deleteList) and (j not in present_state_list):
-        deleteList += [j]
-print(deleteList)
+did = 2
+slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).all()
+print(slots)

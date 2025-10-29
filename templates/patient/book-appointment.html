@@ -38,47 +38,86 @@
     </header>
 
         <div class = 'main-content'>
+            <div class = 'centered-headings'>
+                <h2>Book an Appointment</h2>
+            </div>
 
             <div class = 'info-cards'>
                 {% for d in departments %}
                     <div class = 'info-card-details'>
-                        <!-- <a href = '/department/{{ d.department_id }}' class = 'info-card-texts clickable-links' id = 'dept-card'>{{d.department_name}}</a> -->
-                        <button id = '{{ d.department_name }}' onclick = "hideShowDept()"><a href = '/department/{{ d.department_id }}' class = 'info-card-texts clickable-links' id = 'dept-card'>{{d.department_name}}</a></button>
+                        <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
                     </div>
                 {% endfor %}
             </div>
 
             <div>
-                {% for doctor in doctors %}
-                    <div id = '{{ doctor.dept.department_name }}'>
-                        <div class = 'heading-actions'>
-                            <h3>{{ doctor.doctor_name }}</h3>
-
-                            <div class = 'action-buttons'>
-                                <a href = '/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
-                            </div>
-                        </div>
-
-                        <table>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Date</th>
-                                    </tr>
-
-                            {% for s in slots %}
-                                {% if s.slot_doctor_id == doctor.doctor_id %}
-                                    <tr>
-                                        <td>{{ s.s_sch.slot_time }}</td>
-                                        <td>{{ s.date }}</td>
-                                    </tr>
-                                {% endif %}                            
-                            {% endfor %}
-                        </table>
+            {% for dept in departments %}
+                    {% if dept.doctors | length == 0 %}
+                    <div class = '{{ dept.department_id }} all_doctors' style = 'display: none;'>
+                        <p>No doctors to show</p>
                     </div>
+                    
+                    {% else %}
+                        {% for doctor in dept.doctors %}
+                            <div class = '{{ doctor.dept.department_id }} all_doctors' style = 'display: none;'>
+                                <div class = 'heading-actions'>
+                                    <h3>{{ doctor.doctor_name }}</h3>
+
+                                    <div class = 'action-buttons'>
+                                        <a class = 'buttons' href = '/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                    </div>
+                                </div>
+
+                                <table>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Slot</th>
+                                        <th>Time</th>
+                                    </tr>
+                                    {% if appointment_dict[doctor] != 0 %}
+                                        {% for s in slots %}
+                                                {% if s.slot_doctor_id == doctor.doctor_id %}
+                                                    <tr>
+                                                        <td>{{ s.date.strftime('%d/%m/%y') }}</td>
+                                                        <td>{{ s.s_sch.slot_name }}</td>
+                                                        <td>{{ s.s_sch.slot_time }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td>--</td>
+                                            <td>--</td>
+                                            <td>--</td>
+                                        </tr>
+                                    {% endif %}                                           
+                                </table>
+                            </div>
+                        {% endfor %}
+
+                    {% endif %}
                 {% endfor %}
-            </div>
+                </div>
 
         </div>
+
+    <script>
+        
+        function hideShowDept(dept_id) {
+            var dept_doctors = document.getElementsByClassName(dept_id);
+            var all_doc = document.getElementsByClassName('all_doctors');
+            for (doc of all_doc) {
+                if (doc.classList.contains(dept_id)) {
+                    doc.style.display = 'block';
+                }
+
+                else {
+                    doc.style.display = 'none';
+                }
+            }
+
+        }
+    </script>
 
     <footer>
         &copy;  2025 LDH Hospital

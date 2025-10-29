@@ -76,7 +76,7 @@
                     {% for a in upcoming_appointments %}
                     <tr>
                         <td>{{ a.appointment_id }}</td>
-                        <td>{{ a.date_time }}</td>
+                        <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
                         <td><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{a.d_ref.doctor_name}}</a></td>
                     </tr>
                     {% endfor %}

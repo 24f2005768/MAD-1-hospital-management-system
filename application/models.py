@@ -43,6 +43,7 @@ class Doctor(db.Model):
     doctor_blacklisted = db.Column(db.Boolean, default = False)
     doctor_desc = db.Column(db.String)
     doctor_profile_picture = db.Column(db.Integer, default = 1)
+    doctor_gender = db.Column(db.String)
 
     department_id = db.Column(db.Integer, db.ForeignKey(Department.department_id))
     doctor_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
@@ -109,6 +110,7 @@ class SlotSchedules(db.Model):
     slot_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
     slot_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
     schedule_slot_id = db.Column(db.Integer, db.ForeignKey('slot.slot_id'))
+    status = db.Column(db.String)
 
     slot_doctor = db.relationship('Doctor', back_populates = 'doctor_slot')
     slot_patient = db.relationship('Patient', back_populates = 'patient_slot')

@@ -52,7 +52,7 @@
 
                     {% for s in doctor_slots %}
                         <div>
-                            <label>{{ s.date }}</label>
+                            <label>{{ s.date.strftime('%d/%m/%y') }}</label>
                             <input type = 'checkbox' value = '{{ s.schedule_id }}' name = '{{ s.schedule_id }}'>{{ s.s_sch.slot_time }}
                         </div>
                     {% endfor %}

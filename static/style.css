@@ -5,7 +5,6 @@ header {
     background-color: #313866;
     padding-left: 15px;
     width: 100vw;
-    justify-self: start;
     /* top: 0; */
     /* position: fixed; */
     margin-top: 0px;
@@ -46,7 +45,7 @@ table {
 }
 
 tr:nth-child(odd) {
-    background-color: #f5d4f3;
+    background-color: #ffe0ea;
 }
 
 td {
@@ -56,9 +55,13 @@ td {
 }
 
 th {
-    background-color: #774c71;
+    background-color: #ce6a8a;
     color: white;
     font-size: 17px;
+}
+
+tr:hover {
+  background-color: #dbd9d9;
 }
 
 input {
@@ -89,6 +92,20 @@ footer {
 
 #dept-card {
     font-size: 17px;
+}
+
+#align-items-in-centre {
+    justify-content: center;
+}
+
+.doctor-appointments-buttons {
+    width: 33%;
+    height: 45px;
+    border-radius: 0;
+    text-decoration: none;
+    background-color: #d6d7fa;
+    border: none; 
+    cursor: pointer;
 }
 
 #message {
@@ -209,7 +226,7 @@ footer {
     min-width: 95px;
     height: 80px;
     border-radius: 15px;
-    font-size: 10px;
+    font-size: 15px;
     /* filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.8)) */
 
 }
@@ -327,7 +344,7 @@ footer {
     display: flex;
     align-items: center;
     height: 6vh;
-    background: #d6d7fa;
+    /* background: #d6d7fa; */
     justify-content: space-around;
     flex-direction: row;
 }
@@ -339,3 +356,4 @@ footer {
 .profile-picture-display {
     width: 30vw
 }
+
