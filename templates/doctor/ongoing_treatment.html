@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongoing Treatment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/doctor/{{ doctor.doctor_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div class = 'centered-headings'>
+                <h2>Add Appointment Details</h2>
+            </div>
+            <!-- <div class = 'profile-picture-display'> -->
+                <h3>Patient Details</h3>
+                <div class = "patient-info-details">
+                    <div>
+                        <p>Name: {{ patient.patient_name }}</p>
+                        <p>Age: {{ patient.patient_age }}</p>
+                        <p>Gender: {{ patient.patient_gender }}</p>
+                    </div>
+                    <div>
+                        <p>Height: {{ patient.patient_height }} cm</p>
+                        <p>Weight: {{ patient.patient_weight }} kg</p>
+                        <p>Last Visit: {{ last_visit }}</p>
+                    </div>
+                </div>
+            <!-- </div> -->
+
+            <div class = 'treatment_details'>
+                <form action = '' method = 'POST' class = 'treatment_details_form'>
+                    <h3>Treatment Details</h3>
+                    <div class = 'treatment-form-details'>
+                        <label for = 'diagnosis'>Diagnosis</label>
+                        <input type = 'text' name = 'diagnosis'/>
+                    </div>    
+                                
+                    <div class = 'treatment-form-details'>
+                        <label for = 'notes'>Notes</label>
+                        <input type = 'text' name = 'notes'/>
+                    </div>    
+
+                    <div class = 'treatment-form-details'>
+                        <label for = 'prescription'>Prescription</label>
+                        <input type = 'text' name = 'prescription'/>
+                    </div> 
+
+                    <div class = 'treatment-form-details'>
+                        <label for = 'tests'>Tests</label>
+                        <input type = 'text' name = 'tests'/>
+                    </div>    
+
+                    <input type = 'submit' value = 'Add' class = 'login-button'>
+                </form>
+            </div>
+
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

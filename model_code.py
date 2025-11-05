@@ -2,47 +2,47 @@ from app import *
 
 # # if database file is deleted, run this file to populate db
 
-
+# , patient_height = , patient_weight = , patient_blood_pressure = , patient_blood_sugar_level =
 # patients 
 
 user1 = User(user_name = 'Shr_arya', user_password = '921369', user_role = 'Patient')
-user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male')
+user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male' , patient_height = 186, patient_weight = 65)
 
 user2 = User(user_name = 'Little_deer', user_password = 'kriti', user_role = 'Patient')
-user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female')
+user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female', patient_height = 168, patient_weight = 60)
 
 user3 = User(user_name = 'Mummy', user_password = 'mom', user_role = 'Patient')
-user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 48, patient_gender = 'Female')
+user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 48, patient_gender = 'Female', patient_height = 162, patient_weight = 75)
 
 user4 = User(user_name = 'Aadi', user_password = 'aadi', user_role = 'Patient')
-user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male')
+user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male', patient_height = 183, patient_weight = 64)
 
 user5 = User(user_name = 'Shruti', user_password = 'shruti', user_role = 'Patient')
-user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female')
+user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female', patient_height = 170, patient_weight = 65)
 
 user6 = User(user_name = 'Dheeraj', user_password = 'dheeraj', user_role = 'Patient')
-user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male') 
+user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male', patient_height = 155, patient_weight = 52) 
 
 user7 = User(user_name = 'Jason', user_password = 'jason', user_role = 'Patient')
-user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 12, patient_gender = 'Male') 
+user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 12, patient_gender = 'Male', patient_height = 166, patient_weight = 68) 
 
 user8 = User(user_name = 'Tom', user_password = 'tom', user_role = 'Patient')
-user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male') 
+user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male', patient_height = 175, patient_weight = 98) 
 
 user9 = User(user_name = 'Viena', user_password = 'viena', user_role = 'Patient')
-user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female') 
+user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70) 
 
 user10 = User(user_name = 'Kashish', user_password = 'kashish', user_role = 'Patient')
-user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female') 
+user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82) 
 
 user11 = User(user_name = 'Rudraksh', user_password = 'rudraksh', user_role = 'Patient')
-user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male') 
+user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male', patient_height = 56, patient_weight = 4.5) 
 
 user12 = User(user_name = 'Vipul', user_password = 'vipul', user_role = 'Patient')
-user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male') 
+user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48) 
 
 user13 = User(user_name = 'Anamika', user_password = 'anamika', user_role = 'Patient')
-user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female') 
+user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25) 
 
 db.session.add(user1)
 db.session.add(user2)
@@ -154,24 +154,21 @@ available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doc
 
 book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient4.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
-appointment = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
-appointment.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient5.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
-appointment.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient3.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 
 # Slots and past appointment bookings for doctor 2
@@ -191,24 +188,21 @@ available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doc
 
 book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient2.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
-appointment = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
-appointment.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient1.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
-appointment.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient4.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 
 # Slots and past appointment bookings for doctor 3
@@ -228,31 +222,27 @@ available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doc
 
 book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient11.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
-appointment = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
-appointment.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient13.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
-db.session.add(appointment)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient10.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot4 = available_slots[3]
 book_slot4.slot_patient_id = patient12.patient_id
+book_slot4.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
+book_slot4.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines and Injections', notes = 'Admitted for 3 days', tests = '--', status = 'Completed')
 db.session.add(book_slot4)
-appointment = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
-appointment.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines and Injections', notes = 'Admitted for 3 days', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 
 # Slots and past appointment bookings for doctor 4
@@ -272,24 +262,21 @@ available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doc
 
 book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient13.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
-appointment = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
-appointment.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient12.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
-db.session.add(appointment)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient10.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
-appointment.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
-db.session.add(appointment)
 
 
 # Slots and past appointment bookings for doctor 5
@@ -309,31 +296,27 @@ available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doc
 
 book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient5.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Femur Fracture', prescription = 'Calcium Syrup', notes = 'Femur Fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot1)
-appointment = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
-appointment.t = Treatment(diagnosis = 'Femur Fracture', prescription = 'Calcium Syrup', notes = 'Femur Fracture due to accident', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient3.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
-appointment.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient2.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
-appointment.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
 book_slot4 = available_slots[3]
 book_slot4.slot_patient_id = patient1.patient_id
+book_slot4.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+book_slot4.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot4)
-appointment = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
-appointment.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
 
 # Slots and past appointment bookings for doctor 6
@@ -351,26 +334,23 @@ db.session.add(slot_for_doctor4)
 
 available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doctor.doctor_id).all()
 
-book_slot2 = available_slots[0]
-book_slot2.slot_patient_id = patient2.patient_id
+book_slot1 = available_slots[0]
+book_slot1.slot_patient_id = patient2.patient_id
+book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
+db.session.add(book_slot1)
+
+book_slot2 = available_slots[1]
+book_slot2.slot_patient_id = patient4.patient_id
+book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
+book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot2)
-appointment = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
-appointment.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
-book_slot3 = available_slots[1]
-book_slot3.slot_patient_id = patient4.patient_id
+book_slot3 = available_slots[2]
+book_slot3.slot_patient_id = patient1.patient_id
+book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot3)
-appointment = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
-appointment.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
-
-book_slot4 = available_slots[2]
-book_slot4.slot_patient_id = patient1.patient_id
-db.session.add(book_slot4)
-appointment = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
-appointment.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
-db.session.add(appointment)
 
 db.session.commit()
 

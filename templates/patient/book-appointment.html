@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
 </head>
 
 <body>
@@ -74,15 +75,13 @@
                                         <th>Slot</th>
                                         <th>Time</th>
                                     </tr>
-                                    {% if appointment_dict[doctor] != 0 %}
-                                        {% for s in slots %}
-                                                {% if s.slot_doctor_id == doctor.doctor_id %}
-                                                    <tr>
-                                                        <td>{{ s.date.strftime('%d/%m/%y') }}</td>
-                                                        <td>{{ s.s_sch.slot_name }}</td>
-                                                        <td>{{ s.s_sch.slot_time }}</td>
-                                                    </tr>
-                                                {% endif %}
+                                    {% if appointment_dict[doctor] | length != 0 %}
+                                        {% for s in appointment_dict[doctor] %}
+                                            <tr>
+                                                <td>{{ s.date.strftime('%d/%m/%y') }}</td>
+                                                <td>{{ s.s_sch.slot_name }}</td>
+                                                <td>{{ s.s_sch.slot_time }}</td>
+                                            </tr>
                                         {% endfor %}
                                     {% else %}
                                         <tr>
@@ -100,24 +99,6 @@
                 </div>
 
         </div>
-
-    <script>
-        
-        function hideShowDept(dept_id) {
-            var dept_doctors = document.getElementsByClassName(dept_id);
-            var all_doc = document.getElementsByClassName('all_doctors');
-            for (doc of all_doc) {
-                if (doc.classList.contains(dept_id)) {
-                    doc.style.display = 'block';
-                }
-
-                else {
-                    doc.style.display = 'none';
-                }
-            }
-
-        }
-    </script>
 
     <footer>
         &copy;  2025 LDH Hospital

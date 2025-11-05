@@ -9,7 +9,21 @@
 
 <body>
     <header>
-         <h1><a href = "/doctor/{{ doctor.doctor_id }}" class="page_heading_hyperlink">LDH Hospital</a></h1>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/doctor/{{ doctor.doctor_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </header>
 
         <div class = 'main-content'>
@@ -23,53 +37,96 @@
                         <p>Name: {{ patient.p_ref.patient_name }}</p>
                         <p>Age: {{ patient.p_ref.patient_age }}</p>
                         <p>Gender: {{ patient.p_ref.patient_gender }}</p>
+                        <p>Height: {{ patient.p_ref.patient_height }} cm</p>
+                        <p>Weight: {{ patient.p_ref.patient_weight }} kg</p>
                         <p>Contact Number: {{ patient.p_ref.contact_info }}</p>
                         <p>Email: {{ patient.p_ref.patient_email }}</p>
                         <p>Last Visit: {{ last_visit }}</p>
                     </div>
 
-                    <div class = 'profile-content'>
-                        <h3>Upcoming Appointments</h3>
-
-                        <div class = 'show-appointments'>
-                            {% if upcoming_appointments | length > 0 %}
-                                <ol>
-                                    {% for a in upcoming_appointments %}
-                                        <li>
-                                        <div class = 'list-items'>
-                                            <p><strong><i>{{ a.date_time }}</i></strong></p>
-                                            <div class = 'action-buttons'>
-                                                <a class = 'buttons' href = '/doctor/cancel-appointment/{{ doctor.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
-                                            </div>
-                                        </div>
-                                        <p>Status: {{ a.t.status }}</p>                        
-
-                                        </li>
-                                    {% endfor %}
-                                </ol>
-                            {% else %}
-                                <p><em>No upcoming appointments</em></p>
-                            {% endif %}
+                    <div class = 'doctor-dash-view-patient-appointments'>
+                        <div class = 'doctor-appointments-ribbon'>
+                            <button onclick = 'hideShowThisDoctor()' class = 'view-patient-appointment-buttons'>With {{ doctor.doctor_name }}</button>
+                            <button onclick = 'hideShowAllDoctors()' class = 'view-patient-appointment-buttons'>Complete Medical History</button>
                         </div>
 
-                        <h3>Past Appointments</h3>
-                        <div class = 'show-appointments'>
-                            <ol>
-                                {% for a in past_appointments %}
-                                <li>
-                                    <p><strong><i>{{ a.date_time }}</i></strong></p>
-                                    <p>Diagnosis: {{ a.t.diagnosis }}</p>
-                                    <p>Notes: {{ a.t.notes }}</p>
-                                    <p>Prescription: {{ a.t.prescription }}</p>
-                                    <p>Tests: {{ a.t.tests }}</p>
-                                </li>
-                                {% endfor %}
-                            </ol>
+                        <div id = 'show-doctor-appointments'>
+                            <h3>Upcoming Appointments</h3>
+
+                            <div class = 'show-appointments'>
+                                {% if upcoming_appointments | length > 0 %}
+                                    <ol>
+                                        {% for a in upcoming_appointments %}
+                                            <li>
+                                                <div class = 'list-items'>
+                                                    <p><strong><i>{{ a.date_time.strftime('%d/%m/%y') }}</i></strong></p>
+                                                    <div class = 'action-buttons'>
+                                                        <a class = 'buttons' href = '/doctor/cancel-appointment/{{ doctor.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
+                                                    </div>
+                                                </div>
+                                                <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
+                                                <p>Status: {{ a.t.status }}</p>                        
+
+                                            </li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    <p><em>No upcoming appointments</em></p>
+                                {% endif %}
+                            </div>
+
+                            <h3>Past Appointments</h3>
+                            <div class = 'show-appointments'>
+                                <ol>
+                                    {% for a in past_appointments %}
+                                    <li>
+                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%y') }}</i></strong></p>
+                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                                        <p>Notes: {{ a.t.notes }}</p>
+                                        <p>Prescription: {{ a.t.prescription }}</p>
+                                        <p>Tests: {{ a.t.tests }}</p>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div id = 'show-all-doctors-appointments' style ="display: none;">
+                            <h3>Complete Medical History</h3>
+                            <div class = 'show-appointments'>
+                                <ol>
+                                    {% for a in all_past_appointments %}
+                                    <li>
+                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%y') }}</i></strong></p>
+                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                                        <p>Notes: {{ a.t.notes }}</p>
+                                        <p>Prescription: {{ a.t.prescription }}</p>
+                                        <p>Tests: {{ a.t.tests }}</p>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                        </div>
                         </div>
                     </div>
             </div>
 
         </div>
+
+        <script>
+            var this_doctor_appointments = document.getElementById('show-doctor-appointments')
+            var all_doctor_appointments = document.getElementById('show-all-doctors-appointments')
+
+            function hideShowThisDoctor() {
+                this_doctor_appointments.style.display = 'block';
+                all_doctor_appointments.style.display = 'none';
+            }
+
+            function hideShowAllDoctors() {
+                this_doctor_appointments.style.display = 'none';
+                all_doctor_appointments.style.display = 'block';
+            }
+        </script>
 
     <footer>
         &copy;  2025 LDH Hospital

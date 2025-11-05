@@ -45,7 +45,7 @@ table {
 }
 
 tr:nth-child(odd) {
-    background-color: #ffe0ea;
+    background-color: #f0b4c734;
 }
 
 td {
@@ -61,7 +61,7 @@ th {
 }
 
 tr:hover {
-  background-color: #dbd9d9;
+  background-color: #f0b4c78c;
 }
 
 input {
@@ -354,6 +354,49 @@ footer {
 }
 
 .profile-picture-display {
-    width: 30vw
+    width: 30vw;
 }
 
+.patient-info-details {
+    display: flex;
+    width: 30vw;
+    flex-direction: row;
+    /* gap: 10px; */
+    justify-content: space-between;
+}
+
+.treatment_details {
+    width: 30vw;
+    display: flex;
+}
+
+.treatment_details_form {
+    width: 100%;
+}
+
+.treatment-form-details {
+    width: 100%;
+    gap: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.treatment-form-details > input {
+    /* flex-grow: 1; */
+    width: 320px;
+}
+
+.doctor-dash-view-patient-appointments {
+    width: 350px;
+}
+
+.view-patient-appointment-buttons {
+    width: 165px;
+    height: 40px;
+    border-radius: 0;
+    text-decoration: none;
+    background-color: #d6d7fa;
+    border: none; 
+    cursor: pointer;
+}

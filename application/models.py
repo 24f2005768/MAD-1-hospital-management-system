@@ -63,6 +63,8 @@ class Patient(db.Model):
     patient_blacklisted = db.Column(db.Boolean, default = False)
     patient_age = db.Column(db.Integer)
     patient_profile_picture = db.Column(db.Integer, default = 1)
+    patient_height = db.Column(db.String, default = '--')
+    patient_weight = db.Column(db.String, default = '--')
 
     patient_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
@@ -78,10 +80,12 @@ class Appointment(db.Model):
     t_id = db.Column(db.Integer, db.ForeignKey('treatment.treatment_id'))
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
+    s_sch_id = db.Column(db.Integer, db.ForeignKey('slot_schedules.schedule_id'))
 
     d_ref = db.relationship('Doctor', back_populates = 'appointment_d')
     p_ref = db.relationship('Patient', back_populates = 'appointment_p')
     t = db.relationship('Treatment', back_populates = 'ap', uselist = False)
+    appointment_sch = db.relationship('SlotSchedules', back_populates = 'slot_sch_appointment_rel')
 
 class Treatment(db.Model):
     __tablename__ = 'treatment'
@@ -115,3 +119,4 @@ class SlotSchedules(db.Model):
     slot_doctor = db.relationship('Doctor', back_populates = 'doctor_slot')
     slot_patient = db.relationship('Patient', back_populates = 'patient_slot')
     s_sch = db.relationship('Slot', back_populates = 's_schedule')
+    slot_sch_appointment_rel = db.relationship('Appointment', back_populates = 'appointment_sch', uselist = False)

@@ -283,10 +283,4 @@ if slot_for_doctor2.slot_patient_id != None:
 
 db.session.commit()
 '''
-doctors = Doctor.query.all()
-appointment_dict = {i: len(SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == i.doctor_id, SlotSchedules.date >= date_today)).all()) for i in doctors}
-print(appointment_dict)
 
-did = 2
-slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).all()
-print(slots)
