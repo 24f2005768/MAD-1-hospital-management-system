@@ -41,7 +41,9 @@
                         <h2>{{ doctor.doctor_name }}</h2>
                         <a href = '/doctor/{{ doctor.doctor_id }}/doctor-profile/update' class = 'action-buttons update-button'>Update Profile</a>
                     </div>
+
                     <p><strong>{{ doctor.dept.department_name }}</strong></p>
+                    
                     <div>
                         <span>Email: {{ doctor.doctor_email }}</span>
                         <span> &bullet; Contact Number: {{ doctor.doctor_contact_number }}</span>

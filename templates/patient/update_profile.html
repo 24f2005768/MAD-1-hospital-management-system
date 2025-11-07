@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Patient Profile</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div class = 'login-container'>
+                <h1>Update Profile</h1>
+                <form action = '/patient/{{ patient.patient_id }}/profile/update' method = 'POST'>
+                    <div class = 'update-form-details'>
+                        <label for = 'u_name'>User Name</label>
+                        <input type = 'text' name = 'u_name' value = '{{ patient.p.user_name }}' placeholder = "User Name"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'u_password'>User Password</label>
+                        <input type = 'password' name = 'u_password' value = '{{ patient.p.user_password }}' placeholder = "User Password"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'p_name'>Name</label>
+                        <input type = 'text' name = 'p_name' value = '{{ patient.patient_name }}' placeholder = "Name"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'email'>Email</label>
+                        <input type = 'text' name = 'email' value = '{{ patient.patient_email }}' placeholder = "Email"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'contact_info'>Contact Number</label>
+                        <input type = 'text' name = 'contact_info' value = '{{ patient.contact_info }}' placeholder = "Contact number"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'height'>Height</label>
+                        <input type = 'text' name = 'height' value = '{{ patient.patient_height }}' placeholder = "Height"/>
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'weight'>Weight</label>
+                        <input type = 'text' name = 'weight' value = '{{ patient.patient_weight }}' placeholder = "Weight"/>
+                    </div>
+
+                <input type ="submit" value = "Submit" class = 'login-button'>
+                            
+                </form>
+            </div>
+
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

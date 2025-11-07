@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <h2 id = 'message'>Search results for: {{ input_value }}</h2>
+
+            <div class = 'info-cards'>
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ doctors | length}}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p>
+                    </div>
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ departments | length}}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p>
+                    </div>
+
+                    <div class = 'info-card-details'>
+                        <p class = 'info-card-texts'>{{ patient_appointments | length}}</p>
+                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                    </div>
+            </div>
+
+            <div style ="margin-top: 50px;">
+                <h2>Doctors</h2>
+                {% if doctors | length == 0 %}
+                    <p>No results found</p>
+                {% else %}
+                    <ol>
+                        {% for doctor in doctors %}
+                            <li>
+                                <div class = 'wrapper'>
+                                    <div class = 'profile-picture-display'>
+                                        {{ profile_picture }}
+                                    </div>
+
+                                    <div class = 'profile-content'>
+                                        <p><strong><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></strong></p>
+                                        <p>Department: {{ doctor.dept.department_name }}</p>
+                                        <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
+                                        <p>Email: {{ doctor.doctor_email }}</p>
+                                        <p>Description: {{ doctor.doctor_desc }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </div>
+
+            <div style ="margin-top: 50px;">
+                <h2>Departments</h2>
+                {% if departments | length == 0 %}
+                    <p>No results found</p>
+                {% else %}
+                    <ol>
+                        {% for dept in departments %}
+                            <li>
+                                <div class = 'wrapper'>
+                                    <div class = 'profile-picture-display'>
+                                        <img src = '{{ photo }}' alt = 'Department Picture' height="110px" width="170px">
+                                    </div>
+
+                                    <div class = 'profile-content'>
+                                        <p><strong><a href = '/patient/{{ patient.patient_id }}/view-dept/{{ dept.department_id }}'>{{ dept.department_name }}</a></strong></p>
+                                        <p>Description: {{ dept.department_description }}</p>
+                                        <span>Our Doctors: </span>
+                                        {% for doc in dept.doctors %}
+                                            <span><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doc.doctor_id }}'>{{ doc.doctor_name }}</a></span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+
+            </div>
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

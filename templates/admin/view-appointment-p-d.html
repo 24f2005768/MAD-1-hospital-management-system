@@ -73,7 +73,7 @@
                     {% for a in upcoming_appointments %}
                     <tr>
                         <td>{{ a.appointment_id }}</td>
-                        <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
+                        <td>{{ a.date_time.strftime('%d/%m/%Y') }}</td>
                         <td>{{ a.t.status }}</td>
                     </tr>
                     {% endfor %}
@@ -105,7 +105,7 @@
                     {% for a in past_appointments %}
                         <tr>
                             <td>{{ a.appointment_id }}</td>
-                            <td>{{ a.date_time.strftime('%d/%m/%y') }}</td>
+                            <td>{{ a.date_time.strftime('%d/%m/%Y') }}</td>
                             <td>{{ a.t.diagnosis }}</td>
                             <td>{{ a.t.notes }}</td>
                             <td>{{ a.t.prescription }}</td>

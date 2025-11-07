@@ -60,7 +60,7 @@
                             <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
                             <td>{{a.p_ref.patient_name}}</td>
                             <td>{{a.d_ref.doctor_name}}</td>
-                            <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
+                            <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
                         </tr>
                         {% endfor %}
                     {% else %}
@@ -93,7 +93,7 @@
                         <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
                         <td>{{a.p_ref.patient_name}}</td>
                         <td>{{a.d_ref.doctor_name}}</td>
-                        <td>{{a.date_time.strftime('%d/%m/%y')}}</td>
+                        <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
                         <td>{{a.t.status}}</td>
                     </tr>
                     {% endfor %}

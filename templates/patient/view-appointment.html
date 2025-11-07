@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointment Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div class = 'centered-headings'>
+                <h2>Appointment Details</h2>
+            </div>
+            
+            <div class = 'main-content' id = 'align-items-in-centre'>
+                <div class = 'wrapper'>
+                    <div class = 'profile-picture-display'>
+                        <p><strong>Doctor:</strong> {{ appointment.slot_doctor.doctor_name }}</p>
+                        <p><strong>Department:</strong> {{ appointment.slot_doctor.dept.department_name }}</p>
+                    </div>
+
+                    <div class = 'profile-content'>
+                        <p><strong>Date:</strong> {{ appointment.date.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Slot:</strong> {{ appointment.s_sch.slot_name }} ({{ appointment.s_sch.slot_time }})</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    {% if appointment.slot_sch_appointment_rel.t.status == 'Completed' %}
+                        <p><strong>Diagnosis:</strong> {{ appointment.slot_sch_appointment_rel.t.diagnosis }}</p>
+                        <p><strong>Doctor Notes:</strong> {{ appointment.slot_sch_appointment_rel.t.notes }}</p>
+                        <p><strong>Prescription:</strong> {{ appointment.slot_sch_appointment_rel.t.prescription }}</p>
+                        <p><strong>Tests:</strong> {{ appointment.slot_sch_appointment_rel.t.tests }}</p>
+                    {% else %}
+                        <p>Doctor is yet to provide appointment details</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

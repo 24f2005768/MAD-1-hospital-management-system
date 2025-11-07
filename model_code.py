@@ -6,43 +6,43 @@ from app import *
 # patients 
 
 user1 = User(user_name = 'Shr_arya', user_password = '921369', user_role = 'Patient')
-user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male' , patient_height = 186, patient_weight = 65)
+user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male' , patient_height = 186, patient_weight = 65, patient_dob = date(2007, 10, 3))
 
 user2 = User(user_name = 'Little_deer', user_password = 'kriti', user_role = 'Patient')
-user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female', patient_height = 168, patient_weight = 60)
+user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female', patient_height = 168, patient_weight = 60, patient_dob = date(2004, 9, 18))
 
 user3 = User(user_name = 'Mummy', user_password = 'mom', user_role = 'Patient')
-user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 48, patient_gender = 'Female', patient_height = 162, patient_weight = 75)
+user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 47, patient_gender = 'Female', patient_height = 162, patient_weight = 75, patient_dob = date(1976, 6, 22))
 
 user4 = User(user_name = 'Aadi', user_password = 'aadi', user_role = 'Patient')
-user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male', patient_height = 183, patient_weight = 64)
+user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male', patient_height = 183, patient_weight = 64, patient_dob = date(2005, 10, 4))
 
 user5 = User(user_name = 'Shruti', user_password = 'shruti', user_role = 'Patient')
-user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female', patient_height = 170, patient_weight = 65)
+user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female', patient_height = 170, patient_weight = 65, patient_dob = date(2001, 8, 10))
 
 user6 = User(user_name = 'Dheeraj', user_password = 'dheeraj', user_role = 'Patient')
-user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male', patient_height = 155, patient_weight = 52) 
+user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male', patient_height = 155, patient_weight = 52, patient_dob = date(1984, 3, 11)) 
 
 user7 = User(user_name = 'Jason', user_password = 'jason', user_role = 'Patient')
-user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 12, patient_gender = 'Male', patient_height = 166, patient_weight = 68) 
+user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 32, patient_gender = 'Male', patient_height = 166, patient_weight = 68, patient_dob = date(2013, 4, 13)) 
 
 user8 = User(user_name = 'Tom', user_password = 'tom', user_role = 'Patient')
-user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male', patient_height = 175, patient_weight = 98) 
+user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male', patient_height = 175, patient_weight = 98, patient_dob = date(2003, 5, 4)) 
 
 user9 = User(user_name = 'Viena', user_password = 'viena', user_role = 'Patient')
-user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70) 
+user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70, patient_dob = date(1994, 10, 7)) 
 
 user10 = User(user_name = 'Kashish', user_password = 'kashish', user_role = 'Patient')
-user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82) 
+user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82, patient_dob = date(2014, 11, 6)) 
 
 user11 = User(user_name = 'Rudraksh', user_password = 'rudraksh', user_role = 'Patient')
-user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male', patient_height = 56, patient_weight = 4.5) 
+user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male', patient_height = 56, patient_weight = 4.5, patient_dob = date(2024, 9, 4)) 
 
 user12 = User(user_name = 'Vipul', user_password = 'vipul', user_role = 'Patient')
-user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48) 
+user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48, patient_dob = date(2010, 1, 4)) 
 
 user13 = User(user_name = 'Anamika', user_password = 'anamika', user_role = 'Patient')
-user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25) 
+user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25, patient_dob = date(2018, 7, 30)) 
 
 db.session.add(user1)
 db.session.add(user2)
@@ -64,11 +64,11 @@ dept1 = Department(department_name = 'Cardiology', department_description = 'LDH
 db.session.add(dept1)
 
 user1 = User(user_name = 'Ganesh_heart', user_password = 'ganesh', user_role = 'Doctor')
-user1.doctor_relationship = Doctor(doctor_name = 'Ganesh Rathi', doctor_contact_number = '5746160792', doctor_gender = 'Male',
+user1.doctor_relationship = Doctor(doctor_name = 'Ganesh Rathi', doctor_contact_number = '5746160792', doctor_gender = 'Male', doctor_dob = date(1978, 3, 12),
                                    doctor_email = 'g@email.com', department_id = 1, doctor_desc = "Dr. Ganesh is a board-certified cardiologist with over 25 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Ganesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
 
 user2 = User(user_name = 'Vignesh_heart', user_password = 'vignesh', user_role = 'Doctor')
-user2.doctor_relationship = Doctor(doctor_name = 'Vignesh Kumar', doctor_contact_number = '8166956143', doctor_gender = 'Male',
+user2.doctor_relationship = Doctor(doctor_name = 'Vignesh Kumar', doctor_contact_number = '8166956143', doctor_gender = 'Male', doctor_dob = date(1966, 2, 14),
                                    doctor_email = 'v@email.com', department_id = 1, doctor_desc = "Dr. Vignesh is a board-certified cardiologist with over 7 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Vignesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
 
 
@@ -77,11 +77,11 @@ dept2 = Department(department_name = 'Pediatrics', department_description = "LDH
 db.session.add(dept2)
 
 user3 = User(user_name = 'Preeti_pediatrics', user_password = 'preeti', user_role = 'Doctor')
-user3.doctor_relationship = Doctor(doctor_name = 'Preeti Rai', doctor_contact_number = '9370595052', doctor_gender = 'Female',
+user3.doctor_relationship = Doctor(doctor_name = 'Preeti Rai', doctor_contact_number = '9370595052', doctor_gender = 'Female', doctor_dob = date(1988, 3, 17),
                                    doctor_email = 'p@email.com', department_id = 2, doctor_desc = "Dr. Preeti is a board-certified pediatrician with over 19 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for her warm and compassionate approach, she specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Preeti believes in building strong, trusting relationships with both her young patients and their families to foster a lifetime of good health.")
 
 user4 = User(user_name = 'Raju_pediatrics', user_password = 'raju', user_role = 'Doctor')
-user4.doctor_relationship = Doctor(doctor_name = 'Raju Desai', doctor_contact_number = '7996673737', doctor_gender = 'Male',
+user4.doctor_relationship = Doctor(doctor_name = 'Raju Desai', doctor_contact_number = '7996673737', doctor_gender = 'Male', doctor_dob = date(1973, 5, 8),
                                    doctor_email = 'r@email.com', department_id = 2, doctor_desc = "Dr. Raju is a board-certified pediatrician with over 10 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for his warm and compassionate approach, he specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Raju believes in building strong, trusting relationships with both his young patients and their families to foster a lifetime of good health.")
 
 
@@ -90,11 +90,11 @@ dept3 = Department(department_name = 'General Surgery', department_description =
 db.session.add(dept3)
 
 user5 = User(user_name = 'Dev_surgery', user_password = 'dev', user_role = 'Doctor')
-user5.doctor_relationship = Doctor(doctor_name = 'Dev Sharma', doctor_contact_number = '1059832795', doctor_gender = 'Male',
+user5.doctor_relationship = Doctor(doctor_name = 'Dev Sharma', doctor_contact_number = '1059832795', doctor_gender = 'Male', doctor_dob = date(1998, 4, 10),
                                    doctor_email = 'd@email.com', department_id = 3, doctor_desc = "Dr. Dev is a board-certified General Surgeon with over 15 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Dev is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
 
 user6 = User(user_name = 'Vikas_surgery', user_password = 'vikas', user_role = 'Doctor')
-user6.doctor_relationship = Doctor(doctor_name = 'Vikas Jindal', doctor_contact_number = '2073880656', doctor_gender = 'Male',
+user6.doctor_relationship = Doctor(doctor_name = 'Vikas Jindal', doctor_contact_number = '2073880656', doctor_gender = 'Male', doctor_dob = date(1980, 6, 12),
                                    doctor_email = 'vk@email.com', department_id = 3, doctor_desc = "Dr. Vikas is a board-certified General Surgeon with over 13 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Vikas is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
 
 dept4 = Department(department_name = 'Gastrology', department_description = "LDH's Gastrology department is dedicated to providing high-quality, comprehensive care for a wide spectrum of gastrointestinal conditions, including colon cancer, acid reflux, and other complex digestive disorders. We offer a full range of advanced diagnostic and therapeutic procedures to accurately identify and effectively manage issues affecting your digestive health. Our expertise also extends to personalized nutritional guidance, ensuring a holistic approach to your well-being. You can trust our specialized team to deliver exceptional, patient-centered care for all your digestive health needs.")
@@ -355,3 +355,4 @@ db.session.add(book_slot3)
 db.session.commit()
 
 # Future Slots 
+

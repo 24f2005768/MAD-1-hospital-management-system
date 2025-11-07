@@ -44,7 +44,7 @@
 
                             <tr>
                                 {% for d in list_of_next_7_dates %}
-                                        <td>{{ d.strftime('%d/%m/%y') }}</td>
+                                        <td>{{ d.strftime('%d/%m/%Y') }}</td>
                                         {% for s in slots %}
                                             {% if appointments_dict[d][s] | length > 0 %}
                                                 <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' checked>{{ s.slot_time }}</td>

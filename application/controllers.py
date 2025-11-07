@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from sqlalchemy import and_, or_, distinct
 from application.models import *
 from app import app
 import datetime
-import os
-
+from dateutil.relativedelta import relativedelta
 date_today = date.today()
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -207,6 +206,8 @@ def update_doctor(did):
         blacklisted = request.form['blacklist']
         if blacklisted == 'True':
             new_data.doctor_blacklisted = True
+            notification = AdminDoctorNotifications(message_doctor_id = new_data.doctor_id,admin_doctor_message_type = 'Blacklisted Warning', admin_doctor_message_content = 'You have been temporarily blacklisted.')
+            db.session.add(notification)
         else:
             new_data.doctor_blacklisted = False
         db.session.commit()
@@ -268,6 +269,8 @@ def update_patient(pid):
         blacklisted = request.form['blacklist']
         if blacklisted == 'True':
             new_data.patient_blacklisted = True
+            notification = AdminPatientNotifications(message_patient_id = new_data.patient_id, admin_patient_message_type = 'Blacklisted Warning', admin_patient_message_content = 'You have been temporarily blacklisted.')
+            db.session.add(notification)
         else:
             new_data.patient_blacklisted = False
 
@@ -321,12 +324,12 @@ def search():
             appointments_by_doctor_name = []
             appointments_by_patient_name = []
 
-            patients = Patient.query.filter(Patient.patient_name == input_value).all()
+            patients = Patient.query.filter(Patient.patient_name.like(f'%{input_value}%')).all()
             if patients != []:
                 for patient in patients:
                     appointments_by_patient_name = Appointment.query.filter(Appointment.patient_id == patient.patient_id).all()
 
-            doctors = Doctor.query.filter(Doctor.doctor_name == input_value).all()
+            doctors = Doctor.query.filter(Doctor.doctor_name.like(f'%{input_value}%')).all()
             if doctors != []:
                 for doctor in doctors:
                     appointments_by_doctor_name = Appointment.query.filter(Appointment.doctor_id == doctor.doctor_id).all()
@@ -358,7 +361,6 @@ def doctor_dashboard(did):
 
         doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
         patients = Appointment.query.filter(Appointment.doctor_id == did).all()
-        # availabilty = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today, SlotSchedules.slot_patient_id != None)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
         availabilty = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
 
         # patients who have booked an appointment with doctor atleast once
@@ -488,14 +490,25 @@ def update_treatment_details(tid, did):
 @app.route('/doctor/cancel-appointment/<int:did>/<int:tid>', methods = ['GET'])
 def cancel_appointment_doctor(tid, did):
     treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
+    appointment = treatment.ap[0].appointment_sch
     doctor = db.get_or_404(Doctor, did)
     patient = treatment.ap[0].p_ref
     if treatment.status == 'Booked':
         treatment.status = 'Cancelled'
-        db.session.commit()
+    # notify the patient that the doctor has cancelled the appointment
+    notification = PatientDoctorNotifications(role = 'Doctor', m_doctor_id = appointment.slot_doctor_id, m_patient_id = patient.patient_id, message_type = 'Appointment Cancelled', message_content = f'Your appointment scheduled on { appointment.date } ({ appointment.s_sch.slot_name }) with Dr. { doctor.doctor_name } was cancelled.')
+    db.session.add(notification)
+    db.session.commit()
 
     return redirect(f"/doctor/view-patient/{ patient.patient_id }/{ doctor.doctor_id }")
-    
+
+@app.route('/doctor/<int:did>/notification-page')
+def doctor_notification_page(did):
+    doctor = db.get_or_404(Doctor, did)
+    all_admin_notifications = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.message_doctor_id == did).all()
+    all_patient_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_doctor_id == did, PatientDoctorNotifications.role == 'Patient').all()
+    return render_template('doctor/doctor_notification_page.html', doctor = doctor, all_admin_notifications = all_admin_notifications, all_patient_notifications = all_patient_notifications)
+
 @app.route('/doctor/provide_slots/<int:did>', methods = ['GET', 'POST'])
 def provide_availability(did):
     if request.method == 'GET':
@@ -507,10 +520,12 @@ def provide_availability(did):
         for d in list_of_next_7_dates:
             appointments_dict[d] = {}
             for s in slots:
-                appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.status != 'Cancelled')).all()
-                appointments_dict[d][s] = appointments
-                appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.status == None)).all()
-                appointments_dict[d][s] += appointments
+                appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id)).all()
+                for a in appointments:
+                    if (a.slot_sch_appointment_rel.t.status != 'Cancelled') or (a.slot_sch_appointment_rel.t.status == 'None'):
+                        appointments_dict[d][s] = appointments
+                # appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_sch_appointment_rel.t.status == None)).all()
+                # appointments_dict[d][s] += appointments
         return render_template('/doctor/provide_availability.html', appointments_dict = appointments_dict, doctor = doctor, slots = slots, list_of_next_7_dates = list_of_next_7_dates)
     
     else:
@@ -521,7 +536,7 @@ def provide_availability(did):
         slots = Slot.query.all()
 
         past_state = SlotSchedules.query.filter(and_(SlotSchedules.date > date_today, SlotSchedules.slot_doctor_id == did)).all()
-        if past_state != []:
+        if past_state != []: #updating availability
             past_state_list = []
             for p in past_state:
                 past_state_list += [(str(p.schedule_slot_id), p.date.strftime("%Y-%m-%d"))]
@@ -568,7 +583,9 @@ def provide_availability(did):
                 db.session.add(new_entry)
             db.session.commit()
 
-        else:
+        else: # new data 
+            # check if there is any patient in waiting list
+            waiting_list = AvailibilityNotifications.query.filter(AvailibilityNotifications.notif_doctor_id == did, AvailibilityNotifications.starting_date >= date_today).all()
             for s in a.keys():
                 slot_id = Slot.query.filter(Slot.slot_id == s).first()
                 for x in a[s]:
@@ -578,6 +595,11 @@ def provide_availability(did):
                     slot_date = datetime.date(y,m,d)
                     slot = SlotSchedules(slot_doctor_id = did, schedule_slot_id = slot_id.slot_id, date = slot_date)
                     db.session.add(slot)
+
+                    if waiting_list != []:
+                        for row in waiting_list:
+                            if slot.date == row.starting_date:
+                                row.doctor_available = True
         db.session.commit()
         return redirect(f'/doctor/{ doctor.doctor_id }')
 
@@ -611,11 +633,22 @@ def search_doctor_dash(did):
                 appointments_by_patient_name += Appointment.query.filter(Appointment.patient_id == p.patient_id).all()
             return render_template('doctor/search_doctor.html', input_value = input_value, search_function = search_function, doctor = doctor, appointments_by_patient_name = appointments_by_patient_name, doctors = doctors, departments = departments)
 
-# Patient: dashboard - register - book_appointment - confirm_appointment
+# Patient: dashborad - register - book_appointment - confirm_appointment
+
 @app.route('/patient/<int:pid>', methods = ['GET'])
 def patient_dashboard(pid):
     if request.method == 'GET':
-        return render_template('patient/patient-dashboard.html')
+        global date_today
+        patient = Patient.query.filter(Patient.patient_id == pid).first()
+        appointments_this_week = []
+        doctors = Doctor.query.all()
+        departments = Department.query.all()
+        past_appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_patient_id == pid, SlotSchedules.date < date_today)).all()
+        appointments_today = SlotSchedules.query.filter(and_(SlotSchedules.date == date_today, SlotSchedules.slot_patient_id == pid)).all()
+        list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+        for d in list_of_next_7_dates:
+            appointments_this_week += SlotSchedules.query.filter(and_(SlotSchedules.date == d, SlotSchedules.slot_patient_id == pid)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+        return render_template('patient/patient-dashboard.html', patient = patient, past_appointments = past_appointments, appointments_today = appointments_today, doctors = doctors, appointments_this_week = appointments_this_week, departments = departments)
     
 
 @app.route('/register', methods = ['GET', 'POST'])
@@ -641,12 +674,36 @@ def register_patient():
         patient = Patient(patient_name = patient_name, contact_info = contact_info, patient_email = patient_email, patient_user_id = patient_user_id.user_id, patient_age = patient_age)
         db.session.add(patient)
         db.session.commit()
-        return redirect(f'/patient/{patient_user_id.user_id}') 
+        return redirect(f'/patient/{ patient_user_id.patient_relationship.patient_id }') 
 
-@app.route('/book-appointment', methods = ['GET', 'POST'])
-def book_appointment():
+@app.route('/patient/<int:pid>/profile', methods = ['GET'])
+def view_profile_patient(pid):
+    patient = db.get_or_404(Patient, pid)
+    profile_picture = patient.patient_profile_picture
+    age = relativedelta(date_today, patient.patient_dob)
+    return render_template('patient/patient_profile.html', patient = patient, age = age, profile_picture = profile_picture)
+
+@app.route('/patient/<int:pid>/profile/update', methods = ['GET', 'POST'])
+def update_patient_profile(pid):
+        patient = db.get_or_404(Patient, pid)
+        if request.method == 'GET':
+            return render_template('patient/update_profile.html', patient = patient)
+        else:
+            patient.p.user_name = request.form['u_name']
+            patient.p.user_password = request.form['u_password']
+            patient.patient_name = request.form['p_name']
+            patient.patient_email = request.form['email']
+            patient.contact_info = request.form['contact_info']
+            patient.patient_height = request.form['height']
+            patient.patient_weight = request.form['weight']
+            db.session.commit()
+        return redirect(f'/patient/{ patient.patient_id }')
+
+@app.route('/book-appointment/<int:pid>', methods = ['GET', 'POST'])
+def book_appointment(pid):
     if request.method == 'GET':
         global date_today 
+        patient = Patient.query.filter(Patient.patient_id == pid).first()
         patients = Patient.query.all()
         departments = Department.query.all()
         doctors = Doctor.query.all()
@@ -654,17 +711,20 @@ def book_appointment():
 
         for i in doctors:
             lst = []
-            lst += SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == i.doctor_id, SlotSchedules.date >= date_today, or_(SlotSchedules.status != 'Cancelled', SlotSchedules.status == None)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+            # lst += SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == i.doctor_id, SlotSchedules.date >= date_today, or_(SlotSchedules.slot_sch_appointment_rel.t.status != 'Cancelled', SlotSchedules.slot_sch_appointment_rel.t.status == None)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+            lst += SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == i.doctor_id, SlotSchedules.date >= date_today).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
             appointment_dict[i] = lst
-        return render_template('patient/book-appointment.html', departments = departments, patients = patients, doctors = doctors, appointment_dict = appointment_dict)
+        return render_template('patient/book-appointment.html',patient = patient, departments = departments, patients = patients, doctors = doctors, appointment_dict = appointment_dict)
     
-@app.route('/confirm-appointment/<int:did>', methods = ['GET', 'POST'])
-def confirm_appointment(did):
+@app.route('/patient/<int:pid>/confirm-appointment/<int:did>', methods = ['GET', 'POST'])
+def confirm_appointment(pid,did):
+    patient = db.get_or_404(Patient, pid)
     if request.method == 'GET':
         doctor = db.get_or_404(Doctor, did)
         global date_today 
-        doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today, or_(SlotSchedules.status != 'Cancelled', SlotSchedules.status == None))).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
-        return render_template('patient/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag = False)
+        # doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today, or_(SlotSchedules.slot_sch_appointment_rel.t.status != 'Cancelled', SlotSchedules.slot_sch_appointment_rel.t.status == None))).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+        doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+        return render_template('patient/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag = False, patient = patient)
     else: 
         doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
         doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).all()
@@ -685,17 +745,85 @@ def confirm_appointment(did):
         for slot in slots:
             slot = SlotSchedules.query.filter(SlotSchedules.schedule_id == slot).first()
             if slot.slot_patient_id == None:
-                slot.status = 'Booked'
                 slot.slot_patient_id = patient.patient_id
                     
                 slot.slot_sch_appointment_rel = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
                 slot.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
                 db.session.add(slot)
             else:
-                new_entry = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = slot.schedule_slot_id, status = 'Booked')
+                new_entry = SlotSchedules(date = slot.date, slot_doctor_id = slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = slot.schedule_slot_id)
                 new_entry.slot_sch_appointment_rel = Appointment(date_time = slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
                 new_entry.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
                 db.session.add(new_entry)
 
         db.session.commit()
-        return redirect('/admin')
+        return redirect(f'/patient/{ patient.patient_id}')
+
+@app.route('/patient/<int:pid>/notify-availabililty/<int:did>', methods = ['GET'])
+def notify_patient_doctor_availability(pid, did):
+    global date_today
+    patient = db.get_or_404(Patient, pid)
+    doctor = db.get_or_404(Doctor, did)
+    notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
+    db.session.add(notification)
+    db.session.commit()
+    return redirect(f"/book-appointment/{ patient.patient_id }")
+
+@app.route('/patient/<int:pid>/notification-page', methods = ['GET'])
+def notification_page_patient(pid):
+    patient = db.get_or_404(Patient, pid)
+    all_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid).all()
+    all_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor').all()
+    all_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid).all()
+    return render_template('patient/patient_notification_page.html', patient = patient, all_admin_notifications = all_admin_notifications, all_doctor_notifications = all_doctor_notifications, all_availibility_notifications = all_availibility_notifications)
+
+@app.route('/patient/view-appointment/<int:pid>/<int:sid>', methods = ['GET'])
+def view_appointment_patient(pid, sid):
+    patient = db.get_or_404(Patient, pid)
+    appointment = db.get_or_404(SlotSchedules, sid)
+    return render_template('patient/view-appointment.html', patient = patient, appointment = appointment)
+
+@app.route('/patient/<int:pid>/cancel-appointment/<int:sid>', methods = ['GET'])
+def cancel_appointment_patient(pid, sid):
+    patient = db.get_or_404(Patient, pid)
+    appointment = db.get_or_404(SlotSchedules, sid)
+    if appointment.slot_sch_appointment_rel.t.status == 'Booked':
+        appointment.slot_sch_appointment_rel.t.status = 'Cancelled'
+    # notify the doctor that the patient has cancelled the appointment
+    notification = PatientDoctorNotifications(role = 'Patient', m_doctor_id = appointment.slot_doctor_id, m_patient_id = patient.patient_id, message_type = 'Appointment Cancelled', message_content = f'Your appointment scheduled on { appointment.date } ({ appointment.s_sch.slot_name }) with Patient { patient.patient_name } was cancelled.')
+    db.session.add(notification)
+    db.session.commit()
+    return redirect(f'/patient/{ patient.patient_id }')
+
+@app.route('/patient/<int:pid>/view_doctor/<int:did>', methods = ['GET'])
+def patient_view_doctor(pid, did):
+    global date_today
+    patient = db.get_or_404(Patient, pid)
+    doctor = db.get_or_404(Doctor, did)
+    profile_picture =  '<img decoding="async" src="' + url_for('static', filename='FemaleDoctor2/logo.png') + '" alt = "Profile Picture" height="200px" width="260px">'
+    appointments = Appointment.query.filter(Appointment.patient_id == pid, Appointment.doctor_id == did).order_by(Appointment.date_time).all()
+    past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
+    upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
+    return render_template('patient/view_doctor.html.html', patient = patient, doctor = doctor, appointments = appointments, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments, profile_picture = profile_picture)
+
+@app.route('/patient/<int:pid>/view-dept/<int:did>', methods = ['GET'])
+def patient_view_dept(pid, did):
+    patient = db.get_or_404(Patient, pid)
+    department = db.get_or_404(Department, did)
+    return render_template('patient/view_department.html', patient = patient, department = department)
+
+@app.route('/patient/<int:pid>/search', methods = ['POST'])
+def search_patient(pid):
+    patient = db.get_or_404(Patient, pid)
+    input_value = request.form['query']
+    if not input_value.isnumeric(): # search for name, email
+        doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_email.like(f'%{input_value}%'))).all()
+        departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
+        patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).all()
+        return render_template('patient/search_patient.html',patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
+    else: # search for contact number, or patient's 1st visit
+        doctors = Doctor.query.filter(Doctor.doctor_contact_number.like(f'%{input_value}%')).all()
+        patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).order_by(Appointment.date_time).all()
+        departments = []
+        return render_template('patient/search_patient.html', patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
+    

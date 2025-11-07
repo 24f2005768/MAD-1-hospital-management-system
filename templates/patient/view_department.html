@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Department</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <p>{{ department.department_name }}</p>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Details</title>
+    <title>View Doctor</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
+
     <header>
         <div class = 'heading-actions'>
             <h1>LDH Hospital</h1>
@@ -15,9 +16,9 @@
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/doctor/{{ doctor.doctor_id }}/search' method = 'POST'>
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
                         <div>
-                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
                             <input type ="submit" value = "Search">
                         </div>
                     </form>
@@ -27,27 +28,25 @@
     </header>
 
         <div class = 'main-content'>
-            <div>
-                <h1 class = 'centered-headings'>Patient Details</h1>
-            </div>
-            
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
-                        <img src ="{{ url_for('static',filename='images/1.jpg') }}" alt="Profile Picture" height="200px" width="250px">
-                        <p>Name: {{ patient.p_ref.patient_name }}</p>
-                        <p>Age: {{ patient.p_ref.patient_age }}</p>
-                        <p>Gender: {{ patient.p_ref.patient_gender }}</p>
-                        <p>Height: {{ patient.p_ref.patient_height }} cm</p>
-                        <p>Weight: {{ patient.p_ref.patient_weight }} kg</p>
-                        <p>Contact Number: {{ patient.p_ref.contact_info }}</p>
-                        <p>Email: {{ patient.p_ref.patient_email }}</p>
-                        <p>Last Visit: {{ last_visit }}</p>
-                    </div>
+                    <img src = "{{ url_for('static', filename = 'images/1.jpg') }}" alt="Profile Picture" height="200px" width="260px">
+                    <h3>{{ doctor.doctor_name }}</h3>
+                    <p>{{ doctor.dept.department_name }}</p>
+                    <p>{{ doctor.doctor_desc }}</p>
+                    <p>Your visits with Dr. {{ doctor.doctor_name }}: {{ appointments | length }}</p>
+                    {% if past_appointments != [] %}
+                        <p>Last Visit: {{ past_appointments[-1].date_time.strftime('%d/%m/%y') }}</p>
+                    {% else %}
+                        <p>Last Visit: --</p>
+                    {% endif %}
+                </div>
 
+                <div class = 'profile-content'>
                     <div class = 'doctor-dash-view-patient-appointments'>
                         <div class = 'doctor-appointments-ribbon'>
-                            <button onclick = 'hideShowThisDoctor()' class = 'view-patient-appointment-buttons'>With {{ doctor.doctor_name }}</button>
-                            <button onclick = 'hideShowAllDoctors()' class = 'view-patient-appointment-buttons'>Complete Medical History</button>
+                            <button onclick = 'hideShowThisDoctor()' class = 'view-patient-appointment-buttons'>Upcoming Appointments</button>
+                            <button onclick = 'hideShowAllDoctors()' class = 'view-patient-appointment-buttons'>Past Appointments</button>
                         </div>
 
                         <div id = 'show-doctor-appointments'>
@@ -74,43 +73,31 @@
                                     <p><em>No upcoming appointments</em></p>
                                 {% endif %}
                             </div>
-
-                            <h3>Past Appointments</h3>
-                            <div class = 'show-appointments'>
-                                <ol>
-                                    {% for a in past_appointments %}
-                                    <li>
-                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
-                                        <p>Notes: {{ a.t.notes }}</p>
-                                        <p>Prescription: {{ a.t.prescription }}</p>
-                                        <p>Tests: {{ a.t.tests }}</p>
-                                    </li>
-                                    {% endfor %}
-                                </ol>
-                            </div>
                         </div>
 
                         <div id = 'show-all-doctors-appointments' style ="display: none;">
-                            <h3>Complete Medical History</h3>
+                            <h3>Past Appointments</h3>
                             <div class = 'show-appointments'>
-                                <ol>
-                                    {% for a in all_past_appointments %}
-                                    <li>
-                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
-                                        <p>Notes: {{ a.t.notes }}</p>
-                                        <p>Prescription: {{ a.t.prescription }}</p>
-                                        <p>Tests: {{ a.t.tests }}</p>
-                                    </li>
-                                    {% endfor %}
-                                </ol>
+                                {% if past_appointments != [] %}
+                                    <ol>
+                                        {% for a in past_appointments %}
+                                        <li>
+                                            <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
+                                            <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                                            <p>Notes: {{ a.t.notes }}</p>
+                                            <p>Prescription: {{ a.t.prescription }}</p>
+                                            <p>Tests: {{ a.t.tests }}</p>
+                                        </li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    <p>No appointments to show</p>
+                                {% endif %}
                             </div>
                         </div>
-                        </div>
-                    </div>
-            </div>
 
+                </div>
+            </div>
         </div>
 
         <script>

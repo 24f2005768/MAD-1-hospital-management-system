@@ -1,6 +1,8 @@
 from app import *
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, desc
 from datetime import date
+from dateutil.relativedelta import relativedelta
+from flask import url_for
 
 date_today = date.today()
 list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
@@ -283,4 +285,6 @@ if slot_for_doctor2.slot_patient_id != None:
 
 db.session.commit()
 '''
-
+name = 'Pediatrics'
+url = f"<img src= 'url_for('static', filename='images/{name}'.png')>"
+print(url)

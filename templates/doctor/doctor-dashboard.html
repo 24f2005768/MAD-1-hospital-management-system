@@ -17,6 +17,7 @@
                     
                     <form action = '/doctor/{{ doctor.doctor_id }}/search' method = 'POST'>
                         <div>
+                            <a href = '/doctor/{{ doctor.doctor_id }}/notification-page' style="color: white;text-decoration: none;">Notifications</a>
                             <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
                             <input type ="submit" value = "Search">
                         </div>
@@ -45,7 +46,6 @@
                 <div class = 'info-card-details'>
                     <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
                 </div>
-
         </div>
 
         <div style ="margin-top: 50px; width: 100%;">
@@ -101,7 +101,7 @@
                             {% for a in appointments_this_week %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ a.date.strftime('%d/%m/%y') }}</td>
+                                    <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
                                     <td>{{ a.slot_patient.patient_name }}</td>
                                     <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
                                 </tr>
@@ -127,7 +127,7 @@
                             {% for a in past_appointments %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ a.date.strftime('%d/%m/%y') }}</td>
+                                    <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
                                     <td>{{ a.slot_patient.patient_name }}</td>
                                     <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
                                 </tr>
@@ -136,7 +136,6 @@
                     </table>
                 {% endif %}
             </div>
-
         </div>
 
         <div style = 'margin-top: 50px; width: 100%;'>
@@ -165,7 +164,7 @@
                             {% for s in availabilty_list %}
                                 <tr>
                                     <td><a href = '/doctor/patients-by-slot/{{ doctor.doctor_id }}/{{ s.schedule_id }}'>{{ loop.index }}</a></td>
-                                    <td>{{ s.date.strftime('%d/%m/%y') }}</td>
+                                    <td>{{ s.date.strftime('%d/%m/%Y') }}</td>
                                     <td>{{ s.s_sch.slot_time }} ({{ s.s_sch.slot_name }})</td>
                                     <td>{{ slot_patients_dict[s.date][s.schedule_slot_id] }}</td>
                                 </tr>

@@ -9,37 +9,230 @@
 
 <body>
     <header>
-        <h1><a href = '/admin' class = 'page_heading_hyperlink'>LDH Hospital</a></h1>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
 
-        <div class = 'search_bar'>
-            
-            <form action = '/admin/search' method = 'POST'>
-                <div>
-                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
-
-                    <datalist id = 'search_list'>
-                        {% for patient in patients %}
-                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
-                        {% endfor %}
-
-                        {% for doctor in doctors %}
-                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
-                        {% endfor %}
-
-                        {% for dept in departments %}
-                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
-                        {% endfor %}
-                    </datalist>
-
-                    <input type ="submit" value = "Search">
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: white; text-decoration: none;">Notifications</a>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </header>
     
     <div class = 'main-content'>
-        <h1>This is Patient's dashboard</h1>
+        <h2 id = 'message'>Hi! {{ patient.patient_name }}</h2>    
+        <div class = 'info-cards'>
+
+                <div class = 'info-card-details'>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ patient.patient_id }}/profile'>Profile</a></p>
+                </div>
+
+                <div class = 'info-card-details'>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                </div>
+
+                <div class = 'info-card-details'>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Book an Appointment</p>
+                </div>
+        </div>
+
+        <div style="margin-top: 50px; width: 100%;">
+            <div class = 'heading-actions'>
+                <h2>Appointments</h2>
+            </div>
+
+            <div class = 'doctor-appointments-ribbon'>
+                <button onclick = 'hideShowToday()' id = 'patient-appointments-buttons-today' class = 'doctor-appointments-buttons' style="background-color: #989aca;">Today ({{ appointments_today | length }})</button>
+                <button onclick = 'hideShowThisWeek()' id = 'patient-appointments-buttons-week' class = 'doctor-appointments-buttons'>This Week ({{ appointments_this_week | length }})</button>
+                <button onclick = 'hideShowPastAppointments()' id = 'patient-appointments-buttons-past' class = 'doctor-appointments-buttons'>Past Appointments ({{ past_appointments | length }})</button>
+            </div>
+
+            <div id = 'todays-appointments' style = 'margin-top: 12px;'>
+                {% if appointments_today | length == 0 %}
+                    <p>No appointments today</p>
+                {% else %}
+                    <ol>
+                        {% for a in appointments_today %}
+                            <li>
+                                <div class = 'heading-actions'>
+                                    <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                    <div class = 'action-buttons'>
+                                        <a href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
+                                    </div>
+                                </div>
+                                <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </div>
+
+            <div id = 'this-weeks-appointments' style ="display: none; margin-top: 12px">
+                {% if appointments_this_week | length == 0 %}
+                    <p>No appointments this week</p>
+                {% else %}
+                    <ol>
+                        {% for a in appointments_this_week %}
+                            <li>
+                                <div class = 'heading-actions'>
+                                    <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                    <div class = 'action-buttons'>
+                                        <a href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
+                                    </div>
+                                </div>
+                                <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </div>
+
+            <div id = 'past-appointments' style ="display: none; margin-top: 12px;">
+                {% if past_appointments | length == 0 %}
+                    <p>No Past appointments</p>
+                {% else %}
+                    <ol>
+                        {% for a in past_appointments %}
+                            <li>
+                                <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                <p>Doctor Name: <a href ='/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; width: 100%;">
+            <div class = 'heading-actions'>
+                <h2>Departments</h2>
+                <div class = 'action-buttons'>
+                    <a href = '/book-appointment/{{ patient.patient_id }}'  class = 'buttons'>Book Appointment</a>
+                </div>
+            </div>
+
+            <div class = 'info-cards'>
+                {% for d in departments %}
+                    <div class = 'info-card-details'>
+                        <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div>
+            {% for dept in departments %}
+                {% if dept.doctors | length == 0 %}
+                <div class = '{{ dept.department_id }} all_doctors' style = 'display: none;margin-top: 50px; width: 100%'>
+                        <p>No doctors to show</p>
+                    </div>
+                    
+                    {% else %}
+                        {% for doctor in dept.doctors %}
+                            <div class = '{{ doctor.dept.department_id }} all_doctors' style = 'display: none; margin-top: 50px; width: 100%'>
+                                    
+                                    <div class = 'heading-actions'>
+                                        <div class = 'action-buttons'>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class = 'wrapper'>
+                                        <div class = 'profile-picture-display'>
+                                            {% if doctor.doctor_gender == 'Male' %}
+                                                <img src ="{{ url_for('static',filename='images/MaleDoctor.jpg') }}" alt="Profile Picture" height="110px" width="170px">
+                                                <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
+                                            {% else %}
+                                                <img src ="{{ url_for('static',filename='images/FemaleDoctor.jpg') }}" alt="Profile Picture" height="110px" width="170px">
+                                                <h3>{{ doctor.doctor_name }}</h3>
+                                            {% endif %}                                    
+                                        </div>
+
+                                        <div class = 'profile-content'>
+                                            <div class = 'heading-actions'>
+                                                <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
+                                                <div class = 'action-buttons'>
+                                                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                                </div>
+                                            </div>
+                                            <p>Email: {{ doctor.doctor_email }}</p>
+                                            <p>Description: {{ doctor.doctor_desc }}</p>
+                                        </div>
+                                    </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
     </div>
+        <script>
+                 
+            function hideShowDept(dept_id) {
+                var dept_doctors = document.getElementsByClassName(dept_id);
+                var all_doc = document.getElementsByClassName('all_doctors');
+                for (doc of all_doc) {
+                    if (doc.classList.contains(dept_id)) {
+                        doc.style.display = 'block';
+                    }
+
+                    else {
+                        doc.style.display = 'none';
+                    }
+                }
+
+            }
+
+            var todays_appointments = document.getElementById('todays-appointments');
+            var weeks_appointments = document.getElementById('this-weeks-appointments');
+            var past_appointments = document.getElementById('past-appointments');
+            var today_appointment_color_change = document.getElementById('patient-appointments-buttons-today');
+            var weeks_appointment_color_change = document.getElementById('patient-appointments-buttons-week');
+            var past_appointment_color_change = document.getElementById('patient-appointments-buttons-past');
+            
+            function hideShowToday() {
+                todays_appointments.style.display = 'block';
+                weeks_appointments.style.display = 'none';
+                past_appointments.style.display = 'none';
+                today_appointment_color_change.style.backgroundColor = '#989aca';
+                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+
+            }
+
+            function hideShowThisWeek() {
+                todays_appointments.style.display = 'none';
+                weeks_appointments.style.display = 'block';
+                past_appointments.style.display = 'none';
+                weeks_appointment_color_change.style.backgroundColor = '#989aca';
+                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            }
+
+            function hideShowPastAppointments() {
+                todays_appointments.style.display = 'none';
+                weeks_appointments.style.display = 'none';
+                past_appointments.style.display = 'block';
+                past_appointment_color_change.style.backgroundColor = '#989aca';
+                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            }
+
+        </script>
 
     <footer>
         &copy;  2025 LDH Hospital
