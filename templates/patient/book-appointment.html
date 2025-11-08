@@ -54,7 +54,7 @@
                                     <h3>{{ doctor.doctor_name }}</h3>
 
                                     <div class = 'action-buttons'>
-                                        {% if appointment_dict[doctor] | length != 0 %}
+                                        {% if appointment_dict[doctor] != 0 %}
                                             <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
                                         {% else %}
                                             <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/notify-availabililty/{{ doctor.doctor_id }}'>Notify Me</a>
@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
 
-                                {% if appointment_dict[doctor] | length != 0 %}
+                                {% if appointment_dict[doctor] != 0 %}
                                 <table>
                                     <tr>
                                         <th>Date</th>

@@ -56,11 +56,11 @@
                             <li>
                                 <div class = 'wrapper'>
                                     <div class = 'profile-picture-display'>
-                                        {{ profile_picture }}
+                                        <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
                                     </div>
 
                                     <div class = 'profile-content'>
-                                        <p><strong><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></strong></p>
+                                        <p><strong><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></strong></p>
                                         <p>Department: {{ doctor.dept.department_name }}</p>
                                         <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
                                         <p>Email: {{ doctor.doctor_email }}</p>
@@ -83,7 +83,7 @@
                             <li>
                                 <div class = 'wrapper'>
                                     <div class = 'profile-picture-display'>
-                                        <img src = '{{ photo }}' alt = 'Department Picture' height="110px" width="170px">
+                                        <img src = '/static/images/{{ dept.department_profile_picture }}.png' alt = 'Department Profile Picture' width="170px">
                                     </div>
 
                                     <div class = 'profile-content'>
@@ -101,6 +101,7 @@
                 {% endif %}
 
             </div>
+        </div>
     <footer>
         &copy;  2025 LDH Hospital
     </footer>

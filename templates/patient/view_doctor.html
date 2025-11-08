@@ -28,11 +28,15 @@
     </header>
 
         <div class = 'main-content'>
+            <div>
+                <h2 class = 'centered-headings'>Doctor Details</h2>
+            </div>
+
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
-                    <img src = "{{ url_for('static', filename = 'images/1.jpg') }}" alt="Profile Picture" height="200px" width="260px">
-                    <h3>{{ doctor.doctor_name }}</h3>
-                    <p>{{ doctor.dept.department_name }}</p>
+                    <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
+                    <h3>Dr. {{ doctor.doctor_name }}</h3>
+                    <p><a href = '/patient/{{ patient.patient_id }}/view-dept/{{ doctor.dept.department_id }}'>{{ doctor.dept.department_name }}</a></p>
                     <p>{{ doctor.doctor_desc }}</p>
                     <p>Your visits with Dr. {{ doctor.doctor_name }}: {{ appointments | length }}</p>
                     {% if past_appointments != [] %}
@@ -47,6 +51,7 @@
                         <div class = 'doctor-appointments-ribbon'>
                             <button onclick = 'hideShowThisDoctor()' class = 'view-patient-appointment-buttons'>Upcoming Appointments</button>
                             <button onclick = 'hideShowAllDoctors()' class = 'view-patient-appointment-buttons'>Past Appointments</button>
+                            <button onclick = 'hideShowDoctorAvailability()' class = 'view-patient-appointment-buttons'>Doctor Availability</button>
                         </div>
 
                         <div id = 'show-doctor-appointments'>
@@ -58,7 +63,7 @@
                                         {% for a in upcoming_appointments %}
                                             <li>
                                                 <div class = 'list-items'>
-                                                    <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
+                                                    <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.appointment_sch.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                                     <div class = 'action-buttons'>
                                                         <a class = 'buttons' href = '/doctor/cancel-appointment/{{ doctor.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
                                                     </div>
@@ -82,7 +87,7 @@
                                     <ol>
                                         {% for a in past_appointments %}
                                         <li>
-                                            <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
+                                            <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.date_time.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                             <p>Diagnosis: {{ a.t.diagnosis }}</p>
                                             <p>Notes: {{ a.t.notes }}</p>
                                             <p>Prescription: {{ a.t.prescription }}</p>
@@ -91,9 +96,27 @@
                                         {% endfor %}
                                     </ol>
                                 {% else %}
-                                    <p>No appointments to show</p>
+                                    <p><em>No appointments to show</em></p>
                                 {% endif %}
                             </div>
+                        </div>
+
+                        <div id = 'show-doctor-availability'>
+                            <div class = 'heading-actions'>
+                                <h3>Doctor Availability</h3>
+
+                                <div class = 'action-buttons'>
+                                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                </div>
+                            </div>
+                            <ol>
+                                {% for a in doctor_availability_list %}
+                                    <li>
+                                        <p><em>{{ a.date }}</em></p>
+                                        <p>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                    </li>
+                                {% endfor %}
+                            </ol>
                         </div>
 
                 </div>
@@ -103,18 +126,27 @@
         <script>
             var this_doctor_appointments = document.getElementById('show-doctor-appointments')
             var all_doctor_appointments = document.getElementById('show-all-doctors-appointments')
+            var doctor_availability = document.getElementById('show-doctor-availability')
 
             function hideShowThisDoctor() {
                 this_doctor_appointments.style.display = 'block';
                 all_doctor_appointments.style.display = 'none';
+                doctor_availability.style.display = 'none';
             }
 
             function hideShowAllDoctors() {
                 this_doctor_appointments.style.display = 'none';
                 all_doctor_appointments.style.display = 'block';
+                doctor_availability.style.display = 'none';
+            }
+
+            function hideShowDoctorAvailability() {
+                this_doctor_appointments.style.display = 'none';
+                all_doctor_appointments.style.display = 'none';
+                doctor_availability.style.display = 'block';
             }
         </script>
-
+    </div>
     <footer>
         &copy;  2025 LDH Hospital
     </footer>

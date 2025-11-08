@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Message to Doctor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class = 'heading-actions'>
+            <h1>LDH Hospital</h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div>
+                <h2 class = 'centered-headings'>Send Message to Dr. {{ doctor.doctor_name }}</h2>
+            </div>
+
+            <div class = 'main-content' id = 'align-items-in-centre'>
+                <div class = 'wrapper'>
+                    <div class = 'profile-picture-display'>
+                        <img src = '/static/images/{{ appointment.slot_doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
+                        <p><strong>Doctor:</strong> {{ appointment.slot_doctor.doctor_name }}</p>
+                        <p><strong>Department:</strong> {{ appointment.slot_doctor.dept.department_name }}</p>
+                    </div>
+
+                    <div class = 'profile-content'>
+                        <div class = 'login-container'>
+                            <h3>Message</h3>
+                            <div>
+                                <p>Name: {{ patient.patient_name }}</p>
+                                <p>Date: {{ date_today.strftime('%d/%m/%Y') }}</p>
+                            
+                            <form action = '/patient/{{ patient.patient_id }}/messages/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}' method = 'POST'>
+                                <div class = 'update-form-details'>
+                                    <label for = 'message'>Type Your Message: </label>
+                                    <input type = 'text' name = 'message' placeholder="Type Your Message" >
+                                </div>
+                                
+                                <input type ="submit" value = "Send" class = 'login-button'>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

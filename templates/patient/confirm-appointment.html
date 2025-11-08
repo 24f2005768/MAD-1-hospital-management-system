@@ -27,33 +27,37 @@
     </header>
 
         <div class = 'main-content'>
-            <p>{{ doctor.doctor_name }}</p>
             <div>
-                <form action = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
-                    
-                    <input type = 'text' class = 'patient_name' list = 'patient_list' autocomplete="on" placeholder="Patient Name" name = 'patient_name'>
-
-                    <datalist id = 'patient_list'>
-                        {% for patient in patients %}
-                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
-                        {% endfor %}
-                    </datalist>
-
-                    {% for s in doctor_slots %}
-                        <div>
-                            <label>{{ s.date.strftime('%d/%m/%Y') }}</label>
-                            <input type = 'checkbox' value = '{{ s.schedule_id }}' name = '{{ s.schedule_id }}'>{{ s.s_sch.slot_time }}
-                        </div>
-                    {% endfor %}
-
-                    <input type="submit" value = "Submit" class = "login-button">
-
-                    {% if flag == True %}
-                        <p>Incorrect Patient Name, Try Again</p>
-                    {% endif %}
-                </form>
+                <h2 class = 'centered-headings'>Confirm Appointment</h2>
             </div>
+            <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
+            <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></h3>
 
+                <form action = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            {% for s in slots %}
+                                <th>{{ s.slot_time }} ({{ s.slot_name }})</th>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            {% for d in list_of_next_7_dates %}
+                                <td>{{ d.strftime('%d/%m/%Y') }}</td>
+                                    {% for s in slots %}
+                                        {% if da_dict[d][s] != None %}
+                                            <td><input type = 'checkbox' value = '{{ da_dict[d][s].schedule_id }}' name = '{{ da_dict[d][s].schedule_id }}'></td>
+                                        {% else %}
+                                            <td>-</td>
+                                        {% endif %}
+                                    {% endfor %}
+                            </tr>
+                            {% endfor %}
+                    </table>
+                    <input type="submit" value = "Book" class = "login-button">
+
+                </form>
         </div>
 
     <footer>

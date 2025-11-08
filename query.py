@@ -285,6 +285,32 @@ if slot_for_doctor2.slot_patient_id != None:
 
 db.session.commit()
 '''
-name = 'Pediatrics'
-url = f"<img src= 'url_for('static', filename='images/{name}'.png')>"
-print(url)
+# list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+# slots = Slot.query.all()
+# doctor = db.get_or_404(Doctor, 3)
+# da_dict = {}
+# doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+# print(doctor_slots)
+
+# for d in list_of_next_7_dates:
+#     da_dict[d] = {}
+#     for s in slots:
+#         query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id).all()
+#         da_dict[d][s] = query
+
+# print(da_dict)
+
+pid = 3
+department = db.get_or_404(Department, 3)
+past_appointments = {i: {} for i in department.doctors }
+for doc in past_appointments.keys():
+    past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
+    past_appointments[doc] = past_appointments_list
+
+upcoming_appointments = {i: {} for i in department.doctors }
+for doc in upcoming_appointments.keys():
+    past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time >= date_today)).order_by(Appointment.date_time).all()
+    upcoming_appointments[doc] = past_appointments_list
+print(past_appointments)
+app = db.get_or_404(Appointment, 15)
+print(app.appointment_sch.date.strftime('%d/%m/%Y'))

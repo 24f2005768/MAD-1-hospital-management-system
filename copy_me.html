@@ -131,3 +131,15 @@ Patient
     </footer>
 </body>
 </html>
+
+-- Get one slot, one availability, one doctor
+da_dict = {}
+doctor = db.get_or_404(Doctor, did)
+list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
+slots = Slot.query.all()
+doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+for d in list_of_next_7_dates:
+    da_dict[d] = {}
+    for s in slots:
+        query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_doctor_id == doctor.doctor_id).first()
+        da_dict[d][s] = query

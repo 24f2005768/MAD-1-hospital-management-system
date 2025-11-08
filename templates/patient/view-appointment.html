@@ -35,17 +35,14 @@
             <div class = 'main-content' id = 'align-items-in-centre'>
                 <div class = 'wrapper'>
                     <div class = 'profile-picture-display'>
-                        <p><strong>Doctor:</strong> {{ appointment.slot_doctor.doctor_name }}</p>
-                        <p><strong>Department:</strong> {{ appointment.slot_doctor.dept.department_name }}</p>
+                        <img src = '/static/images/{{ appointment.slot_doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
+                        <p><strong>Doctor:</strong> <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ appointment.slot_doctor.doctor_name }}</a></p>
+                        <p><strong>Department:</strong> <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ doctor.dept.department_id }}'>{{ appointment.slot_doctor.dept.department_name }}</a></p>
                     </div>
 
                     <div class = 'profile-content'>
                         <p><strong>Date:</strong> {{ appointment.date.strftime('%d/%m/%Y') }}</p>
                         <p><strong>Slot:</strong> {{ appointment.s_sch.slot_name }} ({{ appointment.s_sch.slot_time }})</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 30px;">
                     {% if appointment.slot_sch_appointment_rel.t.status == 'Completed' %}
                         <p><strong>Diagnosis:</strong> {{ appointment.slot_sch_appointment_rel.t.diagnosis }}</p>
                         <p><strong>Doctor Notes:</strong> {{ appointment.slot_sch_appointment_rel.t.notes }}</p>
@@ -53,6 +50,32 @@
                         <p><strong>Tests:</strong> {{ appointment.slot_sch_appointment_rel.t.tests }}</p>
                     {% else %}
                         <p>Doctor is yet to provide appointment details</p>
+                    {% endif %}
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/thank-you/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}'>Send a Heart</a>
+                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/messages/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}'>Send a Message</a>
+                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ appointment.slot_doctor.doctor_id }}'>Book Again</a>
+
+                    <h3>Your Past Appointments with Dr. {{ doctor.doctor_name }}</h3>
+                    {% if past_appointments[0].schedule_id == appointment.schedule_id %}
+                        <p><em>No appointments to show</em></p>
+                    {% else %}
+                            <ol>
+                                {% for a in past_appointments %}
+                                    {% if a.schedule_id != appointment.schedule_id %}
+                                        <li>
+                                            <p>Date: {{ a.date }} {{ a.s_sch.slot_name }}</p>
+                                            <p>Diagnosis: {{ a.slot_sch_appointment_rel.t.diagnosis }}</p>
+                                            <p>Notes: {{ a.slot_sch_appointment_rel.t.notes }}</p>
+                                            <p>Tests: {{ a.slot_sch_appointment_rel.t.tests }}</p>
+                                            <p>Prescription: {{ a.slot_sch_appointment_rel.t.prescription }}</p>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
                     {% endif %}
                 </div>
             </div>

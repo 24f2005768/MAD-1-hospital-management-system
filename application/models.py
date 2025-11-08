@@ -40,7 +40,7 @@ class Department(db.Model):
     department_name = db.Column(db.String, nullable = False)
     department_description = db.Column(db.String)
 
-    department_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.picture_id'))
+    department_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.name'))
     
     doctors = db.relationship('Doctor', back_populates = 'dept')
     department_pfp = db.relationship('ProfilePictures', back_populates = 'pfp_department')
@@ -147,6 +147,7 @@ class AvailibilityNotifications(db.Model):
     starting_date = db.Column(db.Date, default = datetime.now)
     patient_message_recieved = db.Column(db.Boolean, default = False)
     doctor_available = db.Column(db.Boolean, default = False)
+    message_date_time = db.Column(db.DateTime, default = datetime.now)
 
     notif_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
     notif_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
@@ -167,11 +168,13 @@ class ProfilePictures(db.Model):
 class PatientDoctorNotifications(db.Model):
     __tablename__ = 'patient_doctor_notifications'
     message_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    message_type = db.Column(db.String)
+    message_type = db.Column(db.String) #Doctor_Notifications, Thank_you_message: Messages from patients; 
     message_content = db.Column(db.String)
-    role = db.Column(db.String)
+    role = db.Column(db.String) #message sent from 
     patient_message_recieved = db.Column(db.Boolean, default = False)
     doctor_message_recieved = db.Column(db.Boolean, default = False)
+    message_date_time = db.Column(db.DateTime, default = datetime.now)
+    appointment_id = db.Column(db.Integer)
 
     m_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
     m_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
@@ -185,6 +188,7 @@ class AdminPatientNotifications(db.Model):
     admin_patient_message_type = db.Column(db.String)
     admin_patient_message_content = db.Column(db.String)
     patient_message_recieved = db.Column(db.Boolean, default = False)
+    message_date_time = db.Column(db.DateTime, default = datetime.now)
 
     message_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
 
@@ -196,6 +200,7 @@ class AdminDoctorNotifications(db.Model):
     admin_doctor_message_type = db.Column(db.String)
     admin_doctor_message_content = db.Column(db.String)
     doctor_message_recieved = db.Column(db.Boolean, default = False)
+    message_date_time = db.Column(db.DateTime, default = datetime.now)
 
     message_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
 

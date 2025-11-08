@@ -41,9 +41,9 @@
             {% endif %}
 
             {% if all_patient_notifications | length != 0 %}
-                <h3>Notifications From Doctors</h3>
+                <h3>Notifications From Patient</h3>
                 <ol>
-                    {% for a in all_doctor_notifications %}
+                    {% for a in all_patient_notifications %}
                         <li>
                             <p>{{ a.message_type }}</p>
                             <p>{{ a.message_content }}</p>
