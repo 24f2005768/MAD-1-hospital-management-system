@@ -10,14 +10,13 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1>LDH Hospital</h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ patient.patient_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
                     <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div>
-                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
+                        <div>                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
                             <input type ="submit" value = "Search">
                         </div>
                     </form>

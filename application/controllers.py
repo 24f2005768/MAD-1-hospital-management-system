@@ -528,7 +528,7 @@ def provide_availability(did):
         doctor = db.get_or_404(Doctor, did)
         availability = request.form
         a = availability.to_dict(flat=False)
-        # print(a)
+        print(a)
         slots = Slot.query.all()
 
         past_state = SlotSchedules.query.filter(and_(SlotSchedules.date > date_today, SlotSchedules.slot_doctor_id == did)).all()
@@ -727,38 +727,50 @@ def book_appointment(pid):
 @app.route('/patient/<int:pid>/confirm-appointment/<int:did>', methods = ['GET', 'POST'])
 def confirm_appointment(pid,did):
     patient = db.get_or_404(Patient, pid)
-    if request.method == 'GET':
-        global date_today 
-        da_dict = {}
-        doctor = db.get_or_404(Doctor, did)
-        list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
-        slots = Slot.query.all()
-        doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
-        for d in list_of_next_7_dates:
-            da_dict[d] = {}
-            for s in slots:
-                query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_doctor_id == doctor.doctor_id).first()
-                da_dict[d][s] = query
-        return render_template('patient/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag = False, patient = patient, list_of_next_7_dates = list_of_next_7_dates, slots = slots, da_dict = da_dict)
-    else: 
-        doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
-        doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).all()
+    global date_today 
+    da_dict = {}
+    doctor = db.get_or_404(Doctor, did)
+    doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
+    list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
+    flag1 = False #check for double booking
+    slots = Slot.query.all()
+    selected_slot = None
+    for d in list_of_next_7_dates:
+        da_dict[d] = {}
+        for s in slots:
+            query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_doctor_id == doctor.doctor_id).first()
+            da_dict[d][s] = query
 
+    # print(da_dict)        
+    if request.method == 'GET':
+        return render_template('patient/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag1 = False, patient = patient, list_of_next_7_dates = list_of_next_7_dates, slots = slots, da_dict = da_dict, flag2 = False, selected_slot = selected_slot)
+    else: 
+        print(patient)
+        # print("---------------"+request.form['name'])
         form_content = request.form 
         form_content_to_dict = form_content.to_dict(flat = False)
-        for slot in form_content_to_dict.keys():
-            s = db.get_or_404(SlotSchedules, int(slot))
-            if s.slot_patient_id == None:
-                s.slot_patient_id = patient.patient_id
-                    
-                s.slot_sch_appointment_rel = Appointment(date_time = s.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-                s.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
-                db.session.add(s)
-            else:
-                new_entry = SlotSchedules(date = s.date, slot_doctor_id = s.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = s.schedule_slot_id)
-                new_entry.slot_sch_appointment_rel = Appointment(date_time = s.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-                new_entry.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
-                db.session.add(new_entry)
+        list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
+
+        input_slot = request.form['time_slot']
+        selected_slot = db.get_or_404(SlotSchedules, int(input_slot))
+        
+        sister_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == selected_slot.slot_doctor_id, SlotSchedules.schedule_slot_id == selected_slot.schedule_slot_id, SlotSchedules.date == selected_slot.date, SlotSchedules.slot_patient_id != None).all()
+        # print(f"sister_slots {sister_slots}")
+        if selected_slot.slot_patient_id == None:
+            selected_slot.slot_patient_id = patient.patient_id   
+            selected_slot.slot_sch_appointment_rel = Appointment(date_time = selected_slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
+            selected_slot.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+        # print(sister_slots)
+
+        if sister_slots != []:
+            for s in sister_slots:
+                if s.slot_patient_id == patient.patient_id:
+                    return render_template('patient/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag1 = True, patient = patient, list_of_next_7_dates = list_of_next_7_dates, slots = slots, da_dict = da_dict)
+                
+            new_entry = SlotSchedules(date = selected_slot.date, slot_doctor_id = selected_slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = selected_slot.schedule_slot_id)
+            new_entry.slot_sch_appointment_rel = Appointment(date_time = selected_slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
+            new_entry.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+            db.session.add(new_entry)                    
 
         db.session.commit()
         return redirect(f'/patient/{ patient.patient_id}')

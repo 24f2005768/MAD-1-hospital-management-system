@@ -10,13 +10,13 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1>LDH Hospital</h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ patient.patient_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
                     <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div>
+                        <div>                            
                             <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
                             <input type ="submit" value = "Search">
                         </div>
@@ -27,8 +27,11 @@
     </header>
 
         <div class = 'main-content'>
-            <div>
+            <div class = 'heading-actions'>
                 <h2 class = 'centered-headings'>Confirm Appointment</h2>
+                <div class = 'action-buttons'>
+                    <button class = 'buttons' onclick = 'history.back()'>Go Back</button>
+                </div>
             </div>
             <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
             <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></h3>
@@ -47,7 +50,7 @@
                                 <td>{{ d.strftime('%d/%m/%Y') }}</td>
                                     {% for s in slots %}
                                         {% if da_dict[d][s] != None %}
-                                            <td><input type = 'checkbox' value = '{{ da_dict[d][s].schedule_id }}' name = '{{ da_dict[d][s].schedule_id }}'></td>
+                                            <td><input type = 'radio' value = '{{ da_dict[d][s].schedule_id }}' name = 'time_slot'></td>
                                         {% else %}
                                             <td>-</td>
                                         {% endif %}
@@ -58,6 +61,10 @@
                     <input type="submit" value = "Book" class = "login-button">
 
                 </form>
+                {% if flag1 == True %}
+                    <p class = 'error-message'>You have already booked an appointment with Dr. {{ selected_slot.slot_doctor.doctor_name }} on your selected slot.</p>
+                {% endif %}
+
         </div>
 
     <footer>

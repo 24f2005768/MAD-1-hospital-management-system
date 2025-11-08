@@ -10,31 +10,20 @@
 <body>
 
     <header>
-        <h1><a href = '/admin' class = 'page_heading_hyperlink'>LDH Hospital</a></h1>
+        <div class = 'heading-actions'>
+            <h1><a href = '/admin' class = 'page_heading_hyperlink'>LDH Hospital</a></h1>
 
-        <div class = 'search_bar'>
-            
-            <form action = '/admin/search' method = 'POST'>
-                <div>
-                    <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
-
-                    <datalist id = 'search_list'>
-                        {% for patient in patients %}
-                            <option value = '{{patient.patient_name}}'>{{patient.patient_name}}</option>
-                        {% endfor %}
-
-                        {% for doctor in doctors %}
-                            <option value = '{{doctor.doctor_name}}'>{{doctor.doctor_name}}</option>
-                        {% endfor %}
-
-                        {% for dept in departments %}
-                            <option value = '{{dept.department_name}}'>{{dept.department_name}}</option>
-                        {% endfor %}
-                    </datalist>
-
-                    <input type ="submit" value = "Search">
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/admin/search' method = 'POST'>
+                        <div>
+                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
+                            <input type ="submit" value = "Search">
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </header>
 
