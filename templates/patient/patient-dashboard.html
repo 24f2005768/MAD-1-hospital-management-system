@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Patient Dashboard</title>
         <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -16,9 +19,12 @@
                 <div class = 'search_bar'>
                     
                     <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div>                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: white; text-decoration: none;">Notifications</a>
-                            <input type = 'text' list = 'search_list' placeholder ="Enter Number or Name" name = 'query'>
-                            <input type ="submit" value = "Search">
+                        <div class = 'flex-container'>                            
+                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: #f9e8c8; text-decoration: none; font-size: 20px; padding-bottom: 5px;"><i class="bi bi-bell-fill"></i></a>
+                            <div class = 'search-flex-container'>
+                                <input type = 'text' placeholder ="Enter Number or Name" name = 'query' style="border-radius: 0; gap:0; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
+                                <button type="submit" style = "height:36px; border: none; background-color: #d75100; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 30px; color: black;"><i class="bi bi-search"></i></button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -31,19 +37,19 @@
         <div class = 'info-cards'>
 
                 <div class = 'info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ patient.patient_id }}/profile'>Profile</a></p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ patient.patient_id }}/profile'><i class="bi bi-person-fill" style="font-size: 50px; color: white;"></i></a></p>
                 </div>
 
                 <div class = 'info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                    <a href = '#apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
                 </div>
 
                 <div class = 'info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Book an Appointment</p>
+                    <a href = '#book-apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Book an Appointment</p></a>
                 </div>
         </div>
 
-        <div style="margin-top: 50px; width: 100%;">
+        <div style="margin-top: 50px; width: 100%;" id = 'apt'>
             <div class = 'heading-actions'>
                 <h2>Appointments</h2>
             </div>
@@ -64,8 +70,8 @@
                                 <div class = 'heading-actions'>
                                     <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
-                                        <a href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
-                                        <a href = '' class = 'buttons'>Reschedule</a>
+                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' style = 'background-color: hsla(360 100% 60.2% / 0.66);' class = 'buttons'>Cancel</a>
+                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '' class = 'buttons' style="background-color: hsla(205 80.1% 79.4% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
                                 <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
@@ -88,7 +94,7 @@
                                     <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
                                         <a href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
-                                        <a href = '/patient/{{ patient.patient_id }}/reschedule-messages/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons'>Reschedule</a>
+                                        <a href = '/patient/{{ patient.patient_id }}/reschedule-messages/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
                                 <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
@@ -118,7 +124,7 @@
             </div>
         </div>
 
-        <div style="margin-top: 50px; width: 100%;">
+        <div style="margin-top: 50px; width: 100%;" id = 'book-apt'>
             <div class = 'heading-actions'>
                 <h2>Departments</h2>
                 <div class = 'action-buttons'>
@@ -222,6 +228,12 @@
                 weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
             }
 
+            function confirm_cancel_or_reschedule_appointment() {
+                var result = confirm('Are you sure?');
+                if (result == false) {
+                    event.preventDefault();
+                }
+            }
         </script>
 
     <footer>

@@ -300,17 +300,14 @@ db.session.commit()
 
 # print(da_dict)
 
-pid = 3
-department = db.get_or_404(Department, 3)
-past_appointments = {i: {} for i in department.doctors }
-for doc in past_appointments.keys():
-    past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
-    past_appointments[doc] = past_appointments_list
+notif1 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'Welcome to LDH Hospital', admin_patient_message_content = 'Greetings from LDH Hospital')
+notif2 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'You can book appointments now', admin_patient_message_content = 'You can book appointments now')
 
-upcoming_appointments = {i: {} for i in department.doctors }
-for doc in upcoming_appointments.keys():
-    past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time >= date_today)).order_by(Appointment.date_time).all()
-    upcoming_appointments[doc] = past_appointments_list
-print(past_appointments)
-app = db.get_or_404(Appointment, 15)
-print(app.appointment_sch.date.strftime('%d/%m/%Y'))
+notif3 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 3, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
+notif4 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 2, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
+
+db.session.add(notif1)
+db.session.add(notif2)
+db.session.add(notif3)
+db.session.add(notif4)
+db.session.commit()

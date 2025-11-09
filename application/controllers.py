@@ -245,9 +245,18 @@ def view_patient_admin(pid):
     global date_today 
     patient = db.get_or_404(Patient, pid)
     past_appointments = Appointment.query.filter(and_(Appointment.date_time <= date_today, Appointment.patient_id == patient.patient_id)).all()
+    age = relativedelta(date_today, patient.patient_dob)
     upcoming_appointments = Appointment.query.filter(and_(Appointment.date_time >= date_today, Appointment.patient_id == patient.patient_id)).all()
 
-    return render_template('admin/view-patient.html', patient = patient, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments)
+    return render_template('admin/view-patient.html', date_today = date_today, age = age, patient = patient, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments)
+
+@app.route('/admin/patient/<int:pid>/send-message', methods = ['POST'])
+def admin_send_patient_message(pid):
+    patient = db.get_or_404(Patient, pid)
+    message = AdminPatientNotifications(message_patient_id = patient.patient_id, admin_patient_message_type = 'Message from Admin', admin_patient_message_content = request.form['message'])
+    db.session.add(message)
+    db.session.commit()
+    return redirect('/admin')
 
 @app.route('/admin/view-all-patients', methods = ['GET'])
 def view_all_patients():
@@ -629,7 +638,10 @@ def search_doctor_dash(did):
                 appointments_by_patient_name += Appointment.query.filter(Appointment.patient_id == p.patient_id).all()
             return render_template('doctor/search_doctor.html', input_value = input_value, search_function = search_function, doctor = doctor, appointments_by_patient_name = appointments_by_patient_name, doctors = doctors, departments = departments)
 
-# Patient: dashborad - register - book_appointment - confirm_appointment
+# Patient: dashborad - register - view_profile - update_profile 
+# book_appointment - confirm_appointment - cancel-appointment - reschedule-appointment
+# notification-d-availability - notification_page - tymessage - send-notific-to-doctor
+# view-doctor - view-dept - search
 
 @app.route('/patient/<int:pid>', methods = ['GET'])
 def patient_dashboard(pid):
@@ -775,32 +787,6 @@ def confirm_appointment(pid,did):
         db.session.commit()
         return redirect(f'/patient/{ patient.patient_id}')
 
-@app.route('/patient/<int:pid>/notify-availabililty/<int:did>', methods = ['GET'])
-def notify_patient_doctor_availability(pid, did):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
-    db.session.add(notification)
-    db.session.commit()
-    return redirect(f"/book-appointment/{ patient.patient_id }")
-
-@app.route('/patient/<int:pid>/notification-page', methods = ['GET'])
-def notification_page_patient(pid):
-    patient = db.get_or_404(Patient, pid)
-    all_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid).all()
-    all_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor').all()
-    all_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid).all()
-    return render_template('patient/patient_notification_page.html', patient = patient, all_admin_notifications = all_admin_notifications, all_doctor_notifications = all_doctor_notifications, all_availibility_notifications = all_availibility_notifications)
-
-@app.route('/patient/view-appointment/<int:pid>/<int:sid>', methods = ['GET'])
-def view_appointment_patient(pid, sid):
-    patient = db.get_or_404(Patient, pid)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    doctor = appointment.slot_doctor
-    past_appointments = SlotSchedules.query.filter(SlotSchedules.slot_patient_id == pid, SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date < date_today).all()
-    return render_template('patient/view-appointment.html', doctor = doctor, patient = patient, appointment = appointment, past_appointments = past_appointments)
-
 @app.route('/patient/<int:pid>/cancel-appointment/<int:sid>', methods = ['GET'])
 def cancel_appointment_patient(pid, sid):
     patient = db.get_or_404(Patient, pid)
@@ -821,12 +807,82 @@ def reschedule_message_to_doctor(pid, did, sid):
     appointment = db.get_or_404(SlotSchedules, sid)
     checker = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.appointment_id == appointment.schedule_slot_id).first()
     if checker != None:
-        # notify the doctor that the patient wants to reschedule the appointment
-        message_content = f'Patient { patient.patient_name } wants to reschedule appointment on { appointment.date } ({ appointment.s_sch.slot_name })'
+        # notify the doctor that the patient has rescheduled the appointment
+        message_content = f'Patient { patient.patient_name } has rescheduled appointment on { appointment.date } ({ appointment.s_sch.slot_name })'
         patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', message_content = message_content, role = 'Patient', appointment_id = appointment.schedule_id)    
         db.session.add(patient_message)
         db.session.commit()
     return redirect(f'/patient/{ patient.patient_id }')
+
+@app.route('/patient/<int:pid>/send-message-to-admin', methods = ['GET', 'POST'])
+def patient_send_admin_messages(pid):
+    patient = db.get_or_404(Patient, pid)
+    global date_today
+    if request.method == 'GET':
+        return render_template('patient/admin_notify_profile_change.html', patient = patient, date_today = date_today)
+    else:
+        message_content = request.form['message']
+        message = AdminPatientNotifications(admin_patient_message_type = f'From Patient {patient.patient_name}', admin_patient_message_content = message_content)
+        db.session.add(message)
+        db.session.commit()
+        return redirect(f'/patient/{ patient.patient_id }')
+
+@app.route('/patient/<int:pid>/notify-availabililty/<int:did>', methods = ['GET'])
+def notify_patient_doctor_availability(pid, did):
+    global date_today
+    patient = db.get_or_404(Patient, pid)
+    doctor = db.get_or_404(Doctor, did)
+    notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
+    db.session.add(notification)
+    db.session.commit()
+    return redirect(f"/book-appointment/{ patient.patient_id }")
+
+@app.route('/patient/<int:pid>/notification-page', methods = ['GET'])
+def notification_page_patient(pid):
+    global date_today
+    patient = db.get_or_404(Patient, pid)
+    unread_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 0).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+    print(unread_admin_notifications)
+    read_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 1).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+    unread_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+    read_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+    unread_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 0).order_by(desc(AvailibilityNotifications.message_date_time)).all()
+    read_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 1).order_by(desc(AvailibilityNotifications.message_date_time)).all()
+    return render_template('patient/patient_notification_page.html', patient = patient, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, unread_availibility_notifications = unread_availibility_notifications, read_availibility_notifications = read_availibility_notifications, unread_doctor_notifications = unread_doctor_notifications, read_doctor_notifications = read_doctor_notifications)
+
+@app.route('/patient/<int:pid>/thank-you/doctor/<int:did>/<int:sid>', methods = ['GET'])
+def send_thank_you_messages(pid, did, sid):
+    patient = db.get_or_404(Patient, pid)
+    doctor = db.get_or_404(Doctor, did)
+    appointment = db.get_or_404(SlotSchedules, sid)
+    thank_you_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Thank_you_message', role = 'Patient')
+    db.session.add(thank_you_message)
+    db.session.commit()
+    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
+
+@app.route('/patient/<int:pid>/messages/doctor/<int:did>/<int:sid>', methods = ['GET', 'POST'])
+def patient_send_message_to_doctor(pid, did, sid):
+    global date_today
+    patient = db.get_or_404(Patient, pid)
+    doctor = db.get_or_404(Doctor, did)
+    appointment = db.get_or_404(SlotSchedules, sid)
+    if request.method == 'GET':
+        return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment)
+    else:
+        message_content = request.form['message']
+        patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', message_content = message_content, role = 'Patient')    
+        db.session.add(patient_message)
+        db.session.commit()
+    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
+
+
+@app.route('/patient/view-appointment/<int:pid>/<int:sid>', methods = ['GET'])
+def view_appointment_patient(pid, sid):
+    patient = db.get_or_404(Patient, pid)
+    appointment = db.get_or_404(SlotSchedules, sid)
+    doctor = appointment.slot_doctor
+    past_appointments = SlotSchedules.query.filter(SlotSchedules.slot_patient_id == pid, SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date < date_today).all()
+    return render_template('patient/view-appointment.html', doctor = doctor, patient = patient, appointment = appointment, past_appointments = past_appointments)
 
 @app.route('/patient/<int:pid>/view_doctor/<int:did>', methods = ['GET'])
 def patient_view_doctor(pid, did):
@@ -859,31 +915,6 @@ def patient_view_dept(pid, did):
         upcoming_appointments[doc] = past_appointments_list
 
     return render_template('patient/view_department.html', patient = patient, department = department, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments)
-
-@app.route('/patient/<int:pid>/thank-you/doctor/<int:did>/<int:sid>', methods = ['GET'])
-def send_thank_you_messages(pid, did, sid):
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    thank_you_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Thank_you_message', role = 'Patient')
-    db.session.add(thank_you_message)
-    db.session.commit()
-    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
-
-@app.route('/patient/<int:pid>/messages/doctor/<int:did>/<int:sid>', methods = ['GET', 'POST'])
-def patient_send_message_to_doctor(pid, did, sid):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    if request.method == 'GET':
-        return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment)
-    else:
-        message_content = request.form['message']
-        patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', message_content = message_content, role = 'Patient')    
-        db.session.add(patient_message)
-        db.session.commit()
-    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
 
 @app.route('/patient/<int:pid>/search', methods = ['POST'])
 def search_patient(pid):

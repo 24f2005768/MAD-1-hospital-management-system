@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+html {
+    scroll-behavior: smooth;
+}
+
 header {
     background-color: #313866;
     padding-left: 15px;
@@ -275,6 +279,21 @@ footer {
     border-radius: 10px;
 }
 
+.message-container {
+    /* background-color: #FFEAEA; */
+    background-color: #f5cdcd;
+    border-radius: 10px;
+    width: 35vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-direction: column;
+    min-width: 35vw;
+    /* margin-top: 25vh; */
+    flex-grow: 1;
+}
+
 .login-container {
     /* background-color: #FFEAEA; */
     background-color: #f5cdcd;
@@ -351,10 +370,15 @@ footer {
 
 .wrapper {
     display: flex;
+    /* width: 100%; */
 }
 
 .profile-picture-display {
     width: 30vw;
+}
+
+.profile-content {
+    /* width: 70vw; */
 }
 
 .patient-info-details {
@@ -399,4 +423,114 @@ footer {
     background-color: #d6d7fa;
     border: none; 
     cursor: pointer;
+}
+
+.flex-button {
+    display: flex;
+    flex-grow: 1;
+}
+
+.flex-container {
+    /* border: 8px solid black; */
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    /* height: 1000px */
+    /* width: 80vw; */
+    /* row-gap: 200px; */
+    gap: 10px;
+    /* flex-wrap: wrap; */
+}
+
+.search-flex-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0;
+}
+
+/* For Template 1 */
+.flex-boxes {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.flex-headings {
+    width: 100%;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#center-heading {
+    text-align: left;
+    width: 100%;
+}
+
+.flex-view-profile-content {
+    /* background-color:#a5a3e8; */
+    width: 100%;
+    /* height: 70vh; */
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.flex-profile-photo {
+    width: 30%;
+    /* background-color: beige; */
+}
+
+.flex-profile-content {
+    width: 70%;
+    /* background-color: blueviolet; */
+}
+
+.flex-profile-content-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-basis: 100%;
+}
+
+.button1 {
+    display: flex;
+    text-align: center;
+    background-color: #d6d7fa;
+    flex: 1;
+    height: 5vh;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;;
+}
+
+.flex-message-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@media(max-width: 1024px) {
+    .flex-view-profile-content {
+        flex-direction: column;
+    }
+
+    .flex-profile-photo {
+        width: 100%;
+        height: 500px;
+    }
+
+    .flex-profile-content {
+        width: 100%;
+        height: 800px;
+    }
 }

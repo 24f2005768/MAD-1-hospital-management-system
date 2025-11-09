@@ -33,27 +33,27 @@
 
             <div class = 'info-card-details'>
                 <p class = 'info-card-texts'>{{ patients | length }}</p>
-                <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
+                <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
             </div>
 
             <div class = 'info-card-details'>
                 <p class = 'info-card-texts'>{{ appointments | length }}</p>
-                <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
+                <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
             </div>
 
             <div class = 'info-card-details'>
                 <p class = 'info-card-texts'>{{ doctors | length }}</p>
-                <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p>
+                <a href = '#doctors'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p></a>
             </div>            
 
             <div class = 'info-card-details'>
                 <p class = 'info-card-texts'>{{departments_first_four | length}}</p>
-                <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p>
+                <a href = '#depts'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p></a>
             </div>
 
         </div>
 
-        <div style ="margin-top: 50px;">
+        <div style ="margin-top: 50px;" id = 'patients'>
             <div class = 'heading-actions'>
                 <h2>Patients</h2>
 
@@ -101,7 +101,7 @@
         </div>
         
         
-        <div style ="margin-top: 50px;">
+        <div style ="margin-top: 50px;" id = 'appointments'>
             <div class = 'heading-actions'>
                 <h2>Appointments</h2>
 
@@ -145,7 +145,7 @@
         </div>
 
 
-        <div style ="margin-top: 50px;">
+        <div style ="margin-top: 50px;" id = 'doctors'>
             <div class = 'heading-actions'>
                 <h2>Doctors</h2>
 
@@ -199,7 +199,7 @@
         </div>
 
             
-        <div style ="margin-top: 50px;"></div>
+        <div style ="margin-top: 50px;" id = 'depts'>
              <div class = 'heading-actions'>
                 <h2>Departments</h2>
 

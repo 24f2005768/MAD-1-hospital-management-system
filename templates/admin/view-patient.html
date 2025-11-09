@@ -26,100 +26,143 @@
     </header>
 
     <div class = 'main-content'>
-        <div class = 'heading-actions'>
-            <h2>Patient Details</h2>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' ><h2 id = 'center-heading'>Patient Details</h2></div>
+                <div style="position:absolute;"><button class = 'buttons' onclick = 'history.back()'>Go Back</button></div>
+            </div>
 
-            <div class = 'action-buttons'>
-                <a href = '/admin/patient/update/{{ patient.patient_id }}' class = 'update-button'>Update</a>
-                <a href = '/admin/patient/delete/{{ patient.patient_id }}' class = 'delete-button'>Delete</a>
+            <div class = 'flex-view-profile-content'>
+                <div class = 'flex-profile-photo'><p></p>
+                    <img src = '/static/images/1.jpg' alt = 'Patient Image' width="170px">
+                    <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
+                    <p><strong>DOB:</strong> {{ patient.patient_dob.strftime('%d/%m/%Y') }}</p>
+                    <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                    <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
+                    <p><strong>Contact Number:</strong> {{ patient.contact_info }}</p>
+                    <p><strong>Patient Email:</strong> {{ patient.patient_email }}</p>
+                    <a href = '/admin/patient/update/{{ patient.patient_id }}' class = 'update-button'>Update</a>
+                    <a onclick="confirmDelete()" href = '/admin/patient/delete/{{ patient.patient_id }}' class = 'delete-button'>Delete</a>
+                </div>
+
+                <div class = 'flex-profile-content'>
+                    <div class = 'flex-profile-content-buttons'>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #989aca;"><a>Upcoming Appointments</a></div>
+                        <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
+                        <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
+
+                    </div>
+
+                    <div id = 'view-upcoming-appointments'>
+                            {% if upcoming_appointments | length > 0 %} 
+                                <ol>
+                                {% for a in upcoming_appointments %}
+                                    <li>
+                                        <p><em><strong>Appointment ID:</strong></em> {{ a.appointment_id }}</p>
+                                        <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'><strong>Doctor:</strong> {{ a.d_ref.doctor_name }}</a></p>
+                                        <p><strong>Status:</strong> {{ a.t.status }}</p>
+                                    </li>
+                                {% endfor %}
+                                </ol>
+                            {% else %}
+                                <p><em>No upcoming appointments to show</em></p>
+                            {% endif %}
+                    </div>
+
+                    <div id = 'view-past-appointments' style="display: none;">
+                            {% if past_appointments | length > 0 %} 
+                                <ol>
+                                {% for a in past_appointments %}
+                                    <li>
+                                        <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
+                                        <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'><strong>Doctor:</strong> {{ a.d_ref.doctor_name }}</a></p>
+                                        <p><strong>Diagnosis:</strong> {{ a.t.diagnosis }}</p>
+                                        <p><strong>Tests:</strong> {{ a.t.notes }}</p>
+                                        <p><strong>Prescription:</strong> {{ a.t.prescription }}</p>
+                                        <p><strong>Tests:</strong> {{ a.t.tests }}</p>
+                                    </li>
+                                {% endfor %}
+                                </ol>
+                            {% else %}
+                                <p><em>No past appointments to show</em></p>
+                            {% endif %}
+                    </div>
+
+                    <div class = 'flex-message-div' id = 'send-message-to-patient' style="display: none;">
+                        <div class = 'message-container'>
+                            <h3>Message</h3>
+                            <div>
+                                <p>To: {{ patient.patient_name }}</p>
+                                <p>Date: {{ date_today.strftime('%d/%m/%Y') }}</p>
+                            
+                            <form action = '/admin/patient/{{ patient.patient_id }}/send-message' method = 'POST'>
+                                <div class = 'update-form-details'>
+                                    <label for = 'message'>Type Your Message: </label>
+                                    <input type = 'text' name = 'message' placeholder="Type Your Message" >
+                                </div>
+                                
+                                <input onclick = 'confirmPostingMessage()' type ="submit" value = "Send" class = 'login-button'>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <table>
-            <tbody>
-                <tr>
-                    <th>Name</th>
-                    <th>Contact Number</th>
-                    <th>Email</th>
-                </tr>
-
-                <tr>
-                    <td>{{ patient.patient_name }}</td>
-                    <td>{{ patient.contact_info }}</td>
-                    <td>{{ patient.patient_email }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2>Upcoming Appointments</h2>
-        
-        <table>
-            <tbody>
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Doctor Name</th>
-                </tr>
-
-                {% if upcoming_appointments | length > 0 %}
-                    {% for a in upcoming_appointments %}
-                    <tr>
-                        <td>{{ a.appointment_id }}</td>
-                        <td>{{ a.date_time.strftime('%d/%m/%Y') }}</td>
-                        <td><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{a.d_ref.doctor_name}}</a></td>
-                    </tr>
-                    {% endfor %}
-
-                {% else %}
-                <tr>
-                    <td>--</td>
-                    <td>--</td>
-                </tr>
-                {% endif %}
-            </tbody>
-        </table>
-
-        
-
-        <h2>Appointment History</h2>
-        <table>
-            <tbody>
-                <tr>
-                    <th>ID</th>
-                    <th>Doctor Name</th>
-                    <!-- <th>Department</th> -->
-                    <th>Diagnosis</th>
-                    <!-- <th>Notes</th> -->
-                    <th>Prescription</th>
-                    <!-- <th>Tests</th> -->
-                </tr>
-
-                {% if past_appointments | length > 0 %}
-                    {% for a in past_appointments %}
-                        <tr>
-                            <td><a href = '/admin/appointment/{{ a.patient_id }}/{{ a.doctor_id }}'>{{a.appointment_id}}</a></td>
-                            <td><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{a.d_ref.doctor_name}}</a></td>
-                            <!-- <td>{{a.d_ref.dept.department_name}}</td> -->
-                            <td>{{a.t.diagnosis}}</td>
-                            <!-- <td>{{a.t.notes}}</td> -->
-                            <td>{{a.t.prescription}}</td>
-                            <!-- <td>{{a.t.tests}}</td> -->
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
     </div>
+
+    <script>
+        var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
+        var view_past_appointments = document.getElementById('view-past-appointments')
+        var send_message_to_patient = document.getElementById('send-message-to-patient')
+        var upcoming_color_change = document.getElementById('upcoming')
+        var past_color_change = document.getElementById('past')
+        var message_color_change = document.getElementById('message')
+
+        function viewPatientUpcomingAppointments() {
+            view_upcoming_appointments.style.display = 'block';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'none';
+            upcoming_color_change.style.backgroundColor = '#989aca'
+            past_color_change.style.backgroundColor = '#d6d7fa'
+            message_color_change.style.backgroundColor = '#d6d7fa'
+        }
+
+        function viewPatientPastAppointments() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'block';
+            send_message_to_patient.style.display = 'none';
+            upcoming_color_change.style.backgroundColor = '#d6d7fa'
+            past_color_change.style.backgroundColor = '#989aca'
+            message_color_change.style.backgroundColor = '#d6d7fa'
+        }
+
+        function sendMessageToPatient() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'flex';
+            send_message_to_patient.style.marginTop = '25px';
+            upcoming_color_change.style.backgroundColor = '#d6d7fa'
+            past_color_change.style.backgroundColor = '#d6d7fa'
+            message_color_change.style.backgroundColor = '#989aca'
+        }
+
+        function confirmDelete() {
+            var result = confirm('Are you sure you want to delete Patient Profile?')
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+
+        function confirmPostingMessage() {
+            var result = confirm('Are you sure you want to send this message?')
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+    </script>
 
     <footer>
         &copy;  2025 LDH Hospital
