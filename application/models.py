@@ -24,6 +24,15 @@ class User(db.Model):
     doctor_relationship = db.relationship('Doctor', back_populates = 'd', uselist = False)
     patient_relationship = db.relationship('Patient', back_populates = 'p', uselist = False)
 
+    def is_authenticated(self):
+        return False    
+    def is_active(self):
+        return False 
+    def is_anonymous(self):
+        return False
+    def get_id(self):
+        return str(self.user_id)
+
 class Admin(db.Model):
     __tablename__ = 'admin'
     admin_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
@@ -168,7 +177,7 @@ class ProfilePictures(db.Model):
 class PatientDoctorNotifications(db.Model):
     __tablename__ = 'patient_doctor_notifications'
     message_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    message_type = db.Column(db.String) #Doctor_Notifications, Thank_you_message: Messages from patients; 
+    message_type = db.Column(db.String) #Doctor_Notifications, Thank_you_message: Messages from patients; TreatmentDetails; AppointmentCancelled
     message_content = db.Column(db.String)
     role = db.Column(db.String) #message sent from 
     patient_message_recieved = db.Column(db.Boolean, default = False)
@@ -185,7 +194,7 @@ class PatientDoctorNotifications(db.Model):
 class AdminPatientNotifications(db.Model):
     __tablename__ = 'admin_patient_notifications'
     admin_patient_message_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    admin_patient_message_type = db.Column(db.String)
+    admin_patient_message_type = db.Column(db.String) #WelcomeMessage, 
     admin_patient_message_content = db.Column(db.String)
     patient_message_recieved = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)

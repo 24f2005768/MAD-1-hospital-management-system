@@ -300,14 +300,87 @@ db.session.commit()
 
 # print(da_dict)
 
-notif1 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'Welcome to LDH Hospital', admin_patient_message_content = 'Greetings from LDH Hospital')
-notif2 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'You can book appointments now', admin_patient_message_content = 'You can book appointments now')
+# notif1 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'Welcome to LDH Hospital', admin_patient_message_content = 'Greetings from LDH Hospital')
+# notif2 = AdminPatientNotifications(message_patient_id = 3, admin_patient_message_type = 'You can book appointments now', admin_patient_message_content = 'You can book appointments now')
 
-notif3 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 3, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
-notif4 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 2, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
+# notif3 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 3, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
+# notif4 = PatientDoctorNotifications(m_patient_id = 3, m_doctor_id = 2, role = 'Doctor', message_type = 'Booking Confirmation', message_content = 'Thank You for trusting LDH Hospital')
 
-db.session.add(notif1)
-db.session.add(notif2)
-db.session.add(notif3)
-db.session.add(notif4)
+# db.session.add(notif1)
+# db.session.add(notif2)
+# db.session.add(notif3)
+# db.session.add(notif4)
+# db.session.commit()
+
+# doctor = db.get_or_404(Doctor, 1)
+# slot3 = db.get_or_404(Slot, 3)
+# s = SlotSchedules(date = date(2025,10,6), slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id)
+# # db.session.add(s)
+# # db.session.commit()
+
+# available_slots = SlotSchedules.query.filter(SlotSchedules.slot_doctor_id == doctor.doctor_id).all()
+# book_slot3 = available_slots[0]
+# patient1 = db.get_or_404(Patient, 1)
+
+# book_slot3.slot_patient_id = patient1.patient_id
+# book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+# book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
+# # db.session.add(book_slot3)
+
+# message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+# db.session.add(message)
+
+user1 = db.get_or_404(User, 2)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user1.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user1.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user2 = db.get_or_404(User, 3)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user2.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user2.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user3 = db.get_or_404(User, 4)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user3.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user3.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user4 = db.get_or_404(User, 5)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user4.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user4.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user5 = db.get_or_404(User, 6)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user5.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user5.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user6 = db.get_or_404(User, 7)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user6.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user6.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user7 = db.get_or_404(User, 8)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user7.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user7.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user8 = db.get_or_404(User, 9)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user8.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user8.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user9 = db.get_or_404(User, 10)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user9.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user9.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user10 = db.get_or_404(User, 11)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user10.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user10.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user11 = db.get_or_404(User, 12)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user11.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user11.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user12 = db.get_or_404(User, 13)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user12.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user12.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user13 = db.get_or_404(User, 14)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user13.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user13.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+
 db.session.commit()

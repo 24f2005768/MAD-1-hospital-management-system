@@ -58,6 +58,62 @@ db.session.add(user11)
 db.session.add(user12)
 db.session.add(user13)
 
+# db.commit()
+
+user1 = db.get_or_404(User, 2)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user1.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user1.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user2 = db.get_or_404(User, 3)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user2.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user2.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user3 = db.get_or_404(User, 4)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user3.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user3.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user4 = db.get_or_404(User, 5)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user4.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user4.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user5 = db.get_or_404(User, 6)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user5.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user5.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user6 = db.get_or_404(User, 7)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user6.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user6.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user7 = db.get_or_404(User, 8)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user7.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user7.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user8 = db.get_or_404(User, 9)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user8.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user8.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user9 = db.get_or_404(User, 10)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user9.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user9.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user10 = db.get_or_404(User, 11)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user10.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user10.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user11 = db.get_or_404(User, 12)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user11.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user11.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user12 = db.get_or_404(User, 13)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user12.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user12.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+user13 = db.get_or_404(User, 14)
+welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user13.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user13.patient_relationship.patient_id)
+db.session.add(welcome_notification)
+
+# print(user1.patient_relationship.patient_name)
+
 
 # # doctors and departments 
 
@@ -166,19 +222,24 @@ book_slot1.slot_patient_id = patient4.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient5.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient3.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 # Slots and past appointment bookings for doctor 2
 
@@ -200,19 +261,24 @@ book_slot1.slot_patient_id = patient2.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient1.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient4.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
-
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 # Slots and past appointment bookings for doctor 3
 
@@ -234,24 +300,32 @@ book_slot1.slot_patient_id = patient11.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient13.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient10.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 book_slot4 = available_slots[3]
 book_slot4.slot_patient_id = patient12.patient_id
 book_slot4.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
 book_slot4.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines and Injections', notes = 'Admitted for 3 days', tests = '--', status = 'Completed')
 db.session.add(book_slot4)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot4.slot_patient_id)
+db.session.add(message)
 
 
 # Slots and past appointment bookings for doctor 4
@@ -274,18 +348,24 @@ book_slot1.slot_patient_id = patient13.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Fever', prescription = 'Medicines', notes = 'Patient has fever since 3 days, no signicant pain', tests = '--', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient12.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = '--', notes = 'Regular Checkup', tests = 'Blood Test', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient10.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Multi-vitamins', notes = 'Patient is recovering well', tests = '--', status = 'Completed')
 db.session.add(book_slot3)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 
 # Slots and past appointment bookings for doctor 5
@@ -308,24 +388,32 @@ book_slot1.slot_patient_id = patient5.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Femur Fracture', prescription = 'Calcium Syrup', notes = 'Femur Fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient3.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient2.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot3)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 book_slot4 = available_slots[3]
 book_slot4.slot_patient_id = patient1.patient_id
 book_slot4.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
 book_slot4.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot4)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot4.slot_patient_id)
+db.session.add(message)
 
 
 # Slots and past appointment bookings for doctor 6
@@ -348,18 +436,24 @@ book_slot1.slot_patient_id = patient2.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Arm Fracture', prescription = 'Calcium Syrup', notes = 'Arm Fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot1)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
+db.session.add(message)
 
 book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient4.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Unexplained pain in wrist', prescription = '--', notes = 'Unexplained pain in wrist', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot2)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
+db.session.add(message)
 
 book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient1.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[3].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow Up after emergency surgery', prescription = 'Calcium Syrup', notes = 'Leg fracture due to accident', tests = 'X-Ray', status = 'Completed')
 db.session.add(book_slot3)
+message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
+db.session.add(message)
 
 db.session.commit()
 
