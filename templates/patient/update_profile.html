@@ -11,20 +11,24 @@
 </head>
 
 <body>
-
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ patient.patient_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ current_user.patient_relationship.patient_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div class = 'flex-container'>                            
-                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: #f9e8c8; text-decoration: none; font-size: 20px; padding-bottom: 5px;"><i class="bi bi-bell-fill"></i></a>
+                    <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>  
+                            <div>                          
+                                <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
                             <div class = 'search-flex-container'>
-                                <input type = 'text' placeholder ="Enter Number or Name" name = 'query' style="border-radius: 0; gap:0; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                                <button type="submit" style = "height:36px; border: none; background-color: #d75100; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 30px; color: black;"><i class="bi bi-search"></i></button>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
                             </div>
                         </div>
                     </form>
@@ -36,40 +40,40 @@
         <div class = 'main-content'>
             <div class = 'login-container'>
                 <h1>Update Profile</h1>
-                <form action = '/patient/{{ patient.patient_id }}/profile/update' method = 'POST'>
+                <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/profile/update' method = 'POST'>
                     <div class = 'update-form-details'>
                         <label for = 'u_name'>User Name</label>
-                        <input type = 'text' name = 'u_name' value = '{{ patient.p.user_name }}' placeholder = "User Name"/>
+                        <input type = 'text' name = 'u_name' value = '{{ current_user.patient_relationship.p.user_name }}' placeholder = "User Name"/>
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'u_password'>User Password</label>
-                        <input type = 'password' name = 'u_password' value = '{{ patient.p.user_password }}' placeholder = "User Password"/>
+                        <input type = 'password' name = 'u_password' value = '{{ current_user.patient_relationship.p.user_password }}' placeholder = "User Password"/>
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'p_name'>Name</label>
-                        <input type = 'text' name = 'p_name' value = '{{ patient.patient_name }}' placeholder = "Name"/>
+                        <input type = 'text' name = 'p_name' value = '{{ current_user.patient_relationship.patient_name }}' placeholder = "Name"/>
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'email'>Email</label>
-                        <input type = 'text' name = 'email' value = '{{ patient.patient_email }}' placeholder = "Email"/>
+                        <input type = 'text' name = 'email' value = '{{ current_user.patient_relationship.patient_email }}' placeholder = "Email"/>
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'contact_info'>Contact Number</label>
-                        <input type = 'text' name = 'contact_info' value = '{{ patient.contact_info }}' placeholder = "Contact number"/>
+                        <input type = 'text' name = 'contact_info' value = '{{ current_user.patient_relationship.contact_info }}' placeholder = "Contact number"/>
                     </div>
 
                     <div class = 'update-form-details'>
-                        <label for = 'height'>Height</label>
-                        <input type = 'text' name = 'height' value = '{{ patient.patient_height }}' placeholder = "Height"/>
+                        <label for = 'height'>Height in cm</label>
+                        <input type = 'text' name = 'height' value = '{{ current_user.patient_relationship.patient_height }}' placeholder = "Height"/>
                     </div>
 
                     <div class = 'update-form-details'>
-                        <label for = 'weight'>Weight</label>
-                        <input type = 'text' name = 'weight' value = '{{ patient.patient_weight }}' placeholder = "Weight"/>
+                        <label for = 'weight'>Weight in kg</label>
+                        <input type = 'text' name = 'weight' value = '{{ current_user.patient_relationship.patient_weight }}' placeholder = "Weight"/>
                     </div>
 
                 <input type ="submit" value = "Submit" class = 'login-button'>

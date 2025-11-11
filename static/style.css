@@ -28,6 +28,37 @@ body {
     font-family:  "Work Sans", sans-serif;
 }
 
+#search_bar {
+    padding-right: 50px;
+    float: right;
+    border-radius: 0; 
+    gap:0; 
+    border-top-left-radius: 8px; 
+    border-bottom-left-radius: 8px;
+    margin-bottom: 0;
+}
+
+#search-icon {
+    height:36px; 
+    border: none; 
+    background-color: #d75100; 
+    border-top-right-radius: 8px; 
+    border-bottom-right-radius: 8px; 
+    width: 30px; 
+    color: black;
+}
+
+#logout-button {
+    color: white;
+    font-size: 18px;
+}
+
+#notification-bell {
+    color: #f9e8c8; 
+    text-decoration: none; 
+    font-size: 20px; 
+    padding-bottom: 5px;}
+
 h1 {
     font-family: "Montserrat", sans-serif;;
 }
@@ -117,6 +148,17 @@ footer {
 }
 
 .buttons {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    background-color: #d6d7fa;   
+    border: none; 
+    cursor: pointer;
+}
+
+.back-button {
     text-decoration: none;
     padding: 5px;
     padding-left: 9px;
@@ -280,17 +322,15 @@ footer {
 }
 
 .message-container {
-    /* background-color: #FFEAEA; */
-    background-color: #f5cdcd;
-    border-radius: 10px;
-    width: 35vw;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
     flex-direction: column;
+    background-color: #b9c5ea6b;
+    border-radius: 10px;
+    width: 35vw;
+    gap: 2rem;
     min-width: 35vw;
-    /* margin-top: 25vh; */
     flex-grow: 1;
 }
 
@@ -333,10 +373,6 @@ footer {
     text-decoration: none;
 }
 
-.search_bar {
-    padding-right: 50px;
-    float: right;
-}
 
 .update-form-details {
     display: flex;
@@ -441,6 +477,7 @@ footer {
     /* row-gap: 200px; */
     gap: 10px;
     /* flex-wrap: wrap; */
+    margin-right: 30px;
 }
 
 .search-flex-container {
@@ -501,7 +538,7 @@ footer {
 .button1 {
     display: flex;
     text-align: center;
-    background-color: #d6d7fa;
+    background-color: #269873a8;
     flex: 1;
     height: 5vh;
     text-align: center;
@@ -509,7 +546,7 @@ footer {
     align-items: center;
     justify-content: center;
     align-items: center;
-    cursor: pointer;;
+    cursor: pointer;
 }
 
 .flex-message-div {
@@ -527,10 +564,91 @@ footer {
     .flex-profile-photo {
         width: 100%;
         height: 500px;
+        align-self: center;
     }
 
     .flex-profile-content {
         width: 100%;
         height: 800px;
     }
+
+    .message-container {
+        min-width: 60vw;
+    }
+
+    /* .profile-content-patient-info {
+        text-align: center;
+    } */
 }
+
+.send-button {
+    margin-bottom: 7px;
+    margin-top: 25px;    
+    border-radius: 40px;
+    border: 1px;
+    padding: 15px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    background-color : #128bf4c9;
+    /* background-color : #128bf4; */
+    color: white;
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+/* Notification-Page */
+
+.notification-page-container {
+    width: 100%;
+    background-color: #eabde630;
+    height: 300px;
+    margin-bottom: 30px;
+    border-radius: 25px;
+    /* filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8)); */
+    box-shadow:  0 0 5px 0.1px #333333;
+}
+.notification-page-button-ribbon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-basis: 100%;
+    /* background-color: green; */
+}
+
+.notification-page-button {
+    display: flex;
+    text-align: center;
+    background-color: #d6d7fa;
+    flex: 1;
+    height: 5vh;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color:#269873a8;
+}
+
+/* selected: #2fbb8fa8
+unselected: #269873a8 */
+
+.notification-page-heading {
+    text-align: center;
+}
+
+.notification-page-main-heading {
+    width: 100%;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#notification-center-heading {
+    text-align: left;
+    width: 100%;
+}
+

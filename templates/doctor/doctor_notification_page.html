@@ -5,20 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notification Page</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ doctor.doctor_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/doctor/{{ doctor.doctor_id }}/search' method = 'POST'>
-                        <div>
-                            <input type = 'text' list = 'search_list' placeholder ="Enter ID, Number or Name" name = 'query'>
-                            <input type ="submit" value = "Search">
+                    <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>
+                            <div>
+                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
+                            <div class = 'search-flex-container'>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -27,31 +38,143 @@
     </header>
 
         <div class = 'main-content'>
-            <h3>Doctor Notification Page</h3>
-            {% if all_admin_notifications | length != 0 %}
-                <h3>Notifications From Admin</h3>
-                <ol>
-                    {% for a in all_admin_notifications %}
-                        <li>
-                            <p>{{ a.admin_doctor_message_type }}</p>
-                            <p>{{ a.admin_doctor_message_content }}</p>
-                        </li>
-                    {% endfor %}
-                </ol>
-            {% endif %}
+            <div class = 'notification-page-main-heading'>
+                <div id = 'notification-center-heading' ><h2 id = 'center-heading'>Notification Page</h2></div>
+                <div style="position:absolute;"><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
+            </div>
 
-            {% if all_patient_notifications | length != 0 %}
-                <h3>Notifications From Patient</h3>
-                <ol>
-                    {% for a in all_patient_notifications %}
-                        <li>
-                            <p>{{ a.message_type }}</p>
-                            <p>{{ a.message_content }}</p>
-                        </li>
-                    {% endfor %}
-                </ol>
-            {% endif %}
-        </div>
+            <div class = 'notification-page-container'>
+
+                <h3 class = 'notification-page-heading'>Notifications From Admin</h3>
+                <div class = 'notification-page-button-ribbon'>
+                    <div id = 'un-adm' class = 'notification-page-button' onclick = 'view_unread_admin_notifactions()' style = 'background-color: #2fbb8fa8;font-weight: 600;'>Unread notifications</div>
+                    <div id = 'r-adm' class = 'notification-page-button' onclick = 'view_read_admin_notifactions()'>Read notifications</div>
+                </div>
+
+                <div class = 'notification-page-content' id = 'unread-admin'>
+                    {% if unread_admin_notifications | length != 0 %}
+                        <ol>
+                            {% for a in unread_admin_notifications %}
+                                <li>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y') }}</p>
+                                    <p>{{ a.admin_doctor_message_type }}</p>
+                                    <p>{{ a.admin_doctor_message_content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+
+                <div  id = 'read-admin' class = 'notification-page-content' style="display: none;">
+                    {% if read_admin_notifications | length != 0 %}
+                        <ol>
+                            {% for a in read_admin_notifications %}
+                                <li>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y') }}</p>
+                                    <p>{{ a.admin_doctor_message_type }}</p>
+                                    <p>{{ a.admin_doctor_message_content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p>No</p>
+                    {% endif %}
+                </div>
+
+                
+            </div>
+
+            <div class = 'notification-page-container'>
+                <h3 class ='notification-page-heading'>Notifications From Patient</h3>
+                <div class = 'notification-page-button-ribbon'>
+                    <div id = 'un-pat' class = 'notification-page-button' onclick = 'view_unread_patient_notifications()' style = 'background-color: #2fbb8fa8; font-weight: 600;'>Unread notifications</div>
+                    <div id = 'r-pat' class = 'notification-page-button' onclick = 'view_read_patient_notifications()'>Read notifications</div>
+
+                </div>
+
+                    <div id = 'unread-patient' class = 'notification-page-content'>
+                        {% if unread_patient_notifications | length != 0 %}
+                            
+                            <ol>
+                                {% for a in unread_patient_notifications %}
+                                    <li>
+                                        <p><p>Message from {{ a.pdn_patient.patient_name }}</p></p>
+                                        <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p>{{ a.message_type }}</p>
+                                        <p>{{ a.message_content }}</p>
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                            
+                        {% endif %}
+                    </div>
+
+                    <div  id = 'read-patient' class = 'notification-page-content' style="display: none;">
+                        {% if read_patient_notifications | length != 0 %}
+                            <ol>
+                                {% for a in read_patient_notifications %}
+                                    <li>
+                                        <p>Message from {{ a.pdn_patient.patient_name }}</p>
+                                        <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p>{{ a.message_type }}</p>
+                                        <p>{{ a.message_content }}</p>
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        {% else %}
+                            <p>No</p>
+                        {% endif %}
+                    </div>                   
+                </div>
+        </div>    
+
+    <script>
+        var unread_admin_apt = document.getElementById('unread-admin')
+        var read_admin_apt = document.getElementById('read-admin')
+        var unread_patient_apt = document.getElementById('unread-patient')
+        var read_patient_apt = document.getElementById('read-patient')
+        var unread_admin_function_button = document.getElementById('un-adm')
+        var read_admin_function_button = document.getElementById('r-adm')
+        var unread_patient_function_button = document.getElementById('un-pat')
+        var read_patient_function_button = document.getElementById('r-pat')
+
+        function view_unread_admin_notifactions() {
+            unread_admin_apt.style.display = 'block';
+            read_admin_apt.style.display = 'none';
+            unread_admin_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_admin_function_button.style.backgroundColor = '#269873a8';
+            unread_admin_function_button.style.fontWeight = '600';
+            read_admin_function_button.style.fontWeight = 'normal';
+        }
+
+        function view_read_admin_notifactions() {
+            unread_admin_apt.style.display = 'none';
+            read_admin_apt.style.display = 'block';
+            unread_admin_function_button.style.backgroundColor = '#269873a8';
+            read_admin_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_admin_function_button.style.fontWeight = '600';
+            unread_admin_function_button.style.fontWeight = 'normal';
+        }
+
+        function view_unread_patient_notifications() {
+            unread_patient_apt.style.display = 'block';
+            read_patient_apt.style.display = 'none';
+            unread_patient_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_patient_function_button.style.backgroundColor = '#269873a8';
+            unread_patient_function_button.style.fontWeight = '600';
+            read_patient_function_button.style.fontWeight = 'normal';
+        }
+
+        function view_read_patient_notifications() {
+            unread_patient_apt.style.display = 'none';
+            read_patient_apt.style.display = 'block';
+            unread_patient_function_button.style.backgroundColor = '#269873a8';
+            read_patient_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_patient_function_button.style.fontWeight = '600';
+            unread_patient_function_button.style.fontWeight = 'normal';
+        }
+
+    </script>
 
     <footer>
         &copy;  2025 LDH Hospital

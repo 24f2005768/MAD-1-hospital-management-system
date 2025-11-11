@@ -13,17 +13,22 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ patient.patient_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ current_user.patient_relationship.patient_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div class = 'flex-container'>                            
-                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: #f9e8c8; text-decoration: none; font-size: 20px; padding-bottom: 5px;"><i class="bi bi-bell-fill"></i></a>
+                    <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>  
+                            <div>                          
+                                <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
                             <div class = 'search-flex-container'>
-                                <input type = 'text' placeholder ="Enter Number or Name" name = 'query' style="border-radius: 0; gap:0; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                                <button type="submit" style = "height:36px; border: none; background-color: #d75100; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 30px; color: black;"><i class="bi bi-search"></i></button>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
                             </div>
                         </div>
                     </form>
@@ -33,11 +38,11 @@
     </header>
     
     <div class = 'main-content'>
-        <h2 id = 'message'>Hi! {{ patient.patient_name }}</h2>    
+        <h2 id = 'message'>Hi! {{ current_user.patient_relationship.patient_name }}</h2>    
         <div class = 'info-cards'>
 
                 <div class = 'info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ patient.patient_id }}/profile'><i class="bi bi-person-fill" style="font-size: 50px; color: white;"></i></a></p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/profile'><i class="bi bi-person-fill" style="font-size: 50px; color: white;"></i></a></p>
                 </div>
 
                 <div class = 'info-card-details'>
@@ -68,14 +73,14 @@
                         {% for a in appointments_today %}
                             <li>
                                 <div class = 'heading-actions'>
-                                    <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                    <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
-                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' style = 'background-color: hsla(360 100% 60.2% / 0.66);' class = 'buttons'>Cancel</a>
+                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' style = 'background-color: hsla(360 100% 60.2% / 0.66);' class = 'buttons'>Cancel</a>
                                         <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '' class = 'buttons' style="background-color: hsla(205 80.1% 79.4% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
-                                <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
                             </li>
                         {% endfor %}
@@ -91,14 +96,14 @@
                         {% for a in appointments_this_week %}
                             <li>
                                 <div class = 'heading-actions'>
-                                    <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                    <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
-                                        <a href = '/patient/{{ patient.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
-                                        <a href = '/patient/{{ patient.patient_id }}/reschedule-messages/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
+                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
+                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-messages/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
-                                <p>Doctor Name: <a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
                             </li>
                         {% endfor %}
@@ -113,9 +118,9 @@
                     <ol>
                         {% for a in past_appointments %}
                             <li>
-                                <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
-                                <p>Doctor Name: <a href ='/patient/{{ patient.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ patient.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                <p>Doctor Name: <a href ='/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
                             </li>
                         {% endfor %}
@@ -128,7 +133,7 @@
             <div class = 'heading-actions'>
                 <h2>Departments</h2>
                 <div class = 'action-buttons'>
-                    <a href = '/book-appointment/{{ patient.patient_id }}'  class = 'buttons'>Book Appointment</a>
+                    <a href = '/book-appointment/{{ current_user.patient_relationship.patient_id }}'  class = 'buttons'>Book Appointment</a>
                 </div>
             </div>
 
@@ -154,14 +159,14 @@
                                     <div class = 'wrapper'>
                                         <div class = 'profile-picture-display'>
                                             <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
-                                            <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></h3>                                
+                                            <h3><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></h3>                                
                                         </div>
 
                                         <div class = 'profile-content'>
                                             <div class = 'heading-actions'>
                                                 <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
                                                 <div class = 'action-buttons'>
-                                                    <a class = 'buttons' href = '/patient/{{ patient.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                                    <a class = 'buttons' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
                                                 </div>
                                             </div>
                                             <p>Email: {{ doctor.doctor_email }}</p>

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Patient</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
     <header>
@@ -35,19 +38,21 @@
             <div class = 'flex-view-profile-content'>
                 <div class = 'flex-profile-photo'><p></p>
                     <img src = '/static/images/1.jpg' alt = 'Patient Image' width="170px">
-                    <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
-                    <p><strong>DOB:</strong> {{ patient.patient_dob.strftime('%d/%m/%Y') }}</p>
-                    <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
-                    <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
-                    <p><strong>Contact Number:</strong> {{ patient.contact_info }}</p>
-                    <p><strong>Patient Email:</strong> {{ patient.patient_email }}</p>
-                    <a href = '/admin/patient/update/{{ patient.patient_id }}' class = 'update-button'>Update</a>
-                    <a onclick="confirmDelete()" href = '/admin/patient/delete/{{ patient.patient_id }}' class = 'delete-button'>Delete</a>
+                    <div class = 'profile-content-patient-info'>
+                        <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
+                        <p><strong>DOB:</strong> {{ patient.patient_dob.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
+                        <p><strong>Contact Number:</strong> {{ patient.contact_info }}</p>
+                        <p><strong>Patient Email:</strong> {{ patient.patient_email }}</p>
+                        <a href = '/admin/patient/update/{{ patient.patient_id }}' class = 'update-button'>Update</a>
+                        <a onclick="confirmDelete()" href = '/admin/patient/delete/{{ patient.patient_id }}' class = 'delete-button'>Delete</a>
+                    </div>
                 </div>
 
                 <div class = 'flex-profile-content'>
                     <div class = 'flex-profile-content-buttons'>
-                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #989aca;"><a>Upcoming Appointments</a></div>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Upcoming Appointments</a></div>
                         <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
                         <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
 
@@ -103,7 +108,7 @@
                                     <input type = 'text' name = 'message' placeholder="Type Your Message" >
                                 </div>
                                 
-                                <input onclick = 'confirmPostingMessage()' type ="submit" value = "Send" class = 'login-button'>
+                                <input onclick = 'confirmPostingMessage()' type ="submit" value = "Send" class = 'send-button'>
                             </form>
                             </div>
                         </div>
@@ -125,18 +130,18 @@
             view_upcoming_appointments.style.display = 'block';
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'none';
-            upcoming_color_change.style.backgroundColor = '#989aca'
-            past_color_change.style.backgroundColor = '#d6d7fa'
-            message_color_change.style.backgroundColor = '#d6d7fa'
+            upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#269873a8'
         }
 
         function viewPatientPastAppointments() {
             view_upcoming_appointments.style.display = 'none';
             view_past_appointments.style.display = 'block';
             send_message_to_patient.style.display = 'none';
-            upcoming_color_change.style.backgroundColor = '#d6d7fa'
-            past_color_change.style.backgroundColor = '#989aca'
-            message_color_change.style.backgroundColor = '#d6d7fa'
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#2fbb8fa8'
+            message_color_change.style.backgroundColor = '#269873a8'
         }
 
         function sendMessageToPatient() {
@@ -144,9 +149,9 @@
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'flex';
             send_message_to_patient.style.marginTop = '25px';
-            upcoming_color_change.style.backgroundColor = '#d6d7fa'
-            past_color_change.style.backgroundColor = '#d6d7fa'
-            message_color_change.style.backgroundColor = '#989aca'
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#2fbb8fa8'
         }
 
         function confirmDelete() {
