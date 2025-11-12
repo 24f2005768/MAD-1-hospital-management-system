@@ -5,26 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Department</title>
     <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ patient.patient_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ current_user.patient_relationship.patient_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/patient/{{ patient.patient_id }}/search' method = 'POST'>
-                        <div class = 'flex-container'>                            
-                            <a href = '/patient/{{ patient.patient_id }}/notification-page' style="color: #f9e8c8; text-decoration: none; font-size: 20px; padding-bottom: 5px;"><i class="bi bi-bell-fill"></i></a>
+                    <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>  
+                            <div>                          
+                                <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
                             <div class = 'search-flex-container'>
-                                <input type = 'text' placeholder ="Enter Number or Name" name = 'query' style="border-radius: 0; gap:0; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                                <button type="submit" style = "height:36px; border: none; background-color: #d75100; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 30px; color: black;"><i class="bi bi-search"></i></button>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
                             </div>
                         </div>
                     </form>
@@ -58,7 +62,7 @@
                             <div class = 'wrapper'>
                                 <div class = 'profile-picture-display'>
                                     <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
-                                    <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
+                                    <h3><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
                                 </div>
 
                                 <div class = 'profile-content'>
@@ -77,14 +81,14 @@
                                 <div class = 'wrapper'>
                                     <div class = 'profile-picture-display'>
                                         <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
-                                        <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
+                                        <h3><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
                                     </div>
 
                                     {% if upcoming_appointments[doctor] | length > 0 %}
                                         <ol>
                                             {% for a in upcoming_appointments[doctor] %}
                                                     <li>
-                                                        <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.appointment_sch.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                                        <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.appointment_sch.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                                         <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
                                                         <p>Status: {{ a.t.status }}</p>                        
 
@@ -108,14 +112,14 @@
                                 <div class = 'wrapper'>
                                     <div class = 'profile-picture-display'>
                                         <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
-                                        <h3><a href = '/patient/{{ patient.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
+                                        <h3><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></h3>
                                     </div>
                                     
                                     {% if past_appointments[doctor] | length > 0 %}
                                         <ol>
                                             {% for a in past_appointments[doctor] %}
                                                     <li>
-                                                        <p><strong><i><a href = '/patient/view-appointment/{{ patient.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.appointment_sch.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                                        <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.appointment_sch.schedule_id }}'>{{ a.appointment_sch.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                                         <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
                                                         <p>Status: {{ a.t.status }}</p>                        
 

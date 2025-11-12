@@ -1122,105 +1122,168 @@ def patient_send_admin_messages(pid):
 
 #flask_login done till here
 @app.route('/patient/<int:pid>/notify-availabililty/<int:did>', methods = ['GET'])
+@login_required
 def notify_patient_doctor_availability(pid, did):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
-    db.session.add(notification)
-    db.session.commit()
-    return redirect(f"/book-appointment/{ patient.patient_id }")
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        global date_today
+        patient = db.get_or_404(Patient, pid)
+        doctor = db.get_or_404(Doctor, did)
+        notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
+        db.session.add(notification)
+        db.session.commit()
+        return redirect(f"/book-appointment/{ patient.patient_id }")
+    else:
+        return redirect('/')
 
 @app.route('/patient/<int:pid>/notification-page', methods = ['GET'])
+@login_required
 def notification_page_patient(pid):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    unread_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 0).order_by(desc(AdminPatientNotifications.message_date_time)).all()
-    read_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 1).order_by(desc(AdminPatientNotifications.message_date_time)).all()
-    unread_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
-    read_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
-    unread_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 0).order_by(desc(AvailibilityNotifications.message_date_time)).all()
-    read_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 1).order_by(desc(AvailibilityNotifications.message_date_time)).all()
-    return render_template('patient/patient_notification_page.html', patient = patient, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, unread_availibility_notifications = unread_availibility_notifications, read_availibility_notifications = read_availibility_notifications, unread_doctor_notifications = unread_doctor_notifications, read_doctor_notifications = read_doctor_notifications)
-
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        global date_today
+        patient = db.get_or_404(Patient, pid)
+        unread_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 0).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+        read_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 1).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+        unread_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+        read_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+        unread_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 0).order_by(desc(AvailibilityNotifications.message_date_time)).all()
+        read_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 1).order_by(desc(AvailibilityNotifications.message_date_time)).all()
+        return render_template('patient/patient_notification_page.html', patient = patient, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, unread_availibility_notifications = unread_availibility_notifications, read_availibility_notifications = read_availibility_notifications, unread_doctor_notifications = unread_doctor_notifications, read_doctor_notifications = read_doctor_notifications)
+    else:
+        return redirect('/')
+    
 @app.route('/patient/<int:pid>/thank-you/doctor/<int:did>/<int:sid>', methods = ['GET'])
+@login_required
 def send_thank_you_messages(pid, did, sid):
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    thank_you_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Thank_you_message', role = 'Patient')
-    db.session.add(thank_you_message)
-    db.session.commit()
-    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        patient = db.get_or_404(Patient, pid)
+        doctor = db.get_or_404(Doctor, did)
+        appointment = db.get_or_404(SlotSchedules, sid)
+        thank_you_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Thank_you_message', role = 'Patient')
+        db.session.add(thank_you_message)
+        db.session.commit()
+        return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
+    else:
+        return redirect('/')
 
 @app.route('/patient/<int:pid>/messages/doctor/<int:did>/<int:sid>', methods = ['GET', 'POST'])
+@login_required
 def patient_send_message_to_doctor(pid, did, sid):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    if request.method == 'GET':
-        return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment)
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        global date_today
+        patient = db.get_or_404(Patient, pid)
+        doctor = db.get_or_404(Doctor, did)
+        appointment = db.get_or_404(SlotSchedules, sid)
+        if request.method == 'GET':
+            return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment)
+        else:
+            message_content = request.form['message']
+            patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', message_content = message_content, role = 'Patient')    
+            db.session.add(patient_message)
+            db.session.commit()
+        return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
     else:
-        message_content = request.form['message']
-        patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', message_content = message_content, role = 'Patient')    
-        db.session.add(patient_message)
-        db.session.commit()
-    return redirect(f'/patient/view-appointment/{ patient.patient_id }/{ appointment.schedule_id }')
+        return redirect('/')
 
 
 @app.route('/patient/view-appointment/<int:pid>/<int:sid>', methods = ['GET'])
+@login_required
 def view_appointment_patient(pid, sid):
-    patient = db.get_or_404(Patient, pid)
-    appointment = db.get_or_404(SlotSchedules, sid)
-    doctor = appointment.slot_doctor
-    past_appointments = SlotSchedules.query.filter(SlotSchedules.slot_patient_id == pid, SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date < date_today).all()
-    return render_template('patient/view-appointment.html', doctor = doctor, patient = patient, appointment = appointment, past_appointments = past_appointments)
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        appointment = db.get_or_404(SlotSchedules, sid)
+        doctor = appointment.slot_doctor
+        past_appointments = SlotSchedules.query.filter(SlotSchedules.slot_patient_id == pid, SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date < date_today).all()
+        return render_template('patient/view-appointment.html', doctor = doctor, appointment = appointment, past_appointments = past_appointments)
+    else:
+        return redirect('/')
 
 @app.route('/patient/<int:pid>/view_doctor/<int:did>', methods = ['GET'])
+@login_required
 def patient_view_doctor(pid, did):
-    global date_today
-    patient = db.get_or_404(Patient, pid)
-    doctor = db.get_or_404(Doctor, did)
-    past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
-    upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
-    doctor_availability = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).order_by(desc(SlotSchedules.date)).all()
-    doctor_availability_list = []
-    helper_list = []
-    for a in doctor_availability:
-        if [a.date, a.s_sch.slot_name] not in helper_list:
-            helper_list += [[a.date, a.s_sch.slot_name]]
-            doctor_availability_list += [a]
-    return render_template('patient/view_doctor.html', patient = patient, doctor = doctor, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments, doctor_availability_list = doctor_availability_list)
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        global date_today
+        patient = db.get_or_404(Patient, pid)
+        doctor = db.get_or_404(Doctor, did)
+        past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
+        upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
+        doctor_availability = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).order_by(desc(SlotSchedules.date)).all()
+        doctor_availability_list = []
+        helper_list = []
+        for a in doctor_availability:
+            if [a.date, a.s_sch.slot_name] not in helper_list:
+                helper_list += [[a.date, a.s_sch.slot_name]]
+                doctor_availability_list += [a]
+        return render_template('patient/view_doctor.html', patient = patient, doctor = doctor, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments, doctor_availability_list = doctor_availability_list)
+    else:
+        return redirect('/')
 
 @app.route('/patient/<int:pid>/view-dept/<int:did>', methods = ['GET'])
+@login_required
 def patient_view_dept(pid, did):
-    patient = db.get_or_404(Patient, pid)
-    department = db.get_or_404(Department, did)
-    past_appointments = {i: {} for i in department.doctors }
-    for doc in past_appointments.keys():
-        past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
-        past_appointments[doc] = past_appointments_list
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        patient = db.get_or_404(Patient, pid)
+        department = db.get_or_404(Department, did)
+        past_appointments = {i: {} for i in department.doctors }
+        for doc in past_appointments.keys():
+            past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
+            past_appointments[doc] = past_appointments_list
 
-    upcoming_appointments = {i: {} for i in department.doctors }
-    for doc in upcoming_appointments.keys():
-        past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time >= date_today)).order_by(Appointment.date_time).all()
-        upcoming_appointments[doc] = past_appointments_list
+        upcoming_appointments = {i: {} for i in department.doctors }
+        for doc in upcoming_appointments.keys():
+            past_appointments_list = Appointment.query.filter(and_(Appointment.doctor_id == doc.doctor_id, Appointment.patient_id == pid, Appointment.date_time >= date_today)).order_by(Appointment.date_time).all()
+            upcoming_appointments[doc] = past_appointments_list
 
-    return render_template('patient/view_department.html', patient = patient, department = department, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments)
+        return render_template('patient/view_department.html', patient = patient, department = department, past_appointments = past_appointments, upcoming_appointments = upcoming_appointments)
+    else:
+        return redirect('/')
 
 @app.route('/patient/<int:pid>/search', methods = ['POST'])
+@login_required
 def search_patient(pid):
-    patient = db.get_or_404(Patient, pid)
-    input_value = request.form['query']
-    if not input_value.isnumeric(): # search for name, email
-        doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_email.like(f'%{input_value}%'))).all()
-        departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
-        patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).all()
-        return render_template('patient/search_patient.html',patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
-    else: # search for contact number
-        doctors = Doctor.query.filter(Doctor.doctor_contact_number.like(f'%{input_value}%')).all()
-        patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).order_by(Appointment.date_time).all()
-        departments = []
-        return render_template('patient/search_patient.html', patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
+    if session['user_id']:
+        if current_user.user_role != 'Patient':
+            return 'You are not authorized'
+        if current_user.patient_relationship.patient_id != pid:
+            return 'You can not view this'
+        patient = db.get_or_404(Patient, current_user.patient_relationship.patient_id)
+        input_value = request.form['query']
+        if not input_value.isnumeric(): # search for name, email
+            doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_email.like(f'%{input_value}%'))).all()
+            departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
+            patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).all()
+            return render_template('patient/search_patient.html',patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
+        else: # search for contact number
+            doctors = Doctor.query.filter(Doctor.doctor_contact_number.like(f'%{input_value}%')).all()
+            patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).order_by(Appointment.date_time).all()
+            departments = []
+            return render_template('patient/search_patient.html', patient = patient, input_value = input_value, doctors = doctors, departments = departments, patient_appointments = patient_appointments)
+    else:
+        return redirect('/')
     
