@@ -79,7 +79,7 @@ def admin_dashboard():
 @login_required
 def view_appointment_patient_doctor(pid, did):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         global date_today 
         patient = Patient.query.filter(Patient.patient_id == pid).first()
@@ -94,7 +94,7 @@ def view_appointment_patient_doctor(pid, did):
 @login_required    
 def view_all_appointments():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         appointments = Appointment.query.all()
         global date_today 
@@ -110,7 +110,7 @@ def view_all_appointments():
 @login_required
 def view_department(dept_id):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         global date_today
         department = Department.query.filter(Department.department_id == dept_id).first()
@@ -131,7 +131,7 @@ def view_department(dept_id):
 @login_required    
 def view_all_departments():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         departments = Department.query.all()
         return render_template('admin/view-all-dept.html', departments = departments)
@@ -142,7 +142,7 @@ def view_all_departments():
 @login_required    
 def add_department():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         
         if request.method == 'GET':
@@ -163,7 +163,7 @@ def add_department():
 @login_required    
 def update_dept(dept_id):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         if request.method == 'GET':
             department = db.get_or_404(Department, dept_id)
@@ -181,7 +181,7 @@ def update_dept(dept_id):
 @login_required    
 def delete_dept(dept_id):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         department = db.get_or_404(Department, dept_id)
         doctors = department.doctors
@@ -216,7 +216,7 @@ def delete_dept(dept_id):
 @login_required
 def view_doctor(did):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         doctor = db.get_or_404(Doctor, did)
         global date_today 
@@ -231,7 +231,7 @@ def view_doctor(did):
 @login_required    
 def view_all_doctors():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         doctors = Doctor.query.all()
         return render_template('admin/view-all-doctors.html', doctors = doctors)
@@ -242,7 +242,7 @@ def view_all_doctors():
 @login_required    
 def add_doctor():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         
         if request.method == 'GET':
@@ -279,7 +279,7 @@ def add_doctor():
 @login_required    
 def update_doctor(did):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         
         if request.method == 'GET':
@@ -312,7 +312,7 @@ def update_doctor(did):
 @login_required    
 def delete_doctor(did):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         
         doctor = db.get_or_404(Doctor, did)
@@ -338,7 +338,7 @@ def delete_doctor(did):
 @login_required    
 def check_availabilty(did):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date).all()
         doctor = db.get_or_404(Doctor, did)
@@ -368,7 +368,7 @@ def view_patient_admin(pid):
 @login_required    
 def admin_send_patient_message(pid):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         patient = db.get_or_404(Patient, pid)
         message = AdminPatientNotifications(message_patient_id = patient.patient_id, admin_patient_message_type = 'Message from Admin', admin_patient_message_content = request.form['message'])
@@ -382,7 +382,7 @@ def admin_send_patient_message(pid):
 @login_required    
 def view_all_patients():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         patients = Patient.query.all()
         return render_template('admin/view-all-patients.html', patients = patients)
@@ -393,7 +393,7 @@ def view_all_patients():
 @login_required
 def update_patient(pid):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         if request.method == 'GET':
             old_data = db.get_or_404(Patient,pid)
@@ -421,7 +421,7 @@ def update_patient(pid):
 @login_required    
 def delete_patient(pid):
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         patient = db.get_or_404(Patient, pid)
 
@@ -446,7 +446,7 @@ def delete_patient(pid):
 @login_required
 def search():
     if session['user_id']:
-        if current_user.user_role != 'admin':
+        if current_user.user_role != 'Admin':
             return 'You are not authorized'
         if request.method == 'POST':
             input_value = request.form['query']
@@ -497,6 +497,14 @@ def search():
     else:
         return redirect('/')
         
+@app.route('/admin/notification-page', methods = ['GET'])
+@login_required
+def admin_notification_page():
+    if session['user_id']:
+        if current_user.user_role != 'Admin':
+            return 'You are not authorized'
+        return render_template('/admin/notification-page.html')
+
 # Doctor   
 
 @app.route('/doctor/<int:did>', methods = ['GET'])
