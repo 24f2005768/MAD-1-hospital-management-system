@@ -40,26 +40,26 @@
     <div class = 'main-content'>
 
         <h2 id = 'message'>Hi! {{ admin_name.admin_name }}</h2>
-        <div class = 'info-cards'>
+        <div class = 'dash-info-cards'>
 
-            <div class = 'info-card-details'>
+            <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ patients | length }}</p>
-                <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
+                <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Patients</p></a>
             </div>
 
-            <div class = 'info-card-details'>
+            <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ appointments | length }}</p>
-                <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
+                <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Appointments</p></a>
             </div>
 
-            <div class = 'info-card-details'>
+            <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ doctors | length }}</p>
-                <a href = '#doctors'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p></a>
+                <a href = '#doctors'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Doctors</p></a>
             </div>            
 
-            <div class = 'info-card-details'>
-                <p class = 'info-card-texts'>{{departments_first_four | length}}</p>
-                <a href = '#depts'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p></a>
+            <div class = 'dash-info-card-details'>
+                <p class = 'info-card-texts'>{{departments | length}}</p>
+                <a href = '#depts'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Departments</p></a>
             </div>
 
         </div>
@@ -118,7 +118,7 @@
 
                 <div class = 'action-buttons'>
                     <a href = '/admin/view-all-appointments' class = 'buttons'>View All</a>
-                    <a href = '/book-appointment' class = 'buttons'>Add</a>
+                    <a href = '/admin/book-appointment' class = 'buttons'>Add</a>
                 </div>
             </div>
 
@@ -135,7 +135,7 @@
                     {% if appointments_first_five | length > 0 %}
                         {% for a in appointments_first_five %}
                         <tr>
-                            <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
+                            <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
                             <td>{{a.p_ref.patient_name}}</td>
                             <td>{{a.d_ref.doctor_name}}</td>
                             <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
@@ -210,7 +210,7 @@
         </div>
 
             
-        <div style ="margin-top: 50px;" id = 'depts'>
+        <div style ="margin-top: 50px; width: 100%;" id = 'depts'>
              <div class = 'heading-actions'>
                 <h2>Departments</h2>
 
@@ -220,10 +220,11 @@
                 </div>
             </div>           
 
-            <div class = 'info-cards'>
+            <div class = 'dash-info-cards'>
                 {% if departments_first_four %}
                     {% for d in departments_first_four %}
-                        <div class = 'info-card-details'>
+                        <div class = 'dash-info-card-details'>
+                            <img src = 'static/images/{{ d.department_profile_picture }}.png' height="50px">
                             <a href = '/department/{{ d.department_id }}' class = 'info-card-texts clickable-links' id = 'dept-card'>{{d.department_name}}</a>
                         </div>
                     {% endfor %}

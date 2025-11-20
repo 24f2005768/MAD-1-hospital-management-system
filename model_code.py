@@ -7,42 +7,55 @@ from app import *
 
 user1 = User(user_name = 'Shr_arya', user_password = '921369', user_role = 'Patient')
 user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male' , patient_height = 186, patient_weight = 65, patient_dob = date(2007, 10, 3))
+user1.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
 user2 = User(user_name = 'Little_deer', user_password = 'kriti', user_role = 'Patient')
 user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female', patient_height = 168, patient_weight = 60, patient_dob = date(2004, 9, 18))
+user2.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
-user3 = User(user_name = 'Mummy', user_password = 'mom', user_role = 'Patient')
+user3 = User(user_name = 'Mummy', user_password = 'mommy', user_role = 'Patient')
 user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 47, patient_gender = 'Female', patient_height = 162, patient_weight = 75, patient_dob = date(1976, 6, 22))
+user3.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
-user4 = User(user_name = 'Aadi', user_password = 'aadi', user_role = 'Patient')
+user4 = User(user_name = 'Aadi', user_password = 'aaditya', user_role = 'Patient')
 user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male', patient_height = 183, patient_weight = 64, patient_dob = date(2005, 10, 4))
+user4.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
 user5 = User(user_name = 'Shruti', user_password = 'shruti', user_role = 'Patient')
 user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female', patient_height = 170, patient_weight = 65, patient_dob = date(2001, 8, 10))
+user5.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
 user6 = User(user_name = 'Dheeraj', user_password = 'dheeraj', user_role = 'Patient')
 user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male', patient_height = 155, patient_weight = 52, patient_dob = date(1984, 3, 11)) 
+user6.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
 user7 = User(user_name = 'Jason', user_password = 'jason', user_role = 'Patient')
 user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 32, patient_gender = 'Male', patient_height = 166, patient_weight = 68, patient_dob = date(2013, 4, 13)) 
+user7.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user8 = User(user_name = 'Tom', user_password = 'tom', user_role = 'Patient')
+user8 = User(user_name = 'Tom', user_password = 'tommy', user_role = 'Patient')
 user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male', patient_height = 175, patient_weight = 98, patient_dob = date(2003, 5, 4)) 
+user8.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user9 = User(user_name = 'Viena', user_password = 'viena', user_role = 'Patient')
+user9 = User(user_name = 'Viena', user_password = 'vienaa', user_role = 'Patient')
 user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70, patient_dob = date(1994, 10, 7)) 
+user9.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
 user10 = User(user_name = 'Kashish', user_password = 'kashish', user_role = 'Patient')
 user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82, patient_dob = date(2014, 11, 6)) 
+user10.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
 
 user11 = User(user_name = 'Rudraksh', user_password = 'rudraksh', user_role = 'Patient')
 user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male', patient_height = 56, patient_weight = 4.5, patient_dob = date(2024, 9, 4)) 
+user11.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
 
 user12 = User(user_name = 'Vipul', user_password = 'vipul', user_role = 'Patient')
 user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48, patient_dob = date(2010, 1, 4)) 
+user11.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
 
 user13 = User(user_name = 'Anamika', user_password = 'anamika', user_role = 'Patient')
 user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25, patient_dob = date(2018, 7, 30)) 
+user11.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
 
 db.session.add(user1)
 db.session.add(user2)
@@ -57,8 +70,6 @@ db.session.add(user10)
 db.session.add(user11)
 db.session.add(user12)
 db.session.add(user13)
-
-# db.commit()
 
 user1 = db.get_or_404(User, 2)
 welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user1.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user1.patient_relationship.patient_id)
@@ -112,9 +123,6 @@ user13 = db.get_or_404(User, 14)
 welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user13.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user13.patient_relationship.patient_id)
 db.session.add(welcome_notification)
 
-# print(user1.patient_relationship.patient_name)
-
-
 # # doctors and departments 
 
 dept1 = Department(department_name = 'Cardiology', department_description = 'LDH offers a comprehensive cardiology program dedicated to the prevention, diagnosis, and treatment of a full spectrum of heart-related conditions. We provide a complete breadth of both invasive and noninvasive cardiovascular services, supported by ongoing research initiatives. Our highly skilled clinicians specialize in managing complex cases, delivering individualized treatment plans tailored to each patient"s unique needs. This patient-centered approach ensures that every individual receives the most advanced and appropriate care for their specific cardiovascular health journey.')
@@ -165,13 +173,28 @@ dept4 = Department(department_name = 'Gastrology', department_description = "LDH
 dept4.department_pfp = ProfilePictures(name = 'Gastrology', role = 'Department')
 db.session.add(dept4)
 
+dept5 = Department(department_name = 'Dietetics', department_description = '')
+dept5.department_pfp = ProfilePictures(name = 'Dietetics', role = 'Department')
+db.session.add(dept5)
+
+user7 = User(user_name = 'Tanuja_dietetics', user_password = 'tanuja', user_role = 'Doctor')
+user7.doctor_relationship = Doctor(doctor_name = 'Tanuja Rathore', doctor_contact_number = '8336977903', doctor_gender = 'Female', doctor_dob = date(1988, 3, 17),
+                                   doctor_email = 't@email.com', department_id = 5, doctor_desc = "")
+user7.doctor_relationship.doctor_pfp = ProfilePictures(name = 'FemaleDoctor1', role = 'Doctor')
+
 db.session.add(user1)
 db.session.add(user2)
 db.session.add(user3)
 db.session.add(user4)
 db.session.add(user5)
 db.session.add(user6)
+db.session.add(user7)
 db.session.commit()
+
+doctors = Doctor.query.all()
+for d in doctors:
+    message = AdminDoctorNotifications(admin_doctor_message_type = 'Welcome message', admin_doctor_message_content = f'Hello, Dr. { d.doctor_name }! Greetings from the LDH Family.', role = 'Admin', message_doctor_id = d.doctor_id)
+    db.session.add(message)
 
 # Slots
 s1 = Slot(slot_time = '09:00 - 12:00', slot_name = 'Morning')

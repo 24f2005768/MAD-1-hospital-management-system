@@ -36,69 +36,76 @@
             </div>
         </div>
     </header>
-        <div class = 'main-content'>
-            <div class = 'heading-actions'>
-                <h2>Upcoming Appointments</h2>
-
-                <div class = 'action-buttons'>
-                    <a href = '/book-appointment' class = 'buttons'>Add</a>
-                </div>
+    <div class = 'main-content'>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>All Appointments</h2></div>
+                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
+        </div>
 
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date</th>
-                    </tr>
-                    {% if upcoming_appointments | length > 0 %}
-                        {% for a in upcoming_appointments %}
-                        <tr>
-                            <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
-                            <td>{{a.p_ref.patient_name}}</td>
-                            <td>{{a.d_ref.doctor_name}}</td>
-                            <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+        <div class = 'heading-actions'>
+            <h2>Upcoming Appointments</h2>
 
-            <div class = 'heading-actions'>
-                <h2>Past Appointments</h2>
+            <div class = 'action-buttons'>
+                <a href = '/book-appointment' class = 'buttons'>Add</a>
             </div>
+        </div>
 
-            <table>
-                <tbody>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                </tr>
+                {% if upcoming_appointments | length > 0 %}
+                    {% for a in upcoming_appointments %}
                     <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-
-                    {% for a in past_appointments %}
-                    <tr>
-                        <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}'>{{a.appointment_id}}</a></td>
+                        <td><a>{{a.appointment_id}}</a></td>
                         <td>{{a.p_ref.patient_name}}</td>
                         <td>{{a.d_ref.doctor_name}}</td>
                         <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
-                        <td>{{a.t.status}}</td>
                     </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                {% else %}
+                    <tr>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <div class = 'heading-actions'>
+            <h2>Past Appointments</h2>
         </div>
+
+        <table>
+            <tbody>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for a in past_appointments %}
+                <tr>
+                    <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
+                    <td>{{a.p_ref.patient_name}}</td>
+                    <td>{{a.d_ref.doctor_name}}</td>
+                    <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                    <td>{{a.t.status}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <footer>
         &copy;  2025 LDH Hospital

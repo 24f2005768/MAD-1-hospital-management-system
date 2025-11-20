@@ -38,18 +38,35 @@
     </header>
 
     <div class = 'main-content'>
-        <div class = 'login-container'>
-
-            <div class = 'form-text'>
-                <h1>Add Department</h1>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Add Department</h2></div>
+                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
-
+        </div>
+        
+        <div class = 'login-container'>
             <div class = 'form-fields'>
                 <form action = '/add_dept' method = 'POST'>
+                    <div class = 'update-form-details'>
+                        <div><label for = 'd_name'>Department Name</label></div>
+                        <div>
+                            <input class="input_fields" type = 'text' name = 'd_name' 
+                            maxlength="64" pattern="[\a ]{1,64}"
+                            title = 'Please add a valid department name. Department name can only have alphabets and spaces'
+                            placeholder = 'Enter Name' required />
+                        </div>
+                    </div>
 
-                    <input type = 'text' name = 'd_name' placeholder = 'Enter Name' style = 'height:5vh; width: 15vw;' required />
-                
-                    <input type = 'text' name = 'd_desc' placeholder = 'Enter Description' style="height:20vh; width:15vw;" required />
+                    <div class = 'update-form-details'>
+                        <div><label for = 'd_name'>Department Description</label></div>
+                        <div>
+                            <input type = 'text' name = 'd_desc' 
+                            placeholder = 'Enter Description' style="height:20vh; width: 160px;" 
+                            pattern="[\w@#$&-.]{1,}"
+                            title = 'Please add a valid description' required />
+                        </div>
+                    </div>
 
                     <input type = 'submit' value = 'Submit' class = 'login-button'>
                 </form>

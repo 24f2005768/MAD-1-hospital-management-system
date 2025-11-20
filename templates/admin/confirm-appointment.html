@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View All Doctors</title>
+    <title>Confirm Appointment</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -40,51 +40,58 @@
         <div class = 'main-content'>
             <div class = 'flex-boxes'>
                 <div class = 'flex-headings'>
-                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>All Doctors</h2></div>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Confirm Appointment</h2></div>
                     <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
-                    <a href = '/admin/doctor/add' class = 'buttons'>Add</a>
                 </div>
             </div>
-            
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Contact Number</th>
-                        <th>Email</th>
-                        <th>Available</th>
-                        <th>Blacklisted</th>
-                    </tr>
-                    
-                    {% if doctors | length > 0 %}
-                        {% for doctor in doctors %}
-                            <tr>
-                                <td><a href = '/admin/doctor/{{ doctor.doctor_id }}'>{{doctor.doctor_name}}</a></td>
-                                <td>{{doctor.dept.department_name}}</td>
-                                <td>{{doctor.doctor_contact_number}}</td>
-                                <td>{{doctor.doctor_email}}</td>
-                                <td><a href = '/admin/doctor/check-availability/{{ doctor.doctor_id  }}'>Check availability</a></td>
-                                {% if doctor.doctor_blacklisted == 0%}
-                                    <td><input type = 'checkbox' disabled></td>
-                                    {% else %}
-                                    <td><input type = 'checkbox' disabled checked ="checked"></td>
-                                {% endif %}                    
-                            </tr>
+
+            <form action = '/admin/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
+                <div>
+                    <label for = 'patients_name'>Patient: </label>
+                    <select id = 'patients_name' name = 'patients_name'>
+                        {% for p in patients %}
+                            <option value = '{{ p.patient_id }}' name = 'patient-name'>{{ p.patient_name }}</option>
                         {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
+                    </select>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        {% for s in slots %}
+                            <th>{{ s.slot_time }} ({{ s.slot_name }})</th>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        {% for d in list_of_next_7_dates %}
+                            <td>{{ d.strftime('%d/%m/%Y') }}</td>
+                                {% for s in slots %}
+                                    {% if da_dict[d][s] != None %}
+                                        <td><input type = 'radio' value = '{{ da_dict[d][s].schedule_id }}' name = 'time_slot'></td>
+                                    {% else %}
+                                        <td>-</td>
+                                    {% endif %}
+                                {% endfor %}
                         </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                </table>
+                <input onclick = 'confirm_appointment_booking()' type="submit" value = "Book" class = "login-button">
+
+            </form>
+            {% if flag1 == True %}
+                <p class = 'error-message'>You have already booked an appointment with Dr. {{ selected_slot.slot_doctor.doctor_name }} on your selected slot.</p>
+            {% endif %}
+
         </div>
+    <script>
+        function confirm_appointment_booking() {
+            var result = confirm('Are you sure?');
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+    </script>
 
     <footer>
         &copy;  2025 LDH Hospital

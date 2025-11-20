@@ -76,12 +76,13 @@
                                     <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
                                         <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' style = 'background-color: hsla(360 100% 60.2% / 0.66);' class = 'buttons'>Cancel</a>
-                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '' class = 'buttons' style="background-color: hsla(205 80.1% 79.4% / 0.93)">Reschedule</a>
+                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
                                 <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
                                 <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
                             </li>
                         {% endfor %}
                     </ol>
@@ -99,12 +100,13 @@
                                     <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                     <div class = 'action-buttons'>
                                         <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
-                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-messages/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
+                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
                                     </div>
                                 </div>
                                 <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
                                 <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
                             </li>
                         {% endfor %}
                     </ol>
@@ -122,6 +124,7 @@
                                 <p>Doctor Name: <a href ='/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
                                 <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
                                 <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
                             </li>
                         {% endfor %}
                     </ol>
@@ -137,9 +140,9 @@
                 </div>
             </div>
 
-            <div class = 'info-cards'>
+            <div class = 'dash-info-cards'>
                 {% for d in departments %}
-                    <div class = 'info-card-details'>
+                    <div class = 'dash-info-card-details'>
                         <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
                     </div>
                 {% endfor %}

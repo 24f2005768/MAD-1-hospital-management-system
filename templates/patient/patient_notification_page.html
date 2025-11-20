@@ -38,161 +38,211 @@
     </header>
 
         <div class = 'main-content'>
-            <h3>Patient Notification Page</h3>
-
-            <h3>Notifications From Admin</h3>
-            <div class = 'flex-button'>
-                <div><button class = 'buttons' onclick = 'view_unread_admin_notifactions()'>Unread Notifications from Admin</button></div>
-                <div><button class = 'buttons' onclick = 'view_read_admin_notifactions()'>Read Notifications from Admin</button></div>
+            <div class = 'notification-page-main-heading'>
+                <div id = 'notification-center-heading' ><h2 id = 'center-heading'>Notification Page</h2></div>
+                <div style="position:absolute;"><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
-            
-            <div id = 'unread-admin' style = 'width: 100%; min-height: 300px;'>
-                {% if unread_admin_notifications != [] %}
-                    <ol>
-                        {% for a in unread_admin_notifications %}
-                            <li>
+
+            <div class = 'notification-page-container'>
+
+                <h3 class = 'notification-page-heading'>Notifications From Admin</h3>
+                <div class = 'notification-page-button-ribbon'>
+                    <div id = 'un-adm' class = 'notification-page-button' onclick = 'view_unread_admin_notifactions()' style = 'background-color: #2fbb8fa8;font-weight: 600;'>Unread notifications</div>
+                    <div id = 'r-adm' class = 'notification-page-button' onclick = 'view_read_admin_notifactions()'>Read notifications</div>
+                </div>
+
+                <div class = 'notification-page-content' id = 'unread-admin'>
+                    {% if unread_admin_notifications | length != 0 %}
+                        <ol>
+                            {% for a in unread_admin_notifications %}
+                                <li>
+                                    <p><em><strong>{{ a.admin_patient_message_type }}</strong></em></p>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                    <p>{{ a.admin_patient_message_content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p><em>No unread notifications to show</em></p>
+                    {% endif %}
+                </div>
+
+                <div  id = 'read-admin' class = 'notification-page-content' style="display: none;">
+                    {% if read_admin_notifications | length != 0 %}
+                        <ol>
+                            {% for a in read_admin_notifications %}
                                 <p><em><strong>{{ a.admin_patient_message_type }}</strong></em></p>
                                 <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
                                 <p>{{ a.admin_patient_message_content }}</p>
                             </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No unread notifications to show</em></p>
-                {% endif %}
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        p><em>No read notifications to show</em></p>
+                    {% endif %}
+                </div>
+
+                
             </div>
 
-            <div id = 'read-admin' style = 'display: none; width: 100%;min-height: 300px'>
-                {% if read_admin_notifications != [] %}
-                    <ol>
-                        {% for a in read_admin_notifications %}
-                            <li>
-                                <p><em><strong>{{ a.admin_patient_message_type }}</strong></em></p>
-                                <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
-                                <p>{{ a.admin_patient_message_content }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No read notifications to show</em></p>
-                {% endif %}
-            </div>
+            <div class = 'notification-page-container'>
+                <h3 class ='notification-page-heading'>Notifications From Doctors</h3>
+                <div class = 'notification-page-button-ribbon'>
+                    <div id = 'un-pat' class = 'notification-page-button' onclick = 'view_unread_patient_notifications()' style = 'background-color: #2fbb8fa8; font-weight: 600;'>Unread notifications</div>
+                    <div id = 'r-pat' class = 'notification-page-button' onclick = 'view_read_patient_notifications()'>Read notifications</div>
+                </div>
 
-            <h3>Notifications From Doctors</h3>
-            <div class = 'flex-button'>
-                <div><button  onclick="view_unread_doctor_notifactions()" class = 'buttons'>Unread Notifications from Doctors</button></div>
-                <div><button  onclick="view_read_doctor_notifactions()" class = 'buttons'>Read Notifications from Doctors</button></div>
-            </div>
+                <div id = 'unread-patient' class = 'notification-page-content'>
+                    {% if unread_doctor_notifications != [] %}
+                        <ol>
+                            {% for a in unread_doctor_notifications %}
+                                <li>
+                                    <p><em><strong>Dr. {{ a.pdn_doctor.doctor_name }}</strong></em></p>
+                                    <p>{{ a.message_type }}</p>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                    <p>{{ a.message_content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p><em>No unread notifications to show</em></p>
+                    {% endif %}
+                </div>
 
-            <div id = 'unread-doctor' style = 'width: 100%;'>
-                {% if unread_doctor_notifications != [] %}
-                    <ol>
-                        {% for a in unread_doctor_notifications %}
-                            <li>
-                                <p><em><strong>Dr. {{ a.pdn_doctor.doctor_name }}</strong></em></p>
-                                <p>{{ a.message_type }}</p>
-                                <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
-                                <p>{{ a.message_content }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No unread notifications to show</em></p>
-                {% endif %}
-            </div>
+                <div  id = 'read-patient' class = 'notification-page-content' style="display: none;">
+                    {% if read_doctor_notifications != [] %}
+                        <ol>
+                            {% for a in read_doctor_notifications %}
+                                <li>
+                                    <p><em><strong>From Dr. {{ a.pdn_doctor.doctor_name }}</strong></em></p>
+                                    <p>{{ a.message_type }}</p>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                    <p>{{ a.message_content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p><em>No read notifications to show</em></p>
+                    {% endif %}
+                </div>                   
+            </div>    
 
-            <div id = 'read-doctor' style = 'display: none; width: 100%;'>
-                {% if read_doctor_notifications != [] %}
-                    <ol>
-                        {% for a in read_doctor_notifications %}
-                            <li>
-                                <p><em><strong>From Dr. {{ a.pdn_doctor.doctor_name }}</strong></em></p>
-                                <p>{{ a.message_type }}</p>
-                                <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
-                                <p>{{ a.message_content }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No read notifications to show</em></p>
-                {% endif %}
-            </div>
+            <div class = 'notification-page-container'>
+                <h3 class = 'notification-page-heading'>Availability Notifications From Doctors</h3>
+                <div class = 'notification-page-button-ribbon'>
+                    <div id = 'un-avail'class = 'notification-page-button' onclick="view_unread_availability_notifactions()" style= 'background-color: #2fbb8fa8; font-weight: 600;'>Unread Availability Notifications</div>
+                    <div id = 'r-avail' class = 'notification-page-button' onclick="view_read_availability_notifactions()">Read Availability Notifications</div>
+                </div>
 
-            <h3>Availability Notifications From Doctors</h3>
-            <div class = 'flex-button'>
-                <div><button  onclick="view_unread_availability_notifactions()" class = 'buttons'>Unread Availability Notifications</button></div>
-                <div><button  onclick="view_read_availability_notifactions()" class = 'buttons'>Read Availability Notifications</button></div>
-            </div>
+                <div class = 'notification-page-content' id = 'unread-avail'>
+                    {% if unread_availibility_notifications != [] %}
+                        <ol>
+                            {% for a in unread_availibility_notifications %}
+                                <li>
+                                    <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p><em>No unread notifications to show</em></p>
+                    {% endif %}                
+                </div>
 
-            <div id = 'unread-avail' style = 'width: 100%;'>
-                {% if unread_availibility_notifications != [] %}
-                    <ol>
-                        {% for a in unread_availibility_notifications %}
-                            <li>
-                                <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
-                                <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No unread notifications to show</em></p>
-                {% endif %}
+                <div class = 'notification-page-content' id = 'read-avail' style="display: none;">
+                    {% if read_availibility_notifications != [] %}
+                        <ol>
+                            {% for a in read_availibility_notifications %}
+                                <li>
+                                    <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
+                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p><em>No read notifications to show</em></p>
+                    {% endif %}
+                </div>
             </div>
-
-            <div id = 'read-avail' style = 'display: none; width: 100%;'>
-                {% if read_availibility_notifications != [] %}
-                    <ol>
-                        {% for a in read_availibility_notifications %}
-                            <li>
-                                <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
-                                <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p><em>No read notifications to show</em></p>
-                {% endif %}
-            </div>
-        </div>
+    </div>
+    
     
     <script>
         var unread_admin_apt = document.getElementById('unread-admin')
         var read_admin_apt = document.getElementById('read-admin')
-        var unread_doctor_apt = document.getElementById('unread-doctor')
-        var read_doctor_apt = document.getElementById('read-doctor')
+        var unread_patient_apt = document.getElementById('unread-patient')
+        var read_patient_apt = document.getElementById('read-patient')
         var unread_availability_apt = document.getElementById('unread-avail')
         var read_availability_apt = document.getElementById('read-avail')
 
+        var unread_admin_function_button = document.getElementById('un-adm')
+        var read_admin_function_button = document.getElementById('r-adm')
+        var unread_patient_function_button = document.getElementById('un-pat')
+        var read_patient_function_button = document.getElementById('r-pat')
+        var unread_availability_function_button = document.getElementById('un-avail')
+        var read_availability_function_button = document.getElementById('r-avail')
+
         function view_unread_admin_notifactions() {
-        unread_admin_apt.style.display = 'block';
-        read_admin_apt.style.display = 'none';
+            unread_admin_apt.style.display = 'block';
+            read_admin_apt.style.display = 'none';
+
+            unread_admin_function_button.style.backgroundColor = '#2fbb8fa8';
+            unread_admin_function_button.style.fontWeight = '600';
+            read_admin_function_button.style.backgroundColor = '#269873a8';
+            read_admin_function_button.style.fontWeight = 'normal';
         }
 
-        function view_read_admin_notifactions () {
-        unread_admin_apt.style.display = 'none';
-        read_admin_apt.style.display = 'block';
+        function view_read_admin_notifactions() {
+            unread_admin_apt.style.display = 'none';
+            read_admin_apt.style.display = 'block';
+
+            unread_admin_function_button.style.backgroundColor = '#269873a8';
+            unread_admin_function_button.style.fontWeight = 'normal';
+            read_admin_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_admin_function_button.style.fontWeight = '600';
         }
 
-        function view_unread_doctor_notifactions () {
-        unread_doctor_apt.style.display = 'block';
-        read_doctor_apt.style.display = 'none';
+        function view_unread_patient_notifications() {
+            unread_patient_apt.style.display = 'block';
+            read_patient_apt.style.display = 'none';
+
+            unread_patient_function_button.style.backgroundColor = '#2fbb8fa8';
+            unread_patient_function_button.style.fontWeight = '600';
+            read_patient_function_button.style.backgroundColor = '#269873a8';
+            read_patient_function_button.style.fontWeight = 'normal';
         }
 
-        function view_read_doctor_notifactions () {
-        unread_doctor_apt.style.display = 'none';
-        read_doctor_apt.style.display = 'block';
+        function view_read_patient_notifications() {
+            unread_patient_apt.style.display = 'none';
+            read_patient_apt.style.display = 'block';
+
+            unread_patient_function_button.style.backgroundColor = '#269873a8';
+            unread_patient_function_button.style.fontWeight = 'normal';
+            read_patient_function_button.style.backgroundColor = '#2fbb8fa8';
+            read_patient_function_button.style.fontWeight = '600';
         }
 
         function view_unread_availability_notifactions () {
         unread_availability_apt.style.display = 'block';
         read_availability_apt.style.display = 'none';
+        
+        unread_availability_function_button.style.backgroundColor = '#2fbb8fa8';
+        unread_availability_function_button.style.fontWeight = '600';
+        read_availability_function_button.style.backgroundColor = '#269873a8';
+        read_availability_function_button.style.fontWeight = 'normal';
         }
 
         function view_read_availability_notifactions () {
         unread_availability_apt.style.display = 'none';
         read_availability_apt.style.display = 'block';
+
+        unread_availability_function_button.style.backgroundColor = '#269873a8';
+        unread_availability_function_button.style.fontWeight = 'normal';
+        read_availability_function_button.style.backgroundColor = '#2fbb8fa8';
+        read_availability_function_button.style.fontWeight = '600';
         }
     </script>
+
 
     <footer>
         &copy;  2025 LDH Hospital

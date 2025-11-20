@@ -57,32 +57,69 @@
                     </div>
                 </div>
             <!-- </div> -->
+            
+            <div class = 'login-container'>
+                <div class = 'treatment_details'>
+                    <form action = '' method = 'POST' class = 'treatment_details_form'>
+                        <h3>Treatment Details</h3>
+                        <div class = 'treatment-form-details'>
+                            <label for = 'diagnosis'>Diagnosis</label>
+                            <input type = 'text' name = 'diagnosis' placeholder="add description"/>
+                        </div>    
+                                    
+                        <div class = 'treatment-form-details'>
+                            <label for = 'notes'>Notes</label>
+                            <input type = 'text' name = 'notes' placeholder="add notes"/>
+                        </div>    
 
-            <div class = 'treatment_details'>
-                <form action = '' method = 'POST' class = 'treatment_details_form'>
-                    <h3>Treatment Details</h3>
-                    <div class = 'treatment-form-details'>
-                        <label for = 'diagnosis'>Diagnosis</label>
-                        <input type = 'text' name = 'diagnosis'/>
-                    </div>    
+                        <div class = 'treatment-form-details'>
+                            <label for = 'prescription'>Prescription</label>
+                            <input type = 'text' name = 'prescription' placeholder="add prescription"/>
+                        </div> 
+
+                        <div class = 'treatment-form-details'>
+                            <label for = 'tests'>Tests</label>
+                            <input type = 'text' name = 'tests' placeholder="add tests"/>
+                        </div>    
+
+                        <fieldset>
+                            <legend>Select Diet Type: </legend>
+                            <div>
+                                <div>
+                                    <input type = 'checkbox', id = 'non-dairy', name = 'non-dairy', value = 'non-dairy'>
+                                    <label for = 'non-dairy'>Non-Dairy</label>
+                                </div>    
                                 
-                    <div class = 'treatment-form-details'>
-                        <label for = 'notes'>Notes</label>
-                        <input type = 'text' name = 'notes'/>
-                    </div>    
+                                <div>
+                                    <input type = 'checkbox', id = 'dairy', name = 'dairy', value = 'dairy'>
+                                    <label for = 'dairy'>Dairy</label>
+                                </div>
 
-                    <div class = 'treatment-form-details'>
-                        <label for = 'prescription'>Prescription</label>
-                        <input type = 'text' name = 'prescription'/>
-                    </div> 
+                                <div>
+                                    <input type = 'checkbox', id = 'clear-liquid', name = 'clear-liquid', value = 'clear-liquid'>
+                                    <label for = 'clear-liquid'>Clear Liquid</label>
+                                </div>
 
-                    <div class = 'treatment-form-details'>
-                        <label for = 'tests'>Tests</label>
-                        <input type = 'text' name = 'tests'/>
-                    </div>    
+                                <div>
+                                    <input type = 'checkbox', id = 'liquid', name = 'liquid', value = 'liquid'>
+                                    <label for = 'liquid'>Liquid</label>
+                                </div>
 
-                    <input type = 'submit' value = 'Add' class = 'login-button'>
-                </form>
+                                <div>
+                                    <input type = 'checkbox', id = 'restricted-normal', name = 'restricted-normal', value = 'restricted-normal'>
+                                    <label for = 'restricted-normal'>Restricted Normal</label>
+                                </div>
+
+                                <div>
+                                    <input type = 'checkbox', id = 'none', name = 'none', value = 'none'>
+                                    <label for = 'none'>None</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <input type = 'submit' value = 'Add' class = 'login-button'>
+                    </form>
+                </div>
             </div>
 
         </div>

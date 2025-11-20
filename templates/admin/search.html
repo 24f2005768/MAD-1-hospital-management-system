@@ -38,8 +38,14 @@
     </header>
 
         <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Search results for: {{input_value}}</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
 
-            <h2 id = 'message'>Search results for: {{input_value}}</h2>
+            <h2 id = 'message'></h2>
 
                 <div class = 'info-cards'>
 

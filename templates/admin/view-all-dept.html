@@ -38,25 +38,27 @@
     </header>
 
         <div class = 'main-content'>
-            <div class = 'heading-actions'>
-                <h2>All Departments</h2>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>View all Departments</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
             </div>
-            
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Department ID</th>
-                        <th>Name</th>
-                    </tr>
 
-                        {% for d in departments %}
-                            <tr>
-                                <td>{{ d.department_id }}</td>
-                                <td><a href = '/department/{{ d.department_id }}'>{{d.department_name}}</a></td>
-                            </tr>
-                        {% endfor %}
-                </tbody>
-            </table>
+            <div class = 'flex-view-profile-content' style="flex-direction: column;">
+                {% for d in departments %}
+                <div style="display: flex;">
+                    <div class = 'flex-profile-photo'>
+                        <img src = '/static/images/{{ d.department_profile_picture }}.png' alt = 'Doctor Image' width="170px">
+                    </div>
+
+                    <div class = 'flex-profile-content'>
+                        <h3><a href = '/department/{{ d.department_id }}'>{{ d.department_name }}</a></h3>
+                        <p>{{ d.department_description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
 
         </div>

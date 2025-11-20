@@ -13,7 +13,11 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+            {% if current_user.doctor_relationship.department_id != dietetics_dept.department_id %}
+                <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+            {% else %}
+                <h1><a class = 'page_heading_hyperlink' href = '/dietetics/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+            {% endif %}
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>

@@ -38,22 +38,32 @@
     </header>
 
     <div class = 'main-content'>
-        <h2>{{ doctor.doctor_name }}'s Availablility</h2>
-        <table>
-            <tbody>
-                <tr>
-                    <th>Date</th>
-                    <th>Slot</th>
-                </tr>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Dr. {{ doctor.doctor_name }}'s Availablility</h2></div>
+                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+            </div>
+        </div>
 
-                {% for s in doctor_slots %}
+        {% if doctor_slots | length > 0 %}
+            <table>
+                <tbody>
                     <tr>
-                        <td>{{s.date}}</td>
-                        <td>{{s.s_sch.slot_time}}</td>
+                        <th>Date</th>
+                        <th>Slot</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+                    {% for s in doctor_slots %}
+                        <tr>
+                            <td>{{s.date}}</td>
+                            <td>{{s.s_sch.slot_time}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Dr. {{ doctor.doctor_name }} has not provided his/ her availablility</p>
+        {% endif %}
     </div>
 
     <footer>

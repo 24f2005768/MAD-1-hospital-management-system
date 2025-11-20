@@ -38,24 +38,85 @@
     </header>
 
     <div class = 'main-content'>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Update Patient</h2></div>
+                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+            </div>
+        </div>
+
         <div class = 'login-container'>
-            <h1>Update Patient</h1>
             <form action = '/admin/patient/update/{{ pid }}' method = 'POST'>
-                <input type = 'text' name = 'u_id' value = '{{ pid }}' placeholder = "ID" disabled />
+                <div class = 'update-form-details'>
+                    <div><label for = 'u_id'>User ID</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'text' name = 'u_id' value = '{{ pid }}' 
+                        placeholder = "ID" disabled />
+                    </div>
+                </div>
 
-                <input type = 'text' name = 'p_name' value = '{{ old_data.patient_name }}' placeholder = "Name" />
+                <div class = 'update-form-details'>
+                    <div><label for = 'p_name'>Name</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'text' name = 'p_name' value = '{{ old_data.patient_name }}' 
+                        placeholder = "Name" 
+                        maxlength="64" pattern="[\a ]{1,64}"
+                        title="Please enter a valid name. Your name should have a maximum length of 64 and you can only use alphabets and space" required/>
+                    </div>
+                </div>
 
-                <input type = 'text' name = 'contact_info' value = '{{ old_data.contact_info }}' placeholder = "Contact number" />
+                <div class = 'update-form-details'>
+                    <div><label for = 'gender'>Gender</label></div>
+                    <div>
+                        <select name = 'gender' class = 'dept-dropdown'>
+                            <option value = 'Male'>Male</option>
+                            <option value = 'Female'>Female</option>
+                            <option value = 'prefer_not_to_say'>Prefer not say</option>
+                        </select>
+                    </div>
+                </div>
 
-                <input type = 'text' name = 'email' value = '{{ old_data.patient_email }}' placeholder = "Email" />
+                <div class = 'update-form-details'>
+                    <div><label for = 'p_age'>DOB</label></div>
+                    <div><input class = 'input_fields' type = 'date' name = 'p_dob' 
+                        placeholder = "Date of Birth*" required/></div>
+                </div>
 
-                <div>
-                    <span>Blacklist:</span>
-                    <input type = 'checkbox' id = 'option1' name = 'blacklist' value = 'True'/>
-                    <label for = 'option1'>True</label>
+                <div class = 'update-form-details'>
+                    <div><label for = 'contact_info'>Contact Number</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'text' name = 'contact_info' value = '{{ old_data.contact_info }}' 
+                        placeholder = "Contact number" 
+                        maxlength="10" minlength="10" pattern="[\d]{10}"
+                        title="Please enter a valid 10 digit number"/>
+                    </div>
+                </div>
 
-                    <input type = 'checkbox' id = 'option2' name = 'blacklist' value = 'False'/>
-                    <label for = 'option2'>False</label><br>
+                <div class = 'update-form-details'>
+                    <div><label for = 'email'>Email</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'email' name = 'email' value = '{{ old_data.patient_email }}' 
+                        placeholder = "Email" />
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <p style = 'display: inline'>Blacklist</p>
+                    {% if old_data.patient_blacklisted == True %}
+                        <div><input type = 'radio' id = 'option1' name = 'blacklist' value = 'True' checked/></div>
+                        <div><label for = 'option1'>True</label></div>
+                    {% else %}
+                        <div><input type = 'radio' id = 'option1' name = 'blacklist' value = 'True'/></div>
+                        <div><label for = 'option1'>True</label></div>
+                    {% endif %}
+
+                    {% if old_data.patient_blacklisted == False %}
+                        <div><input type = 'radio' id = 'option2' name = 'blacklist' value = 'False' checked/></div>
+                        <div><label for = 'option2'>False</label><br></div>
+                    {% else %}
+                        <div><input type = 'radio' id = 'option2' name = 'blacklist' value = 'False' checked/></div>
+                        <div><label for = 'option2'>False</label><br></div>
+                    {% endif %}
                 </div>
 
             <input type="submit" value = "Submit" class = "login-button">

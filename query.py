@@ -3,6 +3,8 @@ from sqlalchemy import and_, or_, desc
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from flask import url_for
+import re 
+from pyisemail import is_email
 
 date_today = date.today()
 list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
@@ -331,6 +333,9 @@ db.session.commit()
 # db.session.add(message)
 
 
+# Testing notifications
+
+'''
 unread_message = PatientDoctorNotifications(message_type = 'unread', message_content = '--', m_doctor_id = 1, m_patient_id = 1)
 read_message = PatientDoctorNotifications(message_type = 'read', message_content = '--', m_doctor_id = 1, m_patient_id = 1, doctor_message_recieved = 1)
 db.session.add(unread_message)
@@ -343,3 +348,15 @@ db.session.add(unread_message1)
 db.session.add(read_message1)
 
 db.session.commit()
+'''
+
+user_id = 1
+user_id = 21
+
+d_id = Doctor.query.filter(Doctor.doctor_user_id == user_id).first()
+print(d_id)
+dietetics_dept = Department.query.filter(Department.department_name == 'Dietetics').first()
+if d_id.department_id != dietetics_dept.department_id:
+    print('G')
+else:
+    print('T')

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dietician Doctor Dashboard</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class = 'heading-actions'>
+            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '' method = 'POST'>
+                        <div class = 'flex-container'>
+                            <div>
+                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
+                            <div class = 'search-flex-container'>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class = 'main-content'>
+        <h2 id = 'welcome-message'>Hi! {{ current_user.doctor_relationship.doctor_name }}</h2>    
+        <div class = 'dash-info-cards'>
+
+                <div class = 'dash-info-card-details'>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile'>Profile</a></p>
+                </div>
+
+                <div class = 'dash-info-card-details'>
+                    <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Diet Plans</p></a>
+                </div>          
+
+                <div class = 'dash-info-card-details'>
+                    <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
+                </div>
+        </div>
+
+        <div style ="margin-top: 50px; width: 100%;" id = 'appointments'>
+            <div class = 'heading-actions'>
+                <h2>Diet Plans</h2>
+            </div>
+
+            <div class = 'flex-profile-content' style="width: 100%;">
+                <div class = 'flex-profile-content-buttons'>
+                    <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>Upcoming Appointments</a></div>
+                    <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
+                    <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
+                </div>
+
+                <div id = 'view-upcoming-appointments'>1</div>
+                <div id = 'view-past-appointments' style="display: none;">2</div>
+                <div id = 'send-message-to-patient' style="display: none;">3</div>
+            </div>
+
+        <div style ="margin-top: 50px; width: 100%;" id = 'patients'>
+            <div class = 'heading-actions'>
+                <h2>Patients</h2>
+            </div>
+        </div>
+        
+    </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+
+    <script>
+        console.log('hi')
+        var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
+        var view_past_appointments = document.getElementById('view-past-appointments')
+        var send_message_to_patient = document.getElementById('send-message-to-patient')
+        var upcoming_color_change = document.getElementById('upcoming')
+        var past_color_change = document.getElementById('past')
+        var message_color_change = document.getElementById('message')
+
+        function viewPatientUpcomingAppointments() {
+            view_upcoming_appointments.style.display = 'block';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = '600'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function viewPatientPastAppointments() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'block';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#2fbb8fa8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = '600'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function sendMessageToPatient() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'block';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = '600'
+        }
+    </script>
+
+</body>
+</html>

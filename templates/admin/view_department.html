@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>View Department</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -40,39 +40,42 @@
     <div class = 'main-content'>
         <div class = 'flex-boxes'>
             <div class = 'flex-headings'>
-                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Doctor Details</h2></div>
-                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
-            </div>
-        </div>
+                <div id = 'center-heading' ><h2 id = 'center-heading'>Department Details</h2></div>
+                <div><a href = '/admin/department/update/{{ department.department_id }}' class = 'update-button'>Update</a></div>
+                <div><a href = '/admin/department/delete/{{ department.department_id }}' onclick="confirmDelete()" class = 'delete-button'>Delete</a></div>
+                <div><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
 
-        <div class = 'flex-boxes'>
             <div class = 'flex-view-profile-content'>
                 <div class = 'flex-profile-photo'><p></p>
-                    <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Image' width="170px">
-                    <div class = 'profile-content-patient-info'>
-                        <p><strong>Doctor Name:</strong> {{ doctor.doctor_name }}</p>
-                        <p><strong>Department: </strong>{{ doctor.dept .department_name}}</p>
-                        <p><strong>DOB:</strong> {{ doctor.doctor_dob.strftime('%d/%m/%Y') }}</p>
-                        <p><strong>Gender:</strong> {{ doctor.doctor_gender }}</p>
-                        <p><strong>Contact Number:</strong> {{ doctor.doctor_contact_number }}</p>
-                        <p><strong>Email:</strong> {{ doctor.doctor_email }}</p>
-                        <a href = '/admin/doctor/update/{{doctor.doctor_id}}' class = 'update-button'>Update</a>
-                        <a onclick="confirmDelete()" href = '/admin/doctor/delete/{{doctor.doctor_id}}' class = 'delete-button'>Delete</a>
-                    </div>
+                    <img src = '/static/images/{{ department.department_profile_picture }}.png' alt = 'Doctor Image' width="170px">
+                    <h3>Department of {{ department.department_name }}</h3>
                 </div>
 
                 <div class = 'flex-profile-content'>
                     <div class = 'flex-profile-content-buttons'>
-                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Upcoming Appointments</a></div>
-                        <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
-                        <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Check Availability</a></div>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Department Description</a></div>
+                        <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Upcoming Appointments</a></div>
+                        <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Past Appointments</a></div>
 
                     </div>
 
                     <div id = 'view-upcoming-appointments'>
-                        {% if upcoming_appointments | length > 0 %} 
+                        <p>{{ department.department_description }}</p>
+
+                        {% for d in department.doctors %}
+                            <div>
+                                <h3><a href = '/admin/doctor/{{ d.doctor_id }}'>{{ d.doctor_name }}</a></h3>
+                                <p>{{ d.doctor_desc }}</p>
+                            </div>
+                        {% endfor %}                        
+
+                    </div>
+
+                    <div id = 'view-past-appointments' style="display: none;">
+                        {% if upcoming_dept_appointments | length > 0 %} 
                             <ol>
-                            {% for a in upcoming_appointments %}
+                            {% for a in upcoming_dept_appointments %}
                                 <li>
                                     <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
                                     <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
@@ -85,10 +88,10 @@
                         {% endif %}
                     </div>
 
-                    <div id = 'view-past-appointments' style="display: none;">
-                        {% if past_appointments | length > 0 %} 
+                    <div id = 'send-message-to-patient' style="display: none;">
+                        {% if past_dept_appointments | length > 0 %} 
                             <ol>
-                            {% for a in past_appointments %}
+                            {% for a in past_dept_appointments %}
                                 <li>
                                     <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
                                     <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
@@ -102,28 +105,6 @@
                             </ol>
                         {% else %}
                             <p><em>No past appointments to show</em></p>
-                        {% endif %}
-                    </div>
-
-                    <div id = 'send-message-to-patient' style="display: none;">
-                        {% if doctor_slots | length > 0 %}
-                            <table style="width: 100%;">
-                                <tbody>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Slot</th>
-                                    </tr>
-
-                                    {% for s in doctor_slots %}
-                                        <tr>
-                                            <td>{{ s.date }}</td>
-                                            <td>{{ s.s_sch.slot_time }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p><em>Availablility not provided</em></p>
                         {% endif %}
                     </div>
                 </div>
@@ -172,7 +153,7 @@
         }
 
         function confirmDelete() {
-            var result = confirm('Are you sure you want to delete Patient Profile?')
+            var result = confirm('Are you sure you want to delete this department?')
             if (result == false) {
                 event.preventDefault();
             }
@@ -185,6 +166,5 @@
             }
         }
     </script>
-
 </body>
 </html>

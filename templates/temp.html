@@ -1,3 +1,89 @@
+    <div class = 'main-content'>
+        <table>
+            <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Department</th>
+            </tr>
+
+            <tr>
+                <td><a href = '/admin/patient/{{ patient.patient_id }}'>{{ patient.patient_name }}</a></td>
+                <td><a href = '/admin/doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></td>
+                <td><a href = '/department/{{ doctor.dept.department_id }}'>{{ doctor.dept.department_name }}</a></td>
+            </tr>
+        </table>
+
+        
+        <h2>Upcoming Appointments and Details</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+
+                {% if upcoming_appointments | length > 0 %}
+                    {% for a in upcoming_appointments %}
+                    <tr>
+                        <td>{{ a.appointment_id }}</td>
+                        <td>{{ a.date_time.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ a.t.status }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    
+
+    
+        <h2>Previous Appointments and Details</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Diagnosis</th>
+                    <th>Notes</th>
+                    <th>Prescription</th>
+                    <th>Tests</th>
+                </tr>
+                
+                {% if past_appointments | length > 0 %}
+                    {% for a in past_appointments %}
+                        <tr>
+                            <td>{{ a.appointment_id }}</td>
+                            <td>{{ a.date_time.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ a.t.diagnosis }}</td>
+                            <td>{{ a.t.notes }}</td>
+                            <td>{{ a.t.prescription }}</td>
+                            <td>{{ a.t.tests }}</td>
+                        </tr>
+                    {% endfor %}
+                
+                {% else %}
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+admin - view department
 <!DOCTYPE html>
 <html lang="en">
 <head>

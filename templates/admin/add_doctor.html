@@ -38,51 +38,96 @@
     </header>
 
     <div class = 'main-content'>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Register Doctor</h2></div>
+                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+            </div>
+        </div>
+
         <div class = 'login-container'>
-            <h1>Register Doctor</h1>
-            <form action = '/admin/doctor/add' method = 'POST'>
+            <div class = 'form-fields'>
+                <form action = '/admin/doctor/add' method = 'POST'>
+                    <div></div>
 
-                <div>
-                    <label for = 'u_name'>User Name</label>
-                    <input type = 'text' name = 'u_name' placeholder = "User name*" required />
-                </div>
+                    <div class = 'update-form-details'>
+                        <label for = 'u_name'>Username</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_name' 
+                        placeholder = "Username*" maxlength="32" pattern="[\w@#$&-.]{1,32}"
+                        title="Please enter a valid username. Your username should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_"
+                        required />
+                    </div>
 
-                <div>
-                    <label for = 'u_password'>User Password</label>
-                    <input type = 'text' name = 'u_password' placeholder = "Password*" required />
-                </div>
+                    <div class = 'update-form-details'>
+                        <label for = 'u_password'>Password</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_password' 
+                        placeholder = "Password*" 
+                        maxlength="32" pattern="[\w@#$&-.]{6,32}"
+                        title="Please enter a valid password. Your password should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_"
+                        required />
+                    </div>
 
-                <div>
-                    <label for = 'd_name'>Name</label>
-                    <input type = 'text' name = 'd_name' placeholder = "Name*" required />
-                </div>
-            
-                <div>
-                    <label for = 'contact_info'>Contact Number</label>
-                    <input type = 'text' name = 'contact_info' placeholder = "Contact number" />
-                </div>
+                    <div class = 'update-form-details'>
+                        <label for = 'd_name'>Name</label>
+                        <input class = 'input_fields' type = 'text' name = 'd_name' 
+                        placeholder = "Doctor's name*" 
+                        maxlength="64" pattern="[\a ]{1,64}"
+                        title="Please enter a valid name. Your name should have a maximum length of 64 and you can only use alphabets and space"
+                        required />
+                    </div>
 
-                <div>
-                    <label for = 'email'>Email</label>
-                    <input type = 'text' name = 'email' placeholder = "Email" />
-                </div>
+                    <div class = 'update-form-details'>
+                        <div><label for = 'gender'>Gender</label></div>
+                        <div>
+                            <select name = 'gender' class = 'dept-dropdown'>
+                                <option value = 'Male'>Male</option>
+                                <option value = 'Female'>Female</option>
+                                <option value = 'prefer_not_to_say'>Prefer not say</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div>
-                    <label for = 'desc'>Description</label>
-                    <input type = 'text' name = 'desc' placeholder = "Description" />
-                </div>
+                    <div class = 'update-form-details'>
+                        <div><label for = 'p_age'>DOB</label></div>
+                        <div><input class = 'input_fields' type = 'date' name = 'd_dob' 
+                            placeholder = "Date of Birth*" required/></div>
+                    </div>                
 
-                <div>
-                    <label for = 'dept'>Department:</label>
-                    <select name = 'dept'>
-                        {% for d in departments %}
-                            <option value = '{{d.department_name}}'>{{d.department_name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            
-                <input type = 'submit' value = 'Submit' class = 'login-button'>
-            </form>
+                    <div class = 'update-form-details'>
+                        <label for = 'contact_info'>Contact Number</label>
+                        <input class = 'input_fields' type = 'text' name = 'contact_info' 
+                        placeholder = "Contact number" 
+                        title="Please enter a valid 10 digit number"
+                        maxlength="10" minlength="10" pattern="[\d]{10}"
+                        />
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'email'>Email</label>
+                        <input class = 'input_fields' type = 'email' name = 'email' 
+                        placeholder = "Email" />
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'desc'>Description</label>
+                        <input class = 'input_fields' type = 'text' name = 'desc' 
+                        pattern = "[\w-_']{1,}"
+                        title="Please add a valid description. You can use alphabets, numbers and special characters _-'"
+                        placeholder = "Description" />
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'dept'>Department</label>
+                        <select name = 'dept' class = 'dept-dropdown'>
+                            {% for d in departments %}
+                                <option value = '{{d.department_name}}'>{{d.department_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                
+                    <input type = 'submit' value = 'Submit' class = 'login-button'>
+                </form>
+            </div>
         </div>
     </div>
 

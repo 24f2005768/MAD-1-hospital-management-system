@@ -17,7 +17,7 @@ class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     user_name = db.Column(db.String(32), nullable = False, unique = True)
-    user_password = db.Column(db.String, nullable = False)
+    user_password = db.Column(db.String(32), nullable = False)
     user_role = db.Column(db.String)
 
     admin_relationship = db.relationship('Admin', back_populates = 'a', uselist = False)
@@ -57,7 +57,7 @@ class Department(db.Model):
 class Doctor(db.Model):
     __tablename__ = 'doctor'
     doctor_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    doctor_name = db.Column(db.String, nullable = False)
+    doctor_name = db.Column(db.String(64), nullable = False)
     doctor_contact_number = db.Column(db.String, nullable = False)
     doctor_email = db.Column(db.String)
     doctor_dob = db.Column(db.Date, nullable = False)
@@ -65,7 +65,7 @@ class Doctor(db.Model):
     doctor_desc = db.Column(db.String)
     doctor_gender = db.Column(db.String)
 
-    doctor_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.name'))
+    doctor_profile_picture = db.Column(db.String, db.ForeignKey('profile_pictures.name'))
     department_id = db.Column(db.Integer, db.ForeignKey(Department.department_id))
     doctor_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
@@ -81,7 +81,7 @@ class Doctor(db.Model):
 class Patient(db.Model):
     __tablename__ = 'patient'
     patient_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    patient_name = db.Column(db.String, nullable = False)
+    patient_name = db.Column(db.String(64), nullable = False)
     contact_info = db.Column(db.String(10), nullable = False)
     patient_gender = db.Column(db.String)
     patient_email = db.Column(db.String)
@@ -91,7 +91,7 @@ class Patient(db.Model):
     patient_height = db.Column(db.String, default = '--')
     patient_weight = db.Column(db.String, default = '--')
 
-    patient_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.name'))
+    patient_profile_picture = db.Column(db.String, db.ForeignKey('profile_pictures.name'))
     patient_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
     p = db.relationship('User', back_populates = 'patient_relationship')
@@ -197,7 +197,9 @@ class AdminPatientNotifications(db.Model):
     admin_patient_message_type = db.Column(db.String) #WelcomeMessage, 
     admin_patient_message_content = db.Column(db.String)
     patient_message_recieved = db.Column(db.Boolean, default = False)
+    admin_message_recieved = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)
+    role = db.Column(db.String) #message sent from      Admin, Patient
 
     message_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
 
@@ -209,7 +211,9 @@ class AdminDoctorNotifications(db.Model):
     admin_doctor_message_type = db.Column(db.String)
     admin_doctor_message_content = db.Column(db.String)
     doctor_message_recieved = db.Column(db.Boolean, default = False)
+    admin_message_recieved = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)
+    role = db.Column(db.String) #message sent from      Admin, Doctor
 
     message_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
 

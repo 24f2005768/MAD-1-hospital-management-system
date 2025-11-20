@@ -38,20 +38,45 @@
     </header>
 
         <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Update Department</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
+
             <div class = 'login-container'>
-                <h1>Update Department</h1>
-
-                <div class = 'form-fields'>
                     <form action = '/admin/department/update/{{ department.department_id }}' method = 'POST'>
-                        <input type = 'text' name = 'dept_id' value = '{{department.department_id}}' style="height:3vh; width:15vw;" disabled />
 
-                        <input type = 'text' name = 'dept_name' value = '{{department.department_name}}' placeholder = "Department Name" style="height:3vh; width:15vw;">
+                        <div class = 'update-form-details'>
+                            <div><label for = 'dept_id'>Department ID</label></div>
+                            <div>
+                                <input class = 'input_fields' type = 'text' name = 'dept_id' value = '{{department.department_id}}' disabled />
+                            </div>
+                        </div>
 
-                        <input type = 'text' name = 'dept_description' value = '{{department.department_description}}' placeholder = "Department Description" style="height:20vh; width:15vw;">
+                        <div class = 'update-form-details'>
+                            <div><label for = 'dept_name'>Department Name</label></div>
+                            <div>
+                                <input class = 'input_fields' type = 'text' name = 'dept_name' value = '{{department.department_name}}' 
+                                maxlength="64" pattern="[\a ]{1,64}"
+                                title = 'Please add a valid department name. Department name can only have alphabets and spaces'
+                                placeholder = "Department Name">
+                            </div>
+                        </div>
+
+                        <div class = 'update-form-details'>
+                            <div><label for = 'dept_description'>Department Description</label></div>
+                            <div>
+                                <input class = 'input_fields' type = 'text' name = 'dept_description' value = '{{department.department_description}}' 
+                                pattern="[\w@#$&-.]{1,}"
+                                title = 'Please add a valid description'
+                                placeholder = "Department Description" style="height:20vh;">
+                            </div>
+                        </div>
 
                         <input type = 'submit' value = "Submit" class = 'login-button'>
                     </form>
-                </div>
             </div>
 
         </div>
