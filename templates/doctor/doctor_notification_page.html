@@ -66,6 +66,8 @@
                                 </li>
                             {% endfor %}
                         </ol>
+                    {% else %}
+                        <p>No unread notifications to show</p>
                     {% endif %}
                 </div>
 
@@ -81,7 +83,7 @@
                             {% endfor %}
                         </ol>
                     {% else %}
-                        <p>No</p>
+                        <p>No read notifications to show</p>
                     {% endif %}
                 </div>
 
@@ -89,7 +91,7 @@
             </div>
 
             <div class = 'notification-page-container'>
-                <h3 class ='notification-page-heading'>Notifications From Patient</h3>
+                <h3 class ='notification-page-heading'>Notifications From Patients</h3>
                 <div class = 'notification-page-button-ribbon'>
                     <div id = 'un-pat' class = 'notification-page-button' onclick = 'view_unread_patient_notifications()' style = 'background-color: #2fbb8fa8; font-weight: 600;'>Unread notifications</div>
                     <div id = 'r-pat' class = 'notification-page-button' onclick = 'view_read_patient_notifications()'>Read notifications</div>
@@ -109,7 +111,8 @@
                                     </li>
                                 {% endfor %}
                             </ol>
-                            
+                        {% else %}                            
+                            <p>No unread notifications to show</p>
                         {% endif %}
                     </div>
 
@@ -126,7 +129,7 @@
                                 {% endfor %}
                             </ol>
                         {% else %}
-                            <p>No</p>
+                            <p>No read notifications to show</p>
                         {% endif %}
                     </div>                   
                 </div>

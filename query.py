@@ -349,14 +349,49 @@ db.session.add(read_message1)
 
 db.session.commit()
 '''
+# selected_slot = db.get_or_404(SlotSchedules, 61)
+# doctor = db.get_or_404(Doctor, 1)
+# patient = db.get_or_404(Patient, 1)
 
-user_id = 1
-user_id = 21
+# new_entry = SlotSchedules(date = selected_slot.date, slot_doctor_id = selected_slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = selected_slot.schedule_slot_id)
+# new_entry.slot_sch_appointment_rel = Appointment(date_time = selected_slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
+# new_entry.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+# db.session.add(new_entry)
+# print(f'{new_entry} ------------------------------------')
+# db.session.commit()
 
-d_id = Doctor.query.filter(Doctor.doctor_user_id == user_id).first()
-print(d_id)
-dietetics_dept = Department.query.filter(Department.department_name == 'Dietetics').first()
-if d_id.department_id != dietetics_dept.department_id:
-    print('G')
-else:
-    print('T')
+# notification = PatientDoctorNotifications(role = 'Doctor', message_type = 'Appointment Booking Confirmation', 
+#                                             message_content = f'Hello, { patient.patient_name }! Your appointment with doctor { doctor.doctor_name } is on { new_entry.date } ({ new_entry.s_sch.slot_name })'
+#                                             ,m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id)
+# db.session.add(notification)
+# db.session.commit()
+
+input_value = 'ics'
+did = 1
+appointments_by_doctor = Appointment.query.filter(Appointment.doctor_id == did).all()
+patients = [] #list of all patients which has booked an appointment with the doctor
+helper_list = [] 
+search_function = []
+appointments_by_patient_name = []
+
+doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_contact_number.like(f'%{input_value}%'))).all()
+departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
+
+# doctor can only search for his patients
+for p in appointments_by_doctor:
+    if p.p_ref.patient_name not in helper_list:
+        patients += [p]
+        helper_list += [p.p_ref.patient_name]
+
+helper_list = []
+
+for p in patients:
+    search_list = Patient.query.filter(or_(Patient.patient_name.like(f'%{input_value}%'), Patient.contact_info.like(f'%{input_value}%'))).all()
+    if search_list != None:
+        if p.p_ref.patient_name not in helper_list:
+            search_function += search_list
+            helper_list += [p.p_ref.patient_name]
+for p in search_list:
+    appointments_by_patient_name += Appointment.query.filter(Appointment.patient_id == p.patient_id, Appointment.doctor_id == did).all()
+for dept in departments:
+    print(dept.doctors)

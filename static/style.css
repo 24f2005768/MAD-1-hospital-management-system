@@ -70,13 +70,19 @@ h2 {
 
 table {
     text-align: center;
-    width: 60vw;
+    /* width: 60vw; */
     background-color: white;
     /* border: 1px solid lightgray; */
     /* border-radius: 15px; */
     border-collapse: separate;
     border-spacing: 0;
     filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+    width: 60vw;
+    overflow: scroll;
+}
+
+.table-margins {
+    margin-top: 10px;
 }
 
 tr:nth-child(odd) {
@@ -308,12 +314,11 @@ footer {
     align-items: center;
     background-color: #a5a3e8;
     text-align: center;
-    max-width: 15vw;
+    min-width: 15vw;
     height: 80px;
     min-height: 10vh;
     border-radius: 15px;
     font-size: 15px;
-    width: 15vw;
 }
 
 .info-card-texts {
@@ -616,8 +621,9 @@ footer {
     min-height: 300px;
     margin-bottom: 30px;
     border-radius: 25px;
-    /* filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8)); */
     box-shadow:  0 0 5px 0.1px #333333;
+    height: 300px;
+    overflow: scroll;
 }
 .notification-page-button-ribbon {
     display: flex;
@@ -708,5 +714,9 @@ unselected: #269873a8 */
 
     .dash-info-card-details {
         width: 100%;
+    }
+
+    table {
+        width: 80vw;
     }
 }

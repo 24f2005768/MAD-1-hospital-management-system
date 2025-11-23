@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -38,117 +39,119 @@
     </header>
     
     <div class = 'main-content'>
-        <h2 id = 'message'>Hi! {{ current_user.doctor_relationship.doctor_name }}</h2>    
-        <div class = 'info-cards'>
+        <h2 id = 'welcome-message'>Hi! {{ current_user.doctor_relationship.doctor_name }}</h2>    
+        <div class = 'dash-info-cards'>
 
-                <div class = 'info-card-details'>
+                <div class = 'dash-info-card-details'>
                     <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile'>Profile</a></p>
                 </div>
 
-                <div class = 'info-card-details'>
+                <div class = 'dash-info-card-details'>
                     <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
                 </div>
 
-                <div class = 'info-card-details'>
+                <div class = 'dash-info-card-details'>
                     <a href = '#availabilty'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p></a>
                 </div>            
 
-                <div class = 'info-card-details'>
+                <div class = 'dash-info-card-details'>
                     <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
                 </div>
         </div>
 
-        <div style ="margin-top: 50px; width: 100%;" id = 'appointments'>
+        <div style ="margin-top: 50px;" id = 'appointments'>
             <div class = 'heading-actions'>
                 <h2>Appointments</h2>
             </div>
 
-            <div class = 'doctor-appointments-ribbon'>
-                <button onclick = 'hideShowToday()' id = 'doctor-appointments-buttons-today' class = 'doctor-appointments-buttons' style="background-color: #989aca;">Today ({{ appointments_today | length }})</button>
-                <button onclick = 'hideShowThisWeek()' id = 'doctor-appointments-buttons-week' class = 'doctor-appointments-buttons'>This Week ({{ appointments_this_week | length }})</button>
-                <button onclick = 'hideShowPastAppointments()' id = 'doctor-appointments-buttons-past' class = 'doctor-appointments-buttons'>Past Appointments ({{ past_appointments | length }})</button>
-            </div>
+            <div class = 'flex-profile-content' style="width: 100%; height: auto;">
+                <div class = 'flex-profile-content-buttons'>
+                    <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>Today ({{ appointments_today | length }})</a></div>
+                    <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>This Week ({{ appointments_this_week | length }})</a></div>
+                    <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Past Appointments ({{ past_appointments | length }})</a></div>
+                </div>
 
-            <div id = 'todays-appointments' style = 'margin-top: 12px;'>
-                {% if appointments_today | length == 0 %}
-                    <p>No appointments scheduled today</p>
-                {% else %}
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>S. No.</th>
-                                <th>Patient Name</th>
-                                <th>Slot</th>
-                                <th>Treatment Details</th>
-                            </tr>
-
-                            {% for a in appointments_today %}
+                <div id = 'view-upcoming-appointments'>
+                    {% if appointments_today | length == 0 %}
+                        <p>No appointments scheduled today</p>
+                    {% else %}
+                        <table class = 'table-margins'>
+                            <tbody>
                                 <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ a.slot_patient.patient_name }}</td>
-                                    <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
-                                    <td><a class = 'buttons' href = '/doctor/ongoing_appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.schedule_id }}'>Add</a></td>
+                                    <th>S. No.</th>
+                                    <th>Patient Name</th>
+                                    <th>Slot</th>
+                                    <th>Treatment Details</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-            </div>
 
-            <div id = 'this-weeks-appointments' style ="display: none; margin-top: 12px">
-                {% if appointments_this_week | length == 0 %}
-                    <p>No appointments scheduled this week</p>
-                {% else %}
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>S. No.</th>
-                                <th>Date</th>
-                                <th>Patient Name</th>
-                                <th>Slot</th>
-                            </tr>
+                                {% for a in appointments_today %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ a.slot_patient.patient_name }}</td>
+                                        <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                        <td><a style="text-decoration: none;" href = '/doctor/ongoing_appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.schedule_id }}'>Add</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}                   
+                </div>
 
-                            {% for a in appointments_this_week %}
+                <div id = 'view-past-appointments' style="display: none;">
+                    {% if appointments_this_week | length == 0 %}
+                        <p>No appointments scheduled this week</p>
+                    {% else %}
+                        <table class = 'table-margins'>
+                            <tbody>
                                 <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
-                                    <td>{{ a.slot_patient.patient_name }}</td>
-                                    <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                    <th>S. No.</th>
+                                    <th>Date</th>
+                                    <th>Patient Name</th>
+                                    <th>Slot</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-            </div>
 
-            <div id = 'past-appointments' style ="display: none; margin-top: 12px;">
-                {% if past_appointments | length == 0 %}
-                    <p>No Past appointments</p>
-                {% else %}
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>S. No.</th>
-                                <th>Date</th>
-                                <th>Patient Name</th>
-                                <th>Slot</th>
-                            </tr>
+                                {% for a in appointments_this_week %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
+                                        <td>{{ a.slot_patient.patient_name }}</td>
+                                        <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}                    
+                </div>
 
-                            {% for a in past_appointments %}
+                <div id = 'send-message-to-patient' style="display: none;">
+                    {% if past_appointments | length == 0 %}
+                        <p>No Past appointments</p>
+                    {% else %}
+                        <table class = 'table-margins'>
+                            <tbody>
                                 <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
-                                    <td>{{ a.slot_patient.patient_name }}</td>
-                                    <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                    <th>S. No.</th>
+                                    <th>Date</th>
+                                    <th>Patient Name</th>
+                                    <th>Slot</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+
+                                {% for a in past_appointments %}
+                                    <tr>
+                                        <td><a href = '/doctor/view-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.slot_sch_appointment_rel.t.treatment_id }}'>{{ loop.index }}</a></td>
+                                        <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
+                                        <td>{{ a.slot_patient.patient_name }}</td>
+                                        <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <div style = 'margin-top: 50px; width: 100%;' id = 'availabilty'>
+        <div style = 'margin-top: 50px;' id = 'availabilty'>
             <div class = 'heading-actions'>
                 <h2>Availablility</h2>
 
@@ -185,7 +188,7 @@
                 {% endif %}
         </div>
 
-        <div style ="margin-top: 50px; width: 100%;" id = 'patients'>
+        <div style ="margin-top: 50px;" id = 'patients'>
             <div class = 'heading-actions'>
                 <h2>Patients</h2>
             </div>
@@ -216,47 +219,97 @@
                 </tbody>
             </table>
         </div>
-        
-        <script>
-            var todays_appointments = document.getElementById('todays-appointments');
-            var weeks_appointments = document.getElementById('this-weeks-appointments');
-            var past_appointments = document.getElementById('past-appointments');
-            var today_appointment_color_change = document.getElementById('doctor-appointments-buttons-today');
-            var weeks_appointment_color_change = document.getElementById('doctor-appointments-buttons-week');
-            var past_appointment_color_change = document.getElementById('doctor-appointments-buttons-past');
-            
-            function hideShowToday() {
-                todays_appointments.style.display = 'block';
-                weeks_appointments.style.display = 'none';
-                past_appointments.style.display = 'none';
-                today_appointment_color_change.style.backgroundColor = '#989aca';
-                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
-
-            }
-
-            function hideShowThisWeek() {
-                todays_appointments.style.display = 'none';
-                weeks_appointments.style.display = 'block';
-                past_appointments.style.display = 'none';
-                weeks_appointment_color_change.style.backgroundColor = '#989aca';
-                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
-            }
-
-            function hideShowPastAppointments() {
-                todays_appointments.style.display = 'none';
-                weeks_appointments.style.display = 'none';
-                past_appointments.style.display = 'block';
-                past_appointment_color_change.style.backgroundColor = '#989aca';
-                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
-            }
-        </script>
     </div>
 
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
+
+    <script>
+        var todays_appointments = document.getElementById('todays-appointments');
+        var weeks_appointments = document.getElementById('this-weeks-appointments');
+        var past_appointments = document.getElementById('past-appointments');
+        var today_appointment_color_change = document.getElementById('doctor-appointments-buttons-today');
+        var weeks_appointment_color_change = document.getElementById('doctor-appointments-buttons-week');
+        var past_appointment_color_change = document.getElementById('doctor-appointments-buttons-past');
+        
+        function hideShowToday() {
+            todays_appointments.style.display = 'block';
+            weeks_appointments.style.display = 'none';
+            past_appointments.style.display = 'none';
+            today_appointment_color_change.style.backgroundColor = '#989aca';
+            weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+
+        }
+
+        function hideShowThisWeek() {
+            todays_appointments.style.display = 'none';
+            weeks_appointments.style.display = 'block';
+            past_appointments.style.display = 'none';
+            weeks_appointment_color_change.style.backgroundColor = '#989aca';
+            today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+        }
+
+        function hideShowPastAppointments() {
+            todays_appointments.style.display = 'none';
+            weeks_appointments.style.display = 'none';
+            past_appointments.style.display = 'block';
+            past_appointment_color_change.style.backgroundColor = '#989aca';
+            today_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+        }
+
+        var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
+        var view_past_appointments = document.getElementById('view-past-appointments')
+        var send_message_to_patient = document.getElementById('send-message-to-patient')
+        var upcoming_color_change = document.getElementById('upcoming')
+        var past_color_change = document.getElementById('past')
+        var message_color_change = document.getElementById('message')
+
+        function viewPatientUpcomingAppointments() {
+            view_upcoming_appointments.style.display = 'block';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = '600'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function viewPatientPastAppointments() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'block';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#2fbb8fa8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = '600'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function sendMessageToPatient() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'block';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = '600'
+        }
+
+    </script>
 </body>
 </html>

@@ -41,6 +41,8 @@ user9 = User(user_name = 'Viena', user_password = 'vienaa', user_role = 'Patient
 user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70, patient_dob = date(1994, 10, 7)) 
 user9.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
+# for pediatrics
+
 user10 = User(user_name = 'Kashish', user_password = 'kashish', user_role = 'Patient')
 user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82, patient_dob = date(2014, 11, 6)) 
 user10.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
@@ -51,11 +53,11 @@ user11.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = '
 
 user12 = User(user_name = 'Vipul', user_password = 'vipul', user_role = 'Patient')
 user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48, patient_dob = date(2010, 1, 4)) 
-user11.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
+user12.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
 
 user13 = User(user_name = 'Anamika', user_password = 'anamika', user_role = 'Patient')
 user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25, patient_dob = date(2018, 7, 30)) 
-user11.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
+user13.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
 
 db.session.add(user1)
 db.session.add(user2)
@@ -478,7 +480,200 @@ db.session.add(book_slot3)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
 db.session.add(message)
 
-db.session.commit()
-
 # Future Slots 
 
+list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
+
+# Doctor1
+doctor = db.get_or_404(Doctor, 1)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient1.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient7.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient7.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient4.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient5.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+# Doctor2
+doctor = db.get_or_404(Doctor, 2)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient2.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient5.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient6.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient6.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient3.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+# Doctor3
+doctor = db.get_or_404(Doctor, 3)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient11.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient11.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient10.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient9.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient9.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient12.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient13.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+# Doctor4
+doctor = db.get_or_404(Doctor, 4)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient11.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient11.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient10.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient10.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient9.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient9.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient12.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient12.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient13.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient13.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+# Doctor5
+doctor = db.get_or_404(Doctor, 5)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient1.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient5.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient3.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient9.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient9.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+# Doctor6
+doctor = db.get_or_404(Doctor, 6)
+
+slot_for_doctor0 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient5.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor0.date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
+slot_for_doctor0.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor1 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient2.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
+slot_for_doctor1.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor2 = SlotSchedules(date = list_of_next_7_dates[0], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot3.slot_id, slot_patient_id = patient7.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor1.date, doctor_id = doctor.doctor_id, patient_id = patient7.patient_id)
+slot_for_doctor2.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor3 = SlotSchedules(date = list_of_next_7_dates[1], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id, slot_patient_id = patient8.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor2.date, doctor_id = doctor.doctor_id, patient_id = patient8.patient_id)
+slot_for_doctor3.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor4 = SlotSchedules(date = list_of_next_7_dates[4], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot1.slot_id, slot_patient_id = patient6.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel = Appointment(date_time = slot_for_doctor3.date, doctor_id = doctor.doctor_id, patient_id = patient6.patient_id)
+slot_for_doctor4.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
+
+slot_for_doctor5 = SlotSchedules(date = list_of_next_7_dates[5], slot_doctor_id = doctor.doctor_id, schedule_slot_id = slot2.slot_id)
+
+db.session.add(slot_for_doctor0)
+db.session.add(slot_for_doctor1)
+db.session.add(slot_for_doctor2)
+db.session.add(slot_for_doctor3)
+db.session.add(slot_for_doctor4)
+db.session.add(slot_for_doctor5)
+
+db.session.commit()

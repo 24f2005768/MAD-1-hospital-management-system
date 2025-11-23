@@ -40,24 +40,24 @@
         <div class = 'main-content'>
             <h2 id = 'message'>Search results for: {{ input_value }}</h2>
 
-                <div class = 'info-cards'>
+                <div class = 'dash-info-cards'>
 
-                    <div class = 'info-card-details'>
-                        <p class = 'info-card-texts'>{{ search_function | length }}</p>
+                    <div class = 'dash-info-card-details'>
+                        <p class = 'info-card-texts'>{{ search_list | length }}</p>
                         <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p>
                     </div>
 
-                    <div class = 'info-card-details'>
+                    <div class = 'dash-info-card-details'>
                         <p class = 'info-card-texts'>{{ appointments_by_patient_name | length}}</p>
                         <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
                     </div>
 
-                    <div class = 'info-card-details'>
+                    <div class = 'dash-info-card-details'>
                         <p class = 'info-card-texts'>{{ doctors | length }}</p>
                         <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p>
                     </div>            
 
-                    <div class = 'info-card-details'>
+                    <div class = 'dash-info-card-details'>
                         <p class = 'info-card-texts'>{{ departments | length}}</p>
                         <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p>
                     </div>
@@ -78,8 +78,8 @@
                             <th>Email</th>
                         </tr>
                         
-                        {% if search_function | length > 0 %}
-                            {% for p in search_function %}
+                        {% if search_list | length > 0 %}
+                            {% for p in search_list %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
                                         <td><a href = '/doctor/view-patient/{{ p.patient_id }}/{{ doctor.doctor_id }}'>{{ p.patient_name }}</a></td>
@@ -115,7 +115,6 @@
                             <th>Date</th>
                         </tr>
                         {% if search_function | length > 0 %}
-
                             {% for a in appointments_by_patient_name %}
                             <tr>
                                 <td><a>{{ loop.index }}</a></td>
@@ -134,46 +133,50 @@
                         </tr>
 
                         {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-
-            <div style ="margin-top: 50px;">
-                <div class = 'heading-actions'>
-                    <h2>Doctors</h2>
-                </div>
-
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>S. No.</th>
-                            <th>Name</th>
-                            <th>Contact number</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                        </tr>
-                        
-                        {% if doctors | length > 0 %}    
-                            {% for d in doctors %}
-                                <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td><a href = ''>{{d.doctor_name}}</a></td>
-                                    <td>{{d.doctor_contact_number}}</td>
-                                    <td>{{d.doctor_email}}</td>
-                                    <td>{{d.dept.department_name}}</td>    
-                            {% endfor %}
-
-                        {% else %}
-                                <tr>
-                                    <td>--</td>
-                                    <td>--</td>
-                                    <td>--</td>
-                                    <td>--</td>
-                                </tr>
-                        {% endif %}
                     </tbody>
                 </table>
             </div>
+
+            {% if doctors | length > 0 %}
+                <div style ="margin-top: 50px;">
+                    <div class = 'heading-actions'>
+                        <h2>Doctors</h2>
+                    </div>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Name</th>
+                                <th>Contact number</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                            </tr>
+                            
+                            {% if doctors | length > 0 %}    
+                                {% for d in doctors %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{d.doctor_name}}</td>
+                                        <td>{{d.doctor_contact_number}}</td>
+                                        <td>{{d.doctor_email}}</td>
+                                        <td>{{d.dept.department_name}}</td>  
+                                    </tr>  
+                                {% endfor %}
+    
+                            {% else %}
+                                    <tr>
+                                        <td>--</td>
+                                        <td>--</td>
+                                        <td>--</td>
+                                        <td>--</td>
+                                        <td>--</td>
+                                    </tr>
+                            {% endif %}  
+                        </tbody>
+                    </table>  
+                </div>      
+            {% endif %}                  
 
             <div style ="margin-top: 50px;">
                 <div class = 'heading-actions'>
@@ -191,7 +194,7 @@
                             {% for d in departments %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td><a href = ''>{{ d.department_name }}</a></td>
+                                    <td>{{ d.department_name }}</td>
                                 </tr>
                             {% endfor %}
 
@@ -205,6 +208,44 @@
                 </table>
             </div>
 
+            {% if departments | length > 0 %}
+                <div style ="margin-top: 50px;">
+                    <div class = 'heading-actions'>
+                        <h2>Department Doctors</h2>
+                    </div>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact number</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                            </tr>
+                            {% if departments | length > 0 %}
+                                {% for dept in departments %}
+                                    {% for doctor in dept.doctors %}
+                                        <tr>
+                                            <td>{{ doctor.doctor_name }}</td>
+                                            <td>{{ doctor.doctor_contact_number }}</td>
+                                            <td>{{ doctor.doctor_email }}</td>
+                                            <td>{{ doctor.dept.department_name }}</td>                                       
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                    
+                            {% else %}
+                                <tr>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
 
         </div>
 

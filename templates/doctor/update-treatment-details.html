@@ -48,22 +48,34 @@
 
                     <div class = 'update-form-details'>
                         <label for = 'diagnosis'>Diagnosis</label>
-                        <input type = 'text' name = 'diagnosis' value = '{{ treatment.diagnosis }}' placeholder = "Diagnosis">
+                        <input class = 'input_fields' type = 'text' name = 'diagnosis' value = '{{ treatment.diagnosis }}' 
+                        placeholder = "Diagnosis" title="Please add valid diagnosis. You can use alphabets, numbers and some special characters @#!$+-'"
+                        pattern="[\w@#!$&+*'\/ \-]{1,}"
+                        >
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'notes'>Notes</label>
-                        <input type = 'text' name = 'notes' value = '{{ treatment.notes }}' placeholder = "Notes">
+                        <input class = 'input_fields' type = 'text' name = 'notes' value = '{{ treatment.notes }}' 
+                        placeholder = "Notes"
+                        pattern="[\w@#!$&+*'\/ \-]{1,}" title="Please add valid notes. You can use alphabets, numbers and some special characters @#!$+(-'')"
+                        >
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'tests'>Tests</label>
-                        <input type = 'text' name = 'tests' value = '{{  treatment.tests }}' placeholder = "Tests">
+                        <input class = 'input_fields' type = 'text' name = 'tests' value = '{{  treatment.tests }}' 
+                        placeholder = "Tests"
+                        pattern="[\w@#!$&+*'\/ \-]{1,}" title="Please add valid tests. You can use alphabets, numbers and some special characters @#!$+(-'')"
+                        >
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'prescription'>Prescription</label>
-                        <input type = 'text' name = 'prescription' value = '{{ treatment.prescription }}' placeholder = "Prescription">
+                        <input class = 'input_fields' type = 'text' name = 'prescription' value = '{{ treatment.prescription }}' 
+                        placeholder = "Prescription"
+                        pattern="[\w@#!$&+*'\/ \-]{1,}" title="Please add a valid prescription. You can use alphabets, numbers and some special characters @#!$+(-'')"
+                        >
                     </div>
 
                     <div class = 'update-form-details'>

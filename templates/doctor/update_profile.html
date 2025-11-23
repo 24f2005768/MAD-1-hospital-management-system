@@ -43,22 +43,36 @@
                 <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile/update' method = 'POST'>
                     <div class = 'update-form-details'>
                         <label for = 'd_name'>Name</label>
-                        <input type = 'text' name = 'd_name' value = '{{ current_user.doctor_relationship.doctor_name }}' placeholder = "Name"/>
+                        <input class = 'input_fields' type = 'text' name = 'd_name' value = '{{ current_user.doctor_relationship.doctor_name }}' 
+                        placeholder = "Name"
+                        maxlength="32" pattern="[\a ]{1,64}"
+                        title="Please enter a valid name. Your name should have a maximum length of 64 and you can only use alphabets and space" required
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'contact_info'>Contact Number</label>
-                        <input type = 'text' name = 'contact_info' value = '{{ current_user.doctor_relationship.doctor_contact_number }}' placeholder = "Contact number"/>
+                        <input class = 'input_fields' type = 'text' name = 'contact_info' value = '{{ current_user.doctor_relationship.doctor_contact_number }}' 
+                        placeholder = "Contact number"
+                        maxlength="10" minlength="10" pattern="[\d]{10}"
+                        title="Please enter a valid 10 digit number"
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'email'>Email</label>
-                        <input type = 'text' name = 'email' value = '{{ current_user.doctor_relationship.doctor_email }}' placeholder = "Email"/>
+                        <input class = 'input_fields' type = 'email' name = 'email' value = '{{ current_user.doctor_relationship.doctor_email }}' 
+                        placeholder = "Email"
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'descprition'>Description</label>
-                        <input type = 'text' name = 'descprition' value = '{{ current_user.doctor_relationship.doctor_desc }}' placeholder = "Description"/>
+                        <input class = 'input_fields' type = 'text' name = 'descprition' value = '{{ current_user.doctor_relationship.doctor_desc }}' 
+                        placeholder = "Description"
+                        pattern ="[\w\'\\\-]{1,}"
+                        title="Please add a valid description. You can use alphabets, numbers and some special characters -'"
+                        />
                     </div>
 
                 <input type ="submit" value = "Submit" class = 'login-button'>

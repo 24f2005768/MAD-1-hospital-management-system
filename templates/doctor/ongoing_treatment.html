@@ -42,21 +42,19 @@
             <div class = 'centered-headings'>
                 <h2>Add Appointment Details</h2>
             </div>
-            <!-- <div class = 'profile-picture-display'> -->
                 <h3>Patient Details</h3>
                 <div class = "patient-info-details">
                     <div>
-                        <p>Name: {{ patient.patient_name }}</p>
-                        <p>Age: {{ patient.patient_age }}</p>
-                        <p>Gender: {{ patient.patient_gender }}</p>
+                        <p><strong>Name:</strong> {{ patient.patient_name }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
                     </div>
                     <div>
-                        <p>Height: {{ patient.patient_height }} cm</p>
-                        <p>Weight: {{ patient.patient_weight }} kg</p>
-                        <p>Last Visit: {{ last_visit }}</p>
+                        <p><strong>Height:</strong> {{ patient.patient_height }} cm</p>
+                        <p><strong>Weight:</strong> {{ patient.patient_weight }} kg</p>
+                        <p><strong>Last Visit:</strong> {{ last_visit.strftime('%d/%m/%Y') }}</p>
                     </div>
                 </div>
-            <!-- </div> -->
             
             <div class = 'login-container'>
                 <div class = 'treatment_details'>
@@ -64,25 +62,41 @@
                         <h3>Treatment Details</h3>
                         <div class = 'treatment-form-details'>
                             <label for = 'diagnosis'>Diagnosis</label>
-                            <input type = 'text' name = 'diagnosis' placeholder="add description"/>
+                            <input class = 'input_fields' type = 'text' name = 'diagnosis' 
+                            placeholder="add description"
+                            pattern="[\w@#!$&+*'\/ \-]{1,}"
+                            title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                            required/>
                         </div>    
                                     
                         <div class = 'treatment-form-details'>
                             <label for = 'notes'>Notes</label>
-                            <input type = 'text' name = 'notes' placeholder="add notes"/>
+                            <input class = 'input_fields' type = 'text' name = 'notes' 
+                            placeholder="add notes"
+                            pattern = "[\w@#!$&+*'\/ \-]{1,}"
+                            title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                            required/>
                         </div>    
 
                         <div class = 'treatment-form-details'>
                             <label for = 'prescription'>Prescription</label>
-                            <input type = 'text' name = 'prescription' placeholder="add prescription"/>
+                            <input class = 'input_fields' type = 'text' name = 'prescription' 
+                            placeholder="add prescription"
+                            pattern="[\w@#!$&+*'\/ \-]{1,}"
+                            title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                            />
                         </div> 
 
                         <div class = 'treatment-form-details'>
                             <label for = 'tests'>Tests</label>
-                            <input type = 'text' name = 'tests' placeholder="add tests"/>
+                            <input class = 'input_fields' type = 'text' name = 'tests' 
+                            placeholder="add tests"
+                            pattern="[\w@#!$&+*'\/ \-]{1,}"
+                            title = "Please add a valid input. You can use alphabets, numbers and these special characters \w@#!$&_-+* \'"
+                            />
                         </div>    
 
-                        <fieldset>
+                        <fieldset style="width: 100%;">
                             <legend>Select Diet Type: </legend>
                             <div>
                                 <div>

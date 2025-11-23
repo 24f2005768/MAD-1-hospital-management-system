@@ -44,7 +44,7 @@
             
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
-                        <img src ="{{ url_for('static',filename='images/1.jpg') }}" alt="Profile Picture" height="200px" width="250px">
+                        <img src = '/static/images/{{ patient.p_ref.patient_profile_picture }}.png' alt="Profile Picture" height="200px" width="250px">
                         <p>Name: {{ patient.p_ref.patient_name }}</p>
                         <p>Age: {{ patient.p_ref.patient_age }}</p>
                         <p>Gender: {{ patient.p_ref.patient_gender }}</p>

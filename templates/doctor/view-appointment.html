@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointment</title>
+    <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class = 'heading-actions'>
+            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>
+                            <div>
+                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
+                            <div class = 'search-flex-container'>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Appointment Details</h2></div>
+                    <div><a class = 'update-button' href = '/doctor/update-treatment-details/{{ current_user.doctor_relationship.doctor_id }}/{{ treatment.treatment_id }}'>Update</a></div>
+                    <div><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
+            
+            <div class = 'wrapper'>
+                <div class = 'profile-picture-display'>
+                        <img src = '/static/images/{{ patient.patient_profile_picture }}.png' alt="Profile Picture" height="200px" width="250px">
+                        <p><strong>Name:</strong> {{ patient.patient_name }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
+                        <p><strong>Height:</strong> {{ patient.patient_height }} cm</p>
+                        <p><strong>Weight:</strong> {{ patient.patient_weight }} kg</p>
+                        <p><strong>Contact </strong>Number: {{ patient.contact_info }}</p>
+                        <p><strong>Email:</strong> {{ patient.patient_email }}</p>
+                    </div>
+
+                    <div class = 'flex-profile-content', style="width: 100%;">
+                        <fieldset>
+                            <p><strong>Diagnosis:</strong> {{ treatment.diagnosis }}</p>
+                            <p><strong>Notes:</strong> {{ treatment.notes }}</p>
+                            <p><strong>Prescription:</strong> {{ treatment.prescription }}</p>
+                            <p><strong>Tests:</strong> {{ treatment.tests }}</p>
+                        </fieldset>
+                        {% if dietician_notes != None %}
+                            <h3>Dietician Notes</h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            var this_doctor_appointments = document.getElementById('show-doctor-appointments')
+            var all_doctor_appointments = document.getElementById('show-all-doctors-appointments')
+
+            function hideShowThisDoctor() {
+                this_doctor_appointments.style.display = 'block';
+                all_doctor_appointments.style.display = 'none';
+            }
+
+            function hideShowAllDoctors() {
+                this_doctor_appointments.style.display = 'none';
+                all_doctor_appointments.style.display = 'block';
+            }
+        </script>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>
