@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -39,25 +40,31 @@
 
 
         <div class = 'main-content' id = 'align-items-in-centre'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 35%;"><h2 id = 'center-heading'>Profile Page</h2></div>
+                    <div><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile/update' class = 'action-buttons update-button'>Update Profile</a></div>
+                    <div><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
+
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
                     <img src = '/static/images/{{ current_user.doctor_relationship.doctor_profile_picture }}.png' alt="Profile Picture" height="240px" width="300px">
+                    <h3 style="text-align: center;">Dr. {{ current_user.doctor_relationship.doctor_name }}</h3>
                 </div>
 
-                <div class = 'profile-content'>
-                    <div class = 'heading-actions'>
-                        <h2>{{ current_user.doctor_relationship.doctor_id.doctor_name }}</h2>
-                        <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile/update' class = 'action-buttons update-button'>Update Profile</a>
+                <fieldset>
+                    <div class = 'profile-content'>
+                        <h3>{{ current_user.doctor_relationship.dept.department_name }}</h3>
+                        
+                        <div>
+                            <span><strong>Email:</strong> {{ current_user.doctor_relationship.doctor_email }}</span>
+                            <span> &bullet; <strong>Contact Number:</strong> {{ current_user.doctor_relationship.doctor_contact_number }}</span>
+                        </div>
+                        <p>{{ current_user.doctor_relationship.doctor_desc }}</p>
                     </div>
-
-                    <p><strong>{{ current_user.doctor_relationship.dept.department_name }}</strong></p>
-                    
-                    <div>
-                        <span>Email: {{ current_user.doctor_relationship.doctor_email }}</span>
-                        <span> &bullet; Contact Number: {{ current_user.doctor_relationship.doctor_contact_number }}</span>
-                    </div>
-                    <p>{{ current_user.doctor_relationship.doctor_desc }}</p>
-                </div>
+                </fieldset>
             </div>
 
         </div>

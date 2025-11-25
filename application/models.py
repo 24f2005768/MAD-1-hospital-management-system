@@ -128,7 +128,7 @@ class Treatment(db.Model):
     diet_type = db.Column(db.String)
 
     ap = db.relationship('Appointment', back_populates = 't')
-    treatment_dn = db.relationship('DieticianNotes', back_populates = 'dn_treatment')
+    treatment_dn = db.relationship('DieticianNotes', back_populates = 'dn_treatment', uselist = False)
 
 class Slot(db.Model):
     __tablename__ = 'slot'
@@ -224,6 +224,8 @@ class AdminDoctorNotifications(db.Model):
 class DieticianNotes(db.Model):
     __tablename__ = 'dietician_notes'
     d_notes_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    status = db.Column(db.String, default = 'Pending')
+    doctor_instructions = db.Column(db.String)
     patient_id = db.Column(db.String)
     morning_plan = db.Column(db.String)
     afternoon_plan = db.Column(db.String)

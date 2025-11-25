@@ -24,10 +24,10 @@
                                 <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
-                            <div>
                                 <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
                             </div>
                         </div>
@@ -41,40 +41,66 @@
             <div class = 'login-container'>
                 <h1>Update Profile</h1>
                 <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/profile/update' method = 'POST'>
+
                     <div class = 'update-form-details'>
-                        <label for = 'u_name'>User Name</label>
-                        <input type = 'text' name = 'u_name' value = '{{ current_user.patient_relationship.p.user_name }}' placeholder = "User Name"/>
+                        <label for = 'u_name'>Username</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_name' value = '{{ current_user.patient_relationship.p.user_name }}' placeholder = "Username"
+                        maxlength="32" pattern="[\w@#$&.\-]{1,32}"
+                        title="Please enter a valid username. Your username should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_"
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
-                        <label for = 'u_password'>User Password</label>
-                        <input type = 'password' name = 'u_password' value = '{{ current_user.patient_relationship.p.user_password }}' placeholder = "User Password"/>
+                        <label for = 'u_password'>Password</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_password' value = '{{ current_user.patient_relationship.p.user_password }}' placeholder = "User Password"
+                        maxlength="32" pattern="[\w@#$&.\-]{5,32}"
+                        title="Please enter a valid password. Your password should have a minimum length of 5, and a maximum length of 32. You can only use these special characters @#$&.-_" 
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'p_name'>Name</label>
-                        <input type = 'text' name = 'p_name' value = '{{ current_user.patient_relationship.patient_name }}' placeholder = "Name"/>
+                        <input class = 'input_fields' type = 'text' name = 'p_name' value = '{{ current_user.patient_relationship.patient_name }}' 
+                        placeholder = "Name"
+                        maxlength="32" pattern="[\a ]{1,64}"
+                        title="Please enter a valid name. Your name should have a maximum length of 64 and you can only use alphabets and space" 
+                        />
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'email'>Email</label>
-                        <input type = 'text' name = 'email' value = '{{ current_user.patient_relationship.patient_email }}' placeholder = "Email"/>
+                        <input class = 'input_fields' type = 'email' name = 'email' value = '{{ current_user.patient_relationship.patient_email }}' 
+                        placeholder = "Email"/>
                     </div>
 
                     <div class = 'update-form-details'>
                         <label for = 'contact_info'>Contact Number</label>
-                        <input type = 'text' name = 'contact_info' value = '{{ current_user.patient_relationship.contact_info }}' placeholder = "Contact number"/>
+                        <input class = 'input_fields' type = 'text' name = 'contact_info' value = '{{ current_user.patient_relationship.contact_info }}' 
+                        placeholder = "Contact number"
+                        maxlength="10" minlength="10" pattern="[\d]{10}"
+                        title="Please enter a valid 10 digit number"/>
                     </div>
 
-                    <div class = 'update-form-details'>
-                        <label for = 'height'>Height in cm</label>
-                        <input type = 'text' name = 'height' value = '{{ current_user.patient_relationship.patient_height }}' placeholder = "Height"/>
+                <div class = 'update-form-details'>
+                    <div><label for = 'height'>Height in cm</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'number' name = 'height' value = '{{ current_user.patient_relationship.patient_height }}' 
+                        pattern="[\d]{1,}"
+                        title="Please enter a valid height"
+                        placeholder = "Height in cm" min="0"/>
                     </div>
+                </div>
 
-                    <div class = 'update-form-details'>
-                        <label for = 'weight'>Weight in kg</label>
-                        <input type = 'text' name = 'weight' value = '{{ current_user.patient_relationship.patient_weight }}' placeholder = "Weight"/>
+                <div class = 'update-form-details'>
+                    <div><label for = 'weight'>Weight in kg</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'number' name = 'weight' value = '{{ current_user.patient_relationship.patient_weight }}' 
+                        pattern="[\d]{1,}"
+                        title="Please enter a valid weight"
+                        placeholder = "Weight in kg" min="0"/>
                     </div>
+                </div>
+
 
                 <input type ="submit" value = "Submit" class = 'login-button'>
                             

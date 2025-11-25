@@ -24,7 +24,8 @@
                                 <a href = '/admin/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -52,59 +53,63 @@
             </div>
         </div>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>Appointment ID</th>
-                    <th>Patient</th>
-                    <th>Doctor</th>
-                    <th>Date</th>
-                </tr>
-                {% if upcoming_appointments | length > 0 %}
-                    {% for a in upcoming_appointments %}
+        <div class = 'scroll-appointments'>
+            <table>
+                <tbody>
                     <tr>
-                        <td><a>{{a.appointment_id}}</a></td>
-                        <td>{{a.p_ref.patient_name}}</td>
-                        <td>{{a.d_ref.doctor_name}}</td>
-                        <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                        <th>S. No.</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
                     </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                    {% if upcoming_appointments | length > 0 %}
+                        {% for a in upcoming_appointments %}
+                        <tr>
+                            <td><a>{{ loop.index }}</a></td>
+                            <td>{{a.p_ref.patient_name}}</td>
+                            <td>{{a.d_ref.doctor_name}}</td>
+                            <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
 
         <div class = 'heading-actions'>
             <h2>Past Appointments</h2>
         </div>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>Appointment ID</th>
-                    <th>Patient</th>
-                    <th>Doctor</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
+        <div class = 'scroll-appointments'>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
 
-                {% for a in past_appointments %}
-                <tr>
-                    <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
-                    <td>{{a.p_ref.patient_name}}</td>
-                    <td>{{a.d_ref.doctor_name}}</td>
-                    <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
-                    <td>{{a.t.status}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% for a in past_appointments %}
+                    <tr>
+                        <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
+                        <td>{{a.p_ref.patient_name}}</td>
+                        <td>{{a.d_ref.doctor_name}}</td>
+                        <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                        <td>{{a.t.status}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <footer>

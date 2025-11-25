@@ -25,7 +25,8 @@
                                 <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>

@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -37,110 +38,184 @@
         </div>
     </header>
 
-        <div class = 'main-content'>
-            <div>
-                <h1 class = 'centered-headings'>Patient Details</h1>
+        <div class = 'main-content'>         
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Patient Details</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
             </div>
-            
+
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display'>
-                        <img src = '/static/images/{{ patient.p_ref.patient_profile_picture }}.png' alt="Profile Picture" height="200px" width="250px">
-                        <p>Name: {{ patient.p_ref.patient_name }}</p>
-                        <p>Age: {{ patient.p_ref.patient_age }}</p>
-                        <p>Gender: {{ patient.p_ref.patient_gender }}</p>
-                        <p>Height: {{ patient.p_ref.patient_height }} cm</p>
-                        <p>Weight: {{ patient.p_ref.patient_weight }} kg</p>
-                        <p>Contact Number: {{ patient.p_ref.contact_info }}</p>
-                        <p>Email: {{ patient.p_ref.patient_email }}</p>
-                        <p>Last Visit: {{ last_visit }}</p>
+                        <img src = '/static/images/{{ patient.p_ref.patient_profile_picture }}.png' alt="Profile Picture" height="200px" >
+                        <p><strong>Name:</strong> {{ patient.p_ref.patient_name }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ patient.p_ref.patient_gender }}</p>
+                        <p><strong>Height:</strong> {{ patient.p_ref.patient_height }} cm</p>
+                        <p><strong>Weight:</strong> {{ patient.p_ref.patient_weight }} kg</p>
+                        <p><strong>Contact Number:</strong> {{ patient.p_ref.contact_info }}</p>
+                        <p><strong>Email:</strong> {{ patient.p_ref.patient_email }}</p>
+                        <p><strong>Last Visit:</strong> {{ last_visit.strftime('%d/%m/%Y') }}</p>
                     </div>
 
-                    <div class = 'doctor-dash-view-patient-appointments'>
-                        <div class = 'doctor-appointments-ribbon'>
-                            <button onclick = 'hideShowThisDoctor()' class = 'view-patient-appointment-buttons'>With Dr. {{ current_user.doctor_relationship.doctor_name }}</button>
-                            <button onclick = 'hideShowAllDoctors()' class = 'view-patient-appointment-buttons'>Complete Medical History</button>
-                        </div>
+                <div class = 'flex-profile-content' style="width: 100%; height: auto;">
+                    <div class = 'flex-profile-content-buttons'>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>With Dr. {{ current_user.doctor_relationship.doctor_name }} ({{ upcoming_appointments | length +  past_appointments | length}})</a></div>
+                        <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Complete Medical History ({{ all_past_appointments | length }})</a></div>
+                        <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
+                    </div>
 
-                        <div id = 'show-doctor-appointments'>
-                            <h3>Upcoming Appointments</h3>
+                    <div id = 'view-upcoming-appointments' style="margin-top: 10px;">
+                        <h3 style = 'text-align: center;'>Upcoming Appointments</h3>
 
-                            <div class = 'show-appointments'>
-                                {% if upcoming_appointments | length > 0 %}
-                                    <ol>
-                                        {% for a in upcoming_appointments %}
-                                            <li>
-                                                <div class = 'list-items'>
-                                                    <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                                    <div class = 'action-buttons'>
-                                                        <a class = 'buttons' href = '/doctor/cancel-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
-                                                    </div>
+                        <div class = 'show-appointments scroll-appointments'>
+                            {% if upcoming_appointments | length > 0 %}
+                                <ol>
+                                    {% for a in upcoming_appointments %}
+                                        <li>
+                                            <div class = 'list-items'>
+                                                <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
+                                                <div class = 'action-buttons'>
+                                                    <a class = 'buttons' href = '/doctor/cancel-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
                                                 </div>
-                                                <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
-                                                <p>Status: {{ a.t.status }}</p>                        
+                                            </div>
+                                            <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
+                                            <p>Status: {{ a.t.status }}</p>                        
 
-                                            </li>
-                                        {% endfor %}
-                                    </ol>
-                                {% else %}
-                                    <p><em>No upcoming appointments</em></p>
-                                {% endif %}
-                            </div>
-
-                            <h3>Past Appointments</h3>
-                            <div class = 'show-appointments'>
-                                <ol>
-                                    {% for a in past_appointments %}
-                                    <li>
-                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
-                                        <p>Notes: {{ a.t.notes }}</p>
-                                        <p>Prescription: {{ a.t.prescription }}</p>
-                                        <p>Tests: {{ a.t.tests }}</p>
-                                    </li>
+                                        </li>
                                     {% endfor %}
                                 </ol>
-                            </div>
+                            {% else %}
+                                <p><em>No upcoming appointments</em></p>
+                            {% endif %}
                         </div>
 
-                        <div id = 'show-all-doctors-appointments' style ="display: none;">
-                            <h3>Complete Medical History</h3>
-                            <div class = 'show-appointments'>
-                                <ol>
-                                    {% for a in all_past_appointments %}
-                                    <li>
-                                        <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                        <p>Diagnosis: {{ a.t.diagnosis }}</p>
-                                        <p>Notes: {{ a.t.notes }}</p>
-                                        <p>Prescription: {{ a.t.prescription }}</p>
-                                        <p>Tests: {{ a.t.tests }}</p>
-                                    </li>
-                                    {% endfor %}
-                                </ol>
-                            </div>
-                        </div>
+                        <h3 style = 'text-align: center;'>Past Appointments</h3>
+                        <div class = 'show-appointments scroll-appointments'>
+                            <ol>
+                                {% for a in past_appointments %}
+                                <li>
+                                    <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
+                                    <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                                    <p>Notes: {{ a.t.notes }}</p>
+                                    <p>Prescription: {{ a.t.prescription }}</p>
+                                    <p>Tests: {{ a.t.tests }}</p>
+                                </li>
+                                {% endfor %}
+                            </ol>
+                        </div>                 
+                    </div>
+
+                    <div class = 'scroll-appointments' id = 'view-past-appointments' style="display: none; margin-top: 10px;">
+                        <div class = 'show-appointments'>
+                            <ol>
+                                {% for a in all_past_appointments %}
+                                <li>
+                                    <p><strong><em>Dr. {{ a.d_ref.doctor_name }}</em></strong></p>
+                                    <p>{{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                    <p>Diagnosis: {{ a.t.diagnosis }}</p>
+                                    <p>Notes: {{ a.t.notes }}</p>
+                                    <p>Prescription: {{ a.t.prescription }}</p>
+                                    <p>Tests: {{ a.t.tests }}</p>
+                                </li>
+                                {% endfor %}
+                            </ol>
                         </div>
                     </div>
+
+                    <div class = 'flex-message-div' id = 'send-message-to-patient' style="display: none;">
+                        <div class = 'message-container'>
+                            <h3>Message</h3>
+                            <div>
+                                <p><strong>To:</strong> {{ patient.p_ref.patient_name }}</p>
+                                <p><strong>Date:</strong> {{ date_today.strftime('%d/%m/%Y') }}</p>
+                            
+                            <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/patient/{{ patient.p_ref.patient_id }}/send-message' method = 'POST'>
+                                <div class = 'update-form-details'>
+                                    <label for = 'message'>Type Your Message: </label>
+                                    <input type = 'text' name = 'message' placeholder="Type Your Message" >
+                                </div>
+                                
+                                <input onclick = 'confirmPostingMessage()' type ="submit" value = "Send" class = 'send-button'>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>
-
-        <script>
-            var this_doctor_appointments = document.getElementById('show-doctor-appointments')
-            var all_doctor_appointments = document.getElementById('show-all-doctors-appointments')
-
-            function hideShowThisDoctor() {
-                this_doctor_appointments.style.display = 'block';
-                all_doctor_appointments.style.display = 'none';
-            }
-
-            function hideShowAllDoctors() {
-                this_doctor_appointments.style.display = 'none';
-                all_doctor_appointments.style.display = 'block';
-            }
-        </script>
-
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
+
+    <script>
+        var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
+        var view_past_appointments = document.getElementById('view-past-appointments')
+        var send_message_to_patient = document.getElementById('send-message-to-patient')
+        var upcoming_color_change = document.getElementById('upcoming')
+        var past_color_change = document.getElementById('past')
+        var message_color_change = document.getElementById('message')
+
+        function viewPatientUpcomingAppointments() {
+            view_upcoming_appointments.style.display = 'block';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = '600'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function viewPatientPastAppointments() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'block';
+            send_message_to_patient.style.display = 'none';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#2fbb8fa8'
+            message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = '600'
+            message_color_change.style.fontWeight = 'normal'
+        }
+
+        function sendMessageToPatient() {
+            view_upcoming_appointments.style.display = 'none';
+            view_past_appointments.style.display = 'none';
+            send_message_to_patient.style.display = 'flex';
+            send_message_to_patient.style.marginTop = '25px';
+
+            upcoming_color_change.style.backgroundColor = '#269873a8'
+            past_color_change.style.backgroundColor = '#269873a8'
+            message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = '600'
+        }
+
+        function confirmDelete() {
+            var result = confirm('Are you sure you want to delete Patient Profile?')
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+
+        function confirmPostingMessage() {
+            var result = confirm('Are you sure you want to send this message?')
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+    </script>
+
 </body>
 </html>

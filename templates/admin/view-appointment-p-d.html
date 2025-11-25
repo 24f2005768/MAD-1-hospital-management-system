@@ -24,7 +24,8 @@
                                 <a href = '/admin/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -66,14 +67,14 @@
 
                 <div class = 'flex-profile-content'>
                     <div class = 'flex-profile-content-buttons'>
-                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Doctor Profile</a></div>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>Doctor Profile</a></div>
                         <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Patient Profile</a></div>
                         <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Appointments</a></div>
 
                     </div>
 
                     <div id = 'view-upcoming-appointments'>
-                        <p><strong>Doctor Name:</strong> {{ doctor.doctor_name }}</p>
+                        <p><strong>Doctor Name:</strong> <a href = '/admin/doctor/{{ doctor.doctor_id }}'>{{ doctor.doctor_name }}</a></p>
                         <p><strong>Department: </strong>{{ doctor.dept .department_name}}</p>
                         <p><strong>DOB:</strong> {{ doctor.doctor_dob.strftime('%d/%m/%Y') }}</p>
                         <p><strong>Gender:</strong> {{ doctor.doctor_gender }}</p>
@@ -82,7 +83,7 @@
                     </div>
 
                     <div id = 'view-past-appointments' style="display: none;">
-                        <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
+                        <p><strong>Patient Name:</strong> <a href = '/admin/patient/{{ patient.patient_id }}'>{{ patient.patient_name }}</a></p>
                         <p><strong>DOB:</strong> {{ patient.patient_dob.strftime('%d/%m/%Y') }}</p>
                         <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
                         <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
@@ -110,7 +111,7 @@
                                     <li>
                                         <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
                                         <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
-                                        <p><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'><strong>Patient:</strong> {{ a.p_ref.patient_name }}</a></p>
+                                        <p><strong>Patient Name:</strong> <a href = '/admin/patient/{{ patient.patient_id }}'>{{ patient.patient_name }}</a>
                                     </li>
                                 {% endfor %}
                                 </ol>
@@ -120,18 +121,20 @@
                         </div>
                                         
                         <h3 style = 'margin-top: 50px'>Previous Appointments and Details</h3>
-                            {% if past_appointments | length > 0 %} 
+                            {% if past_appointments | length - booked_appointments | length == 0 %} 
                                 <ol>
                                 {% for a in past_appointments %}
-                                    <li>
-                                        <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
-                                        <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
-                                        <p><strong>Patient:</strong> <a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{ a.p_ref.patient_name }}</a></p>
-                                        <p><strong>Diagnosis:</strong> {{ a.t.diagnosis }}</p>
-                                        <p><strong>Tests:</strong> {{ a.t.notes }}</p>
-                                        <p><strong>Prescription:</strong> {{ a.t.prescription }}</p>
-                                        <p><strong>Tests:</strong> {{ a.t.tests }}</p>
-                                    </li>
+                                    {% if a.t.status != 'Booked' %}
+                                        <li>
+                                            <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
+                                            <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                            <p><strong>Patient:</strong> <a href = '/admin/patient/{{ patient.patient_id }}'>{{ patient.patient_name }}</a>
+                                            <p><strong>Diagnosis:</strong> {{ a.t.diagnosis }}</p>
+                                            <p><strong>Tests:</strong> {{ a.t.notes }}</p>
+                                            <p><strong>Prescription:</strong> {{ a.t.prescription }}</p>
+                                            <p><strong>Tests:</strong> {{ a.t.tests }}</p>
+                                        </li>
+                                    {% endif %}
                                 {% endfor %}
                                 </ol>
                             {% else %}
@@ -151,10 +154,11 @@
         var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
         var view_past_appointments = document.getElementById('view-past-appointments')
         var send_message_to_patient = document.getElementById('send-message-to-patient')
+        
         var upcoming_color_change = document.getElementById('upcoming')
         var past_color_change = document.getElementById('past')
         var message_color_change = document.getElementById('message')
-        
+
         var doctor_profile = document.getElementById('doctor-profile')
         var patient_profile = document.getElementById('patient-profile')
         var appointment_profile = document.getElementById('appointment-photo')
@@ -163,9 +167,15 @@
             view_upcoming_appointments.style.display = 'block';
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'none';
+
             upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
             past_color_change.style.backgroundColor = '#269873a8'
             message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = '600'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = 'normal'
+
             doctor_profile.style.display = 'flex'
             patient_profile.style.display = 'none';
             appointment_profile.style.display = 'none'
@@ -175,11 +185,17 @@
             view_upcoming_appointments.style.display = 'none';
             view_past_appointments.style.display = 'block';
             send_message_to_patient.style.display = 'none';
+
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#2fbb8fa8'
             message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = '600'
+            message_color_change.style.fontWeight = 'normal'
+
             doctor_profile.style.display = 'none'
-            patient_profile.style.display = 'flex'
+            patient_profile.style.display = 'flex';
             appointment_profile.style.display = 'none'
         }
 
@@ -188,19 +204,18 @@
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'block';
             send_message_to_patient.style.marginTop = '25px';
+
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#269873a8'
             message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = '600'
+
             doctor_profile.style.display = 'none'
             patient_profile.style.display = 'none';
             appointment_profile.style.display = 'flex'
-        }
-
-        function confirmDelete() {
-            var result = confirm('Are you sure you want to delete Patient Profile?')
-            if (result == false) {
-                event.preventDefault();
-            }
         }
 
     </script>

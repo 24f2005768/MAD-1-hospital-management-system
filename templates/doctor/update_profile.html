@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -38,9 +39,30 @@
     </header>
 
         <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Update Profile</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
             <div class = 'login-container'>
-                <h1>Update Profile</h1>
                 <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile/update' method = 'POST'>
+                    <div class = 'update-form-details'>
+                        <label for = 'u_name'>Username</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_name' value = '{{ current_user.user_name }}' placeholder = "Username"
+                        maxlength="32" pattern="[\w@#$&.\-]{1,32}"
+                        title="Please enter a valid username. Your username should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_"
+                        />
+                    </div>
+
+                    <div class = 'update-form-details'>
+                        <label for = 'u_password'>Password</label>
+                        <input class = 'input_fields' type = 'text' name = 'u_password' value = '{{ current_user.user_password }}' placeholder = "User Password"
+                        maxlength="32" pattern="[\w@#$&.\-]{5,32}"
+                        title="Please enter a valid password. Your password should have a minimum length of 5, and a maximum length of 32. You can only use these special characters @#$&.-_" 
+                        />
+                    </div>                    
+                    
                     <div class = 'update-form-details'>
                         <label for = 'd_name'>Name</label>
                         <input class = 'input_fields' type = 'text' name = 'd_name' value = '{{ current_user.doctor_relationship.doctor_name }}' 

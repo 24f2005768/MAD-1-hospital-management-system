@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -38,9 +39,16 @@
     </header>
 
         <div class = 'main-content'>
+              <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 66%;"><h2 id = 'center-heading'>Update Treatment Details</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
+
             <div class = 'login-container'>
-                <h1>Update Treatment Details</h1>
                 <form action = '/doctor/update-treatment-details/{{ current_user.doctor_relationship.doctor_id }}/{{ treatment.treatment_id }}' method = "POST">
+                    <div></div>
                     <div class = 'update-form-details'>
                         <label for = 'patient_name'>Patient Name</label>
                         <input type = 'text' name = 'patient_name' value = '{{ treatment.ap[0].p_ref.patient_name }}' disabled />
@@ -90,6 +98,61 @@
                             {% endfor %}
                         </select>
                     </div>
+
+                        <fieldset style="width: 100%;">
+                            <legend>Select Diet Type: </legend>
+                            <div>
+                                <div>
+                                    {% if 'non-dairy' not in di %}
+                                        <input type = 'checkbox', id = 'non-dairy', name = 'non-dairy', value = 'non-dairy'>
+                                        <label for = 'non-dairy'>Non-Dairy</label>
+                                    {% else %}
+                                        <input type = 'checkbox', id = 'non-dairy', name = 'non-dairy', value = 'non-dairy' checked>
+                                        <label for = 'non-dairy'>Non-Dairy</label>
+                                    {% endif %}
+                                </div>    
+                                
+                                <div>
+                                    {% if 'dairy' not in di %}
+                                        <input type = 'checkbox', id = 'dairy', name = 'dairy', value = 'dairy'>
+                                        <label for = 'dairy'>Dairy</label>
+                                    {% else %}
+                                        <input type = 'checkbox', id = 'dairy', name = 'dairy', value = 'dairy' checked>
+                                        <label for = 'dairy'>Dairy</label>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    {% if 'clear-liquid' not in di %}
+                                        <input type = 'checkbox', id = 'clear-liquid', name = 'clear-liquid', value = 'clear-liquid'>
+                                        <label for = 'clear-liquid'>Clear Liquid</label>
+                                    {% else %}
+                                        <input type = 'checkbox', id = 'clear-liquid', name = 'clear-liquid', value = 'clear-liquid' checked>
+                                        <label for = 'clear-liquid'>Clear Liquid</label>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    {% if 'liquid' not in di %}
+                                        <input type = 'checkbox', id = 'liquid', name = 'liquid', value = 'liquid'>
+                                        <label for = 'liquid'>Liquid</label>
+                                    {% else %}
+                                        <input type = 'checkbox', id = 'liquid', name = 'liquid', value = 'liquid' checked>
+                                        <label for = 'liquid'>Liquid</label>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    {% if 'restricted-normal' not in di %}
+                                        <input type = 'checkbox', id = 'restricted-normal', name = 'restricted-normal', value = 'restricted-normal'>
+                                        <label for = 'restricted-normal'>Restricted Normal</label>
+                                    {% else %}
+                                        <input type = 'checkbox', id = 'restricted-normal', name = 'restricted-normal', value = 'restricted-normal' checked>
+                                        <label for = 'restricted-normal'>Restricted Normal</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
 
                     <input type ="submit" value = "Submit" class = 'login-button'>
                 </form>

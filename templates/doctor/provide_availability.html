@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -38,12 +39,14 @@
     </header>
 
         <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 66%;"><h2 id = 'center-heading'>Provide Availablility</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
             <div>
-                <form action = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' method="POST">
-                    <div class = 'centered-headings'>
-                        <h2>Provide Availablility</h2>
-                    </div>
-                    
+                <form action = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' method="POST">                  
                     <table>
                         <tbody>
                             <tr>

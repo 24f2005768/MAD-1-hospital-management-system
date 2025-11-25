@@ -246,6 +246,7 @@ book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient4.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
+book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot1)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
 db.session.add(message)
@@ -254,6 +255,7 @@ book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient5.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
+book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient5.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot2)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
 db.session.add(message)
@@ -262,6 +264,7 @@ book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient3.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
+book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient3.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot3)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
 db.session.add(message)
@@ -285,6 +288,7 @@ book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient2.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
+book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient2.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot1)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
 db.session.add(message)
@@ -293,6 +297,7 @@ book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient1.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
+book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient1.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot2)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
 db.session.add(message)
@@ -301,6 +306,7 @@ book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient4.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
+book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
 db.session.add(book_slot3)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
 db.session.add(message)

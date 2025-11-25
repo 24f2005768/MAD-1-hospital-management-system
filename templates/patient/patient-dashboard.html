@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -24,9 +25,10 @@
                                 <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
-                            </div>
+                            </div>                            
                             <div>
                                 <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
                             </div>
@@ -38,114 +40,123 @@
     </header>
     
     <div class = 'main-content'>
-        <h2 id = 'message'>Hi! {{ current_user.patient_relationship.patient_name }}</h2>    
-        <div class = 'info-cards'>
-
-                <div class = 'info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/profile'><i class="bi bi-person-fill" style="font-size: 50px; color: white;"></i></a></p>
-                </div>
-
-                <div class = 'info-card-details'>
-                    <a href = '#apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
-                </div>
-
-                <div class = 'info-card-details'>
-                    <a href = '#book-apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Book an Appointment</p></a>
-                </div>
-        </div>
-
-        <div style="margin-top: 50px; width: 100%;" id = 'apt'>
-            <div class = 'heading-actions'>
-                <h2>Appointments</h2>
+        <h2 id = 'welcome-message'>Hi! {{ current_user.patient_relationship.patient_name }}</h2>    
+        <div class = 'dash-info-cards'>
+            <div class = 'dash-info-card-details'>
+                <div><i class="bi bi-person" style="font-size: 30px;"></i></div>
+                <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a class = 'dash-icon-text' href = '/patient/{{ current_user.patient_relationship.patient_id }}/profile'>Profile</a></p>
             </div>
 
-            <div class = 'doctor-appointments-ribbon'>
-                <button onclick = 'hideShowToday()' id = 'patient-appointments-buttons-today' class = 'doctor-appointments-buttons' style="background-color: #989aca;">Today ({{ appointments_today | length }})</button>
-                <button onclick = 'hideShowThisWeek()' id = 'patient-appointments-buttons-week' class = 'doctor-appointments-buttons'>This Week ({{ appointments_this_week | length }})</button>
-                <button onclick = 'hideShowPastAppointments()' id = 'patient-appointments-buttons-past' class = 'doctor-appointments-buttons'>Past Appointments ({{ past_appointments | length }})</button>
+            <div class = 'dash-info-card-details'>
+                <div><i class="bi bi-journal-medical" style="font-size: 27px;"></i></div>
+                <a href = '#apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px" class="dash-icon-text">Appointments</p></a>
             </div>
 
-            <div id = 'todays-appointments' style = 'margin-top: 12px;'>
-                {% if appointments_today | length == 0 %}
-                    <p>No appointments today</p>
-                {% else %}
-                    <ol>
-                        {% for a in appointments_today %}
-                            <li>
-                                <div class = 'heading-actions'>
-                                    <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
-                                    <div class = 'action-buttons'>
-                                        <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' style = 'background-color: hsla(360 100% 60.2% / 0.66);' class = 'buttons'>Cancel</a>
-                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
-                                    </div>
-                                </div>
-                                <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
-                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
-                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% endif %}
-            </div>
-
-            <div id = 'this-weeks-appointments' style ="display: none; margin-top: 12px">
-                {% if appointments_this_week | length == 0 %}
-                    <p>No appointments this week</p>
-                {% else %}
-                    <ol>
-                        {% for a in appointments_this_week %}
-                            <li>
-                                <div class = 'heading-actions'>
-                                    <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
-                                    <div class = 'action-buttons'>
-                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'buttons'>Cancel</a>
-                                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'buttons' style="background-color: hsl(205 80.1% 60% / 0.93)">Reschedule</a>
-                                    </div>
-                                </div>
-                                <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
-                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
-                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% endif %}
-            </div>
-
-            <div id = 'past-appointments' style ="display: none; margin-top: 12px;">
-                {% if past_appointments | length == 0 %}
-                    <p>No Past appointments</p>
-                {% else %}
-                    <ol>
-                        {% for a in past_appointments %}
-                            <li>
-                                <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
-                                <p>Doctor Name: <a href ='/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
-                                <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
-                                <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
-                                <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% endif %}
+            <div class = 'dash-info-card-details'>
+                <div><i class="bi bi-calendar-heart" style="font-size: 30px;"></i></div>
+                <a href = '#book-apt'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px" class="dash-icon-text">Book an Appointment</p></a>
             </div>
         </div>
+            <div style="margin-top: 50px; width: 100%;" id = 'apt'>
+                <div class = 'heading-actions'>
+                    <h2>Appointments</h2>
+                </div>
 
-        <div style="margin-top: 50px; width: 100%;" id = 'book-apt'>
+            <div class = 'flex-profile-content' style="width: 100%; height: auto;">
+                <div class = 'flex-profile-content-buttons'>
+                    <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>Today ({{ appointments_today | length }})</a></div>
+                    <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>This Week ({{ appointments_this_week | length }})</a></div>
+                    <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Past Appointments ({{ past_appointments | length }})</a></div>
+                </div>
+
+                <div id = 'view-upcoming-appointments' class = 'scroll-appointments'>
+                    {% if appointments_today | length == 0 %}
+                        <p>No appointments today</p>
+                    {% else %}
+                        <ol>
+                            {% for a in appointments_today %}
+                                <li>
+                                    <div class = 'heading-actions'>
+                                        <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                        <div class = 'action-buttons'>
+                                            <a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'cancel-button'>Cancel</a>
+                                            <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'availabilty-button'>Reschedule</a>
+                                        </div>
+                                    </div>
+                                    <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                    <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                    <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                    <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+
+                <div id = 'view-past-appointments' style="display: none;" class = 'scroll-appointments'>
+                    {% if appointments_this_week | length == 0 %}
+                        <p>No appointments this week</p>
+                    {% else %}
+                        <ol>
+                            {% for a in appointments_this_week %}
+                                <li>
+                                    <div class = 'heading-actions'>
+                                        <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                        <div class = 'action-buttons'>
+                                            <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'cancel-button'>Cancel</a>
+                                            <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'availabilty-button'>Reschedule</a>
+                                        </div>
+                                    </div>
+                                    <p>Doctor Name: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                    <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                    <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                    <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+
+                <div id = 'send-message-to-patient' style="display: none;" class = 'scroll-appointments'>
+                    {% if past_appointments | length == 0 %}
+                        <p>No Past appointments</p>
+                    {% else %}
+                        <ol>
+                            {% for a in past_appointments %}
+                                <li>
+                                    <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
+                                    <p>Doctor Name: <a href ='/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ a.slot_doctor.doctor_id }}'>{{ a.slot_doctor.doctor_name }}</a></p>
+                                    <p>Department: <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ a.slot_doctor.dept.department_id }}'>{{ a.slot_doctor.dept.department_name }}</a></p>
+                                    <p>Slot: {{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</p>
+                                    <p>Status: {{ a.slot_sch_appointment_rel.t.status }}</p>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <div style="margin-top: 30px;" id = 'book-apt'>
             <div class = 'heading-actions'>
                 <h2>Departments</h2>
                 <div class = 'action-buttons'>
-                    <a href = '/book-appointment/{{ current_user.patient_relationship.patient_id }}'  class = 'buttons'>Book Appointment</a>
+                    <a href = '/book-appointment/{{ current_user.patient_relationship.patient_id }}'  class = 'booking-button'>Book Appointment</a>
                 </div>
             </div>
 
             <div class = 'dash-info-cards'>
                 {% for d in departments %}
                     <div class = 'dash-info-card-details'>
-                        <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
+                        <img src = '/static/images/{{ d.department_profile_picture }}.png' height="50px" alt = 'Department Picture' onclick = "hideShowDept('{{ d.department_id }}')">
+                        <a id = '{{ d.department_id }}' onclick = "hideShowDept('{{ d.department_id }}')">{{d.department_name}}</a>
                     </div>
                 {% endfor %}
+            </div>
+
+            <div id = 'click-to-choose'>
+                <p><em>Click on any department to view their doctors and their availablility</em></p>
             </div>
 
             <div>
@@ -162,16 +173,17 @@
                                     <div class = 'wrapper'>
                                         <div class = 'profile-picture-display'>
                                             <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
-                                            <h3><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></h3>                                
+                                            <p><strong><a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>Dr. {{ doctor.doctor_name }}</a></strong></p>                                
                                         </div>
 
                                         <div class = 'profile-content'>
                                             <div class = 'heading-actions'>
-                                                <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
+                                                <p><strong>Department of {{ doctor.dept.department_name }}</strong></p>
                                                 <div class = 'action-buttons'>
-                                                    <a class = 'buttons' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                                    <a class = 'booking-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
                                                 </div>
                                             </div>
+                                            <p>Contact Number: {{ doctor.doctor_contact_number }}</p>
                                             <p>Email: {{ doctor.doctor_email }}</p>
                                             <p>Description: {{ doctor.doctor_desc }}</p>
                                         </div>
@@ -189,59 +201,75 @@
             function hideShowDept(dept_id) {
                 var dept_doctors = document.getElementsByClassName(dept_id);
                 var all_doc = document.getElementsByClassName('all_doctors');
+                var hide_message = document.getElementById('click-to-choose');
                 for (doc of all_doc) {
                     if (doc.classList.contains(dept_id)) {
                         doc.style.display = 'block';
+                        hide_message.style.display = 'none';
                     }
 
                     else {
                         doc.style.display = 'none';
+                        hide_message.style.display = 'none';
                     }
                 }
 
             }
+            var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
+            var view_past_appointments = document.getElementById('view-past-appointments')
+            var send_message_to_patient = document.getElementById('send-message-to-patient')
+            var upcoming_color_change = document.getElementById('upcoming')
+            var past_color_change = document.getElementById('past')
+            var message_color_change = document.getElementById('message')
 
-            var todays_appointments = document.getElementById('todays-appointments');
-            var weeks_appointments = document.getElementById('this-weeks-appointments');
-            var past_appointments = document.getElementById('past-appointments');
-            var today_appointment_color_change = document.getElementById('patient-appointments-buttons-today');
-            var weeks_appointment_color_change = document.getElementById('patient-appointments-buttons-week');
-            var past_appointment_color_change = document.getElementById('patient-appointments-buttons-past');
-            
-            function hideShowToday() {
-                todays_appointments.style.display = 'block';
-                weeks_appointments.style.display = 'none';
-                past_appointments.style.display = 'none';
-                today_appointment_color_change.style.backgroundColor = '#989aca';
-                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            function viewPatientUpcomingAppointments() {
+                view_upcoming_appointments.style.display = 'block';
+                view_past_appointments.style.display = 'none';
+                send_message_to_patient.style.display = 'none';
 
+                upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
+                past_color_change.style.backgroundColor = '#269873a8'
+                message_color_change.style.backgroundColor = '#269873a8'
+
+                upcoming_color_change.style.fontWeight = '600'
+                past_color_change.style.fontWeight = 'normal'
+                message_color_change.style.fontWeight = 'normal'
             }
 
-            function hideShowThisWeek() {
-                todays_appointments.style.display = 'none';
-                weeks_appointments.style.display = 'block';
-                past_appointments.style.display = 'none';
-                weeks_appointment_color_change.style.backgroundColor = '#989aca';
-                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                past_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            function viewPatientPastAppointments() {
+                view_upcoming_appointments.style.display = 'none';
+                view_past_appointments.style.display = 'block';
+                send_message_to_patient.style.display = 'none';
+
+                upcoming_color_change.style.backgroundColor = '#269873a8'
+                past_color_change.style.backgroundColor = '#2fbb8fa8'
+                message_color_change.style.backgroundColor = '#269873a8'
+
+                upcoming_color_change.style.fontWeight = 'normal'
+                past_color_change.style.fontWeight = '600'
+                message_color_change.style.fontWeight = 'normal'
             }
 
-            function hideShowPastAppointments() {
-                todays_appointments.style.display = 'none';
-                weeks_appointments.style.display = 'none';
-                past_appointments.style.display = 'block';
-                past_appointment_color_change.style.backgroundColor = '#989aca';
-                today_appointment_color_change.style.backgroundColor = '#d6d7fa';
-                weeks_appointment_color_change.style.backgroundColor = '#d6d7fa';
+            function sendMessageToPatient() {
+                view_upcoming_appointments.style.display = 'none';
+                view_past_appointments.style.display = 'none';
+                send_message_to_patient.style.display = 'block';
+
+                upcoming_color_change.style.backgroundColor = '#269873a8'
+                past_color_change.style.backgroundColor = '#269873a8'
+                message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+                upcoming_color_change.style.fontWeight = 'normal'
+                past_color_change.style.fontWeight = 'normal'
+                message_color_change.style.fontWeight = '600'
             }
 
-            function confirm_cancel_or_reschedule_appointment() {
-                var result = confirm('Are you sure?');
-                if (result == false) {
-                    event.preventDefault();
+                function confirm_cancel_or_reschedule_appointment() {
+                    var result = confirm('Are you sure?');
+                    if (result == false) {
+                        event.preventDefault();
+                    }
                 }
-            }
         </script>
 
     <footer>

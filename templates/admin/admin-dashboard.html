@@ -24,7 +24,8 @@
                                 <a href = '/admin/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -44,22 +45,22 @@
 
             <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ patients | length }}</p>
-                <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Patients</p></a>
+                <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px;">Patients</p></a>
             </div>
 
             <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ appointments | length }}</p>
-                <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Appointments</p></a>
+                <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px;">Appointments</p></a>
             </div>
 
             <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{ doctors | length }}</p>
-                <a href = '#doctors'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Doctors</p></a>
+                <a href = '#doctors'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px;">Doctors</p></a>
             </div>            
 
             <div class = 'dash-info-card-details'>
                 <p class = 'info-card-texts'>{{departments | length}}</p>
-                <a href = '#depts'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px">Departments</p></a>
+                <a href = '#depts'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 5px;;">Departments</p></a>
             </div>
 
         </div>
@@ -70,7 +71,7 @@
 
                 <div class = 'action-buttons'>
                     <a href = '/admin/view-all-patients' class = 'buttons'>View All</a>
-                    <a href = '/register' class = 'buttons'>Add</a>
+                    <a href = '/register' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -118,7 +119,7 @@
 
                 <div class = 'action-buttons'>
                     <a href = '/admin/view-all-appointments' class = 'buttons'>View All</a>
-                    <a href = '/admin/book-appointment' class = 'buttons'>Add</a>
+                    <a href = '/admin/book-appointment' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -162,7 +163,7 @@
 
                 <div class = 'action-buttons'>
                     <a href = '/admin/view-all-doctors' class = 'buttons'>View All</a>
-                    <a href = '/admin/doctor/add' class = 'buttons'>Add</a>
+                    <a href = '/admin/doctor/add' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -186,7 +187,7 @@
                                 <td>{{d.doctor_contact_number}}</td>
                                 <td>{{d.doctor_email}}</td>
                                 <td>{{d.dept.department_name}}</td>    
-                                <td><a class = 'buttons' href = '/admin/doctor/check-availability/{{ d.doctor_id }}'>Check</a></td>
+                                <td><a href = '/admin/doctor/check-availability/{{ d.doctor_id }}' style="text-decoration: none">Check</a></td>
                                 {% if d.doctor_blacklisted == 0%}
                                     <td><input type = 'checkbox' disabled></td>
                                     {% else %}
@@ -210,13 +211,13 @@
         </div>
 
             
-        <div style ="margin-top: 50px; width: 100%;" id = 'depts'>
+        <div style ="margin-top: 50px;" id = 'depts'>
              <div class = 'heading-actions'>
                 <h2>Departments</h2>
 
                 <div class = 'action-buttons'>
                     <a href = '/all-dept'  class = 'buttons'>View All</a>
-                    <a href = '/add_dept' class = 'buttons'>Add</a>
+                    <a href = '/add_dept' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>           
 
@@ -225,7 +226,7 @@
                     {% for d in departments_first_four %}
                         <div class = 'dash-info-card-details'>
                             <img src = 'static/images/{{ d.department_profile_picture }}.png' height="50px">
-                            <a href = '/department/{{ d.department_id }}' class = 'info-card-texts clickable-links' id = 'dept-card'>{{d.department_name}}</a>
+                            <a href = '/department/{{ d.department_id }}' class = 'info-card-texts clickable-links' id = 'dept-card'>{{ d.department_name }}</a>
                         </div>
                     {% endfor %}
                 {% else %}

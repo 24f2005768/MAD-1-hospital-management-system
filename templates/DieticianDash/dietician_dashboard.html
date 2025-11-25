@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -54,6 +55,7 @@
                 </div>
         </div>
 
+        <a href = '/dietetician_notes/{{ current_user.doctor_relationship.doctor_id }}/7'>Provide notes</a>
         <div style ="margin-top: 50px; width: 100%;" id = 'appointments'>
             <div class = 'heading-actions'>
                 <h2>Diet Plans</h2>

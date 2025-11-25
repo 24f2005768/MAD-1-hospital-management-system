@@ -24,7 +24,8 @@
                                 <a href = '/admin/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -44,6 +45,7 @@
                 <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
         </div>
+        
         <div class = 'flex-boxes'>
             <div class = 'flex-view-profile-content'>
                 <div class = 'flex-profile-photo'><p></p>
@@ -62,7 +64,7 @@
 
                 <div class = 'flex-profile-content'>
                     <div class = 'flex-profile-content-buttons'>
-                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Upcoming Appointments</a></div>
+                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8; font-weight: 600;"><a>Upcoming Appointments</a></div>
                         <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
                         <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
                     </div>
@@ -127,7 +129,6 @@
         </div>
     </div>
 
-
     <footer>
         &copy;  2025 LDH Hospital
     </footer>
@@ -136,6 +137,7 @@
         var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
         var view_past_appointments = document.getElementById('view-past-appointments')
         var send_message_to_patient = document.getElementById('send-message-to-patient')
+
         var upcoming_color_change = document.getElementById('upcoming')
         var past_color_change = document.getElementById('past')
         var message_color_change = document.getElementById('message')
@@ -144,18 +146,28 @@
             view_upcoming_appointments.style.display = 'block';
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'none';
+
             upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
             past_color_change.style.backgroundColor = '#269873a8'
             message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = '600'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = 'normal'
         }
 
         function viewPatientPastAppointments() {
             view_upcoming_appointments.style.display = 'none';
             view_past_appointments.style.display = 'block';
             send_message_to_patient.style.display = 'none';
+
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#2fbb8fa8'
             message_color_change.style.backgroundColor = '#269873a8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = '600'
+            message_color_change.style.fontWeight = 'normal'
         }
 
         function sendMessageToPatient() {
@@ -163,9 +175,14 @@
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'flex';
             send_message_to_patient.style.marginTop = '25px';
+
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#269873a8'
             message_color_change.style.backgroundColor = '#2fbb8fa8'
+
+            upcoming_color_change.style.fontWeight = 'normal'
+            past_color_change.style.fontWeight = 'normal'
+            message_color_change.style.fontWeight = '600'
         }
 
         function confirmDelete() {

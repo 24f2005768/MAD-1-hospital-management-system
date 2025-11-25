@@ -60,10 +60,17 @@
                             <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/messages/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}' method = 'POST'>
                                 <div class = 'update-form-details'>
                                     <label for = 'message'>Type Your Message: </label>
-                                    <input type = 'text' name = 'message' placeholder="Type Your Message" >
+                                    <input type = 'text' name = 'message' placeholder="Type Your Message" 
+                                    pattern = "[\w,.\'\/\- ]{1,}"
+                                    title="Please add a valid input. You can use alphabets, numbers and some special characters -'" required>
                                 </div>
                                 
                                 <input onclick = 'confirm_posting_message()' type ="submit" value = "Send" class = 'login-button'>
+                            
+                                {% if warning_message == True %}
+                                    <p class = 'error_message'>Please enter a valid message</p>
+                                {% endif %}
+                                
                             </form>
                             </div>
                         </div>

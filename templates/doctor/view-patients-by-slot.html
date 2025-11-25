@@ -24,7 +24,8 @@
                                 <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -38,22 +39,35 @@
     </header>
 
         <div class = 'main-content'>
-            <div>
-                <h2>Slot Details</h2>
-                <p>Date: {{ slot.date }}</p>
-                <p>Time: {{ slot.s_sch.slot_name }}</p>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Slot Details</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
             </div>
 
-            <div class = 'show-appointments'>
-                <ol>
-                    {% for a in all_appointments %}
-                        <li>
-                            <p>Patient Name: {{ a.slot_patient.patient_name }}</p>
-                            <a href = '/admin/patient/{{ a.slot_patient.patient_id }}'>Visit Patient Profile</a>
-                        </li>
-                    {% endfor %}
-                </ol>
+            <div>
+                <span><strong>Date:</strong> {{ slot.date.strftime('%d/%m/%Y') }}</span>
+                <span> &bullet; <strong>Time:</strong> {{ slot.s_sch.slot_name }}</span>
             </div>
+
+            <table class = 'table-margins'>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <th>Profile</th>
+                        <th>Time</th>
+                    </tr>
+
+                    <tr>
+                        {% for a in all_appointments %}
+                            <td>{{ a.slot_patient.patient_name }}</td>
+                            <td><a href = '/admin/patient/{{ a.slot_patient.patient_id }}'>Visit Patient Profile</a></td>
+                            <td>{{ a.date.strftime('%d/%m/%Y') }} ({{ a.s_sch.slot_name }})</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
     <footer>

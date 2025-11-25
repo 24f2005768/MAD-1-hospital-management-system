@@ -24,7 +24,8 @@
                                 <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -40,22 +41,24 @@
         <div class = 'main-content' id = 'align-items-in-centre'>
             <div class = 'wrapper'>
                 <div class = 'profile-picture-display' id = 'align-items-in-centre'>
-                    <img src = "{{ url_for('static', filename = 'images/1.jpg') }}" alt="Profile Picture" height="200px" width="260px">
-                    <p>User Name: {{ current_user.user_name }}</p>
+                    <img src = "/static/images/{{ current_user.patient_relationship.patient_profile_picture }}.png" alt="Profile Picture" height="200px">
+                    <p><strong>User Name:</strong> {{ current_user.user_name }}</p>
                 </div>
             
                 <div class = 'profile-content' style="width: 100%;">
-                    <div class = 'heading-actions'>
-                        <h2>{{ current_user.patient_relationship.patient_name }}</h2>
-                        <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/profile/update' class = 'action-buttons update-button'>Update Profile</a>
-                    </div>
-                    <p>DOB: {{ current_user.patient_relationship.patient_dob.strftime('%d/%m/%Y') }}</p>
-                    <p>Age: {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
-                    <p>Gender: {{ current_user.patient_relationship.patient_gender }}</p>
-                    <p>Email: {{ current_user.patient_relationship.patient_email }}</p>
-                    <p>Contact Number: {{ current_user.patient_relationship.contact_info }}</p>
-                    <p>Height: {{ current_user.patient_relationship.patient_height }} cm</p>
-                    <p>Weight: {{ current_user.patient_relationship.patient_weight }} kg</p>
+                    <fieldset>
+                        <div class = 'heading-actions'>
+                            <h2>{{ current_user.patient_relationship.patient_name }}</h2>
+                            <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/profile/update' class = 'action-buttons update-button'>Update Profile</a>
+                        </div>
+                        <p><strong>DOB:</strong> {{ current_user.patient_relationship.patient_dob.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ current_user.patient_relationship.patient_gender }}</p>
+                        <p><strong>Email:</strong> {{ current_user.patient_relationship.patient_email }}</p>
+                        <p><strong>Contact Number:</strong> {{ current_user.patient_relationship.contact_info }}</p>
+                        <p><strong>Height:</strong> {{ current_user.patient_relationship.patient_height }} cm</p>
+                        <p><strong>Weight:</strong> {{ current_user.patient_relationship.patient_weight }} kg</p>
+                    </fieldset>
                 </div>
             </div>
 

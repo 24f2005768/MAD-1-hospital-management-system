@@ -366,32 +366,26 @@ db.session.commit()
 # db.session.add(notification)
 # db.session.commit()
 
-input_value = 'ics'
-did = 1
-appointments_by_doctor = Appointment.query.filter(Appointment.doctor_id == did).all()
-patients = [] #list of all patients which has booked an appointment with the doctor
-helper_list = [] 
-search_function = []
-appointments_by_patient_name = []
+slot1 = db.get_or_404(Slot, 1)
+slot2 = db.get_or_404(Slot, 2)
+slot3 = db.get_or_404(Slot, 3)
 
-doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_contact_number.like(f'%{input_value}%'))).all()
-departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
+patient1 = db.get_or_404(Patient, 1)
+patient2 = db.get_or_404(Patient, 2)
+patient3 = db.get_or_404(Patient, 3)
+patient4 = db.get_or_404(Patient, 4)
+patient5 = db.get_or_404(Patient, 5)
+patient6 = db.get_or_404(Patient, 6)
+patient7 = db.get_or_404(Patient, 7)
+patient8 = db.get_or_404(Patient, 8)
+patient9 = db.get_or_404(Patient, 9)
+patient10 = db.get_or_404(Patient, 10)
+patient11 = db.get_or_404(Patient, 11)
+patient12 = db.get_or_404(Patient, 12)
+patient13 = db.get_or_404(Patient, 13)
 
-# doctor can only search for his patients
-for p in appointments_by_doctor:
-    if p.p_ref.patient_name not in helper_list:
-        patients += [p]
-        helper_list += [p.p_ref.patient_name]
+# Slots and past appointment bookings for doctor 1
 
-helper_list = []
-
-for p in patients:
-    search_list = Patient.query.filter(or_(Patient.patient_name.like(f'%{input_value}%'), Patient.contact_info.like(f'%{input_value}%'))).all()
-    if search_list != None:
-        if p.p_ref.patient_name not in helper_list:
-            search_function += search_list
-            helper_list += [p.p_ref.patient_name]
-for p in search_list:
-    appointments_by_patient_name += Appointment.query.filter(Appointment.patient_id == p.patient_id, Appointment.doctor_id == did).all()
-for dept in departments:
-    print(dept.doctors)
+dn = db.get_or_404(DieticianNotes, 7)
+patient = dn.patient_id
+doctor_instructions = dn.doctor_instructions

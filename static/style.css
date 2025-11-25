@@ -68,6 +68,10 @@ h2 {
     font-family: "Montserrat", sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 table {
     text-align: center;
     /* width: 60vw; */
@@ -165,7 +169,7 @@ footer {
     padding-left: 9px;
     padding-right: 9px;
     border-radius: 10px;
-    background-color: #f1f1f2;   
+    background-color: #fffcfc;   
     border: none; 
     cursor: pointer;
 }
@@ -179,6 +183,22 @@ footer {
     background-color: #d6d7fa;   
     border: none; 
     cursor: pointer;
+}
+
+.cancel-button {
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 10px;
+    border: solid 2px #FF5B5B; 
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover {
+    background-color: #FF5B5B;
+    color: black;
 }
 
 .main-content {
@@ -222,14 +242,18 @@ footer {
 }
 
 .update-button {
-    text-decoration: none;
     padding: 5px;
-    padding-left: 9px;
-    padding-right: 9px;
-    border-radius: 10px;
-    background-color: #d6d7fa;
-    color: blue;
-    border-bottom: 1px solid #6d6fff;
+    border: solid 2px rgba(134, 134, 251, 0.82);
+    border-radius: 7px;
+    transition: background-color 0.2s ease;
+    transition: color 0.2s ease;
+}
+
+.update-button:hover {
+    background-color: rgba(134, 134, 251, 0.82);
+    padding: 5px;
+    border-radius: 7px;
+    color: white;    
 }
 
 .all-dept-cards {
@@ -315,10 +339,23 @@ footer {
     background-color: #a5a3e8;
     text-align: center;
     min-width: 15vw;
-    height: 80px;
-    min-height: 10vh;
     border-radius: 15px;
     font-size: 15px;
+    height: 80px;
+    min-height: 10vh;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    transition: transform 0.2s ease;
+}
+
+.dash-info-card-details:hover {
+    transform: translateY(-5px);
+    background-color: #8582d4;
+    text-decoration: none;
+}
+
+.dash-icon-text {
+    color: black;
 }
 
 .info-card-texts {
@@ -672,6 +709,48 @@ unselected: #269873a8 */
 .back-button {
     width: 80px;
     height: 31px;
+    background-color: #f0ecec;
+}
+
+.back-button:hover {
+    background-color: #C2E2FA;
+}
+
+.availabilty-button {
+    padding: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    border: solid 2px #71DEFF;
+    border-radius: 7px;
+}
+
+.availabilty-button:hover {
+    text-decoration: none;
+    background-color: #71DEFF;
+    padding: 5px;
+    border-radius: 7px;
+    color: black;
+}
+
+.booking-button {
+    padding: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    border: solid 2px #B659FB;
+    border-radius: 7px;
+}
+
+.booking-button:hover {
+    text-decoration: none;
+    background-color: #B659FB;
+    padding: 5px;
+    border-radius: 7px;
+    color: black;
+}
+
+.scroll-appointments {
+    max-height: 500px;
+    overflow: scroll;
 }
 
 @media(max-width: 1024px) {
@@ -710,6 +789,17 @@ unselected: #269873a8 */
 @media(max-width: 800px) {
     .dash-info-cards{
         flex-direction: column;
+    }
+
+    .dash-info-card-details {
+        transition: background-color 0.2s ease;
+        transition: transform 0.2s ease;
+    }
+
+    .dash-info-card-details:hover {
+        transform: translateY(-3px);
+        background-color: #8582d4;
+        text-decoration: none;
     }
 
     .dash-info-card-details {

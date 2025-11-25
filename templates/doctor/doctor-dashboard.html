@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -28,8 +29,10 @@
                                     pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
-                            <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                            <div class = 'header-logout-button'>
+                                <a href = '/logout'>
+                                    <div><i id = 'logout-button' class="bi bi-box-arrow-right"></i></div>
+                                    <div><span id = 'logout-button'>Logout</span></a></div>
                             </div>
                         </div>
                     </form>
@@ -39,23 +42,27 @@
     </header>
     
     <div class = 'main-content'>
-        <h2 id = 'welcome-message'>Hi! {{ current_user.doctor_relationship.doctor_name }}</h2>    
+        <h2 id = 'welcome-message'>Hi! Dr. {{ current_user.doctor_relationship.doctor_name }}</h2>    
         <div class = 'dash-info-cards'>
 
                 <div class = 'dash-info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile'>Profile</a></p>
+                    <div><i class="bi bi-person" style="font-size: 30px;"></i></div>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile' class = 'dash-icon-text'>Profile</a></p>
                 </div>
 
                 <div class = 'dash-info-card-details'>
-                    <a href = '#appointments'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p></a>
+                    <i class="bi bi-calendar-heart" style="font-size: 30px;"></i>
+                    <a href = '#appointments' style="text-decoration: none;" class = 'dash-icon-text'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px;">Appointments</p></a>
                 </div>
 
                 <div class = 'dash-info-card-details'>
-                    <a href = '#availabilty'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p></a>
+                    <i class="bi bi-clipboard-pulse" style="font-size: 30px;"></i>
+                    <a href = '#availabilty' style="text-decoration: none;" class = 'dash-icon-text'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Availablility</p></a>
                 </div>            
 
                 <div class = 'dash-info-card-details'>
-                    <a href = '#patients'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
+                    <i class="bi bi-people" style="font-size: 30px;"></i>
+                    <a href = '#patients' style = 'text-decoration: none;'class = 'dash-icon-text'><p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Patients</p></a>
                 </div>
         </div>
 
@@ -156,7 +163,7 @@
                 <h2>Availablility</h2>
 
                 <div class = 'action-buttons'>
-                    <a href = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' class = 'buttons'>Provide Availablility</a>
+                    <a href = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' class = 'availabilty-button'>Provide Availablility</a>
                 </div>
 
             </div>

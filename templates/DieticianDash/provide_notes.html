@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongoing Treatment</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class = 'heading-actions'>
+                <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+
+            <div class = 'action-buttons'>
+                <div class = 'search_bar'>
+                    
+                    <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>
+                            <div>
+                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                            </div>
+                            <div class = 'search-flex-container'>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
+                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
+                            </div>
+                            <div>
+                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+        <div class = 'main-content'>
+            <div class = 'flex-boxes'>
+                <div class = 'flex-headings'>
+                    <div id = 'center-heading' style="width: 66%;"><h2 id = 'center-heading'>Add Appointment Details</h2></div>
+                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
+            </div>
+
+                <h3>Patient Details</h3>
+                <div class = "patient-info-details">
+                    <div>
+                        <p><strong>Name:</strong> {{ patient.patient_name }}</p>
+                        <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
+                        <p><strong>Gender:</strong> {{ patient.patient_gender }}</p>
+                    </div>
+                    <div>
+                        <p><strong>Height:</strong> {{ patient.patient_height }} cm</p>
+                        <p><strong>Weight:</strong> {{ patient.patient_weight }} kg</p>
+                        <p><strong>Doctor Instructions:</strong> {{ dn.doctor_instructions }}</p>
+                    </div>
+                </div>
+            
+                <div class = 'login-container'>
+                    <div class = 'treatment_details'>
+                        <form action = '' method = 'POST' class = 'treatment_details_form'>
+                            <h3>Diet Details</h3>
+                            <div class = 'treatment-form-details'>
+                                <label for = 'morning_plan'>Morning Plan</label>
+                                <input class = 'input_fields' type = 'text' name = 'diagnosis' 
+                                placeholder="add description"
+                                pattern="[\w@#!$&+*'\/ \-]{1,}"
+                                title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                                required/>
+                            </div>    
+                                        
+                            <div class = 'treatment-form-details'>
+                                <label for = 'afternoon_plan'>Afternoon Plan</label>
+                                <input class = 'input_fields' type = 'text' name = 'notes' 
+                                placeholder="add notes"
+                                pattern = "[\w@#!$&+*'\/ \-]{1,}"
+                                title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                                required/>
+                            </div>    
+
+                            <div class = 'treatment-form-details'>
+                                <label for = 'evening_plan'>Evening Plan</label>
+                                <input class = 'input_fields' type = 'text' name = 'prescription' 
+                                placeholder="add prescription"
+                                pattern="[\w@#!$&+*'\/ \-]{1,}"
+                                title = "Please add a valid input. You can use alphabets, numbers and these special characters @#!$&_-+* \'"
+                                required/>
+                            </div> 
+
+                            <div class = 'treatment-form-details'>
+                                <label for = 'additional_notes'>Notes</label>
+                                <input class = 'input_fields' type = 'text' name = 'tests' 
+                                placeholder="add tests"
+                                pattern="[\w@#!$&+*'\/ \-]{1,}"
+                                title = "Please add a valid input. You can use alphabets, numbers and these special characters \w@#!$&_-+* \'"
+                                required/>
+                            </div>    
+
+                            <input type = 'submit' value = 'Add' class = 'login-button'>
+                        </form>
+                    </div>
+                </div>
+
+        </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

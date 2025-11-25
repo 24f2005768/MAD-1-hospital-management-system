@@ -27,7 +27,7 @@ def validate_name(name):
 def validate_only_text_fields(number):
     return number.isdigit()
 def validate_description(description):
-    return re.fullmatch(r"[\w\'\\\-]{1,}", description)
+    return re.fullmatch(r"[\w,.\'\/\- ]{1,}", description)
 def validate_treatment_details(input_string):
     return re.fullmatch(r"[\w@#!$&+*'\/ \-]{1,}", input_string)
 
@@ -81,8 +81,9 @@ def logout():
         session.pop('user_id', None)
         return redirect('/')
 
-# Admin
+# Find Admin
 
+#checked
 @app.route('/admin', methods = ['GET'])
 @login_required
 def admin_dashboard():
@@ -107,6 +108,7 @@ def admin_dashboard():
     else:
         return redirect('/')
 
+# checked
 @app.route('/admin/appointment/<int:pid>/<int:did>/<int:aid>', methods = ['GET'])
 @login_required
 def view_appointment_patient_doctor(pid, did, aid):
@@ -119,11 +121,19 @@ def view_appointment_patient_doctor(pid, did, aid):
         doctor = Doctor.query.filter(Doctor.doctor_id == did).first()
         this_appointment = Appointment.query.filter(Appointment.appointment_id == aid).first()
         past_appointments = Appointment.query.filter(and_(Appointment.patient_id == pid, Appointment.doctor_id == did, Appointment.date_time <= date_today, Appointment.appointment_id != aid)).all()
+        
+        booked_appointments = []
+        for a in past_appointments:
+            if a.t.status != 'Booked':
+                booked_appointments += [a]
+
         upcoming_appointments = Appointment.query.filter(and_(Appointment.patient_id == pid, Appointment.doctor_id == did, Appointment.date_time >= date_today, Appointment.appointment_id != aid)).all()
-        return render_template('admin/view-appointment-p-d.html', past_appointments = past_appointments, doctor = doctor, patient = patient, pid = pid, did = did, upcoming_appointments = upcoming_appointments, age = age, this_appointment = this_appointment)
+        return render_template('admin/view-appointment-p-d.html', past_appointments = past_appointments, doctor = doctor, patient = patient, pid = pid, did = did, 
+                               upcoming_appointments = upcoming_appointments, age = age, this_appointment = this_appointment, booked_appointments = booked_appointments)
     else:
         return redirect('/')
 
+# checked
 @app.route('/admin/view-all-appointments', methods = ['GET'])
 @login_required    
 def view_all_appointments():
@@ -138,6 +148,7 @@ def view_all_appointments():
     else:
         return redirect('/')
 
+# checked
 @app.route('/admin/book-appointment', methods = ['GET', 'POST'])
 @login_required
 def admin_book_appointment():
@@ -708,7 +719,7 @@ def admin_notification_page():
         return render_template('/admin/notification-page.html', unread_patient_notifications = unread_patient_notifications, read_patient_notifications = read_patient_notifications,
                                unread_doctor_notifications = unread_doctor_notifications, read_doctor_notifications = read_doctor_notifications)
 
-# Doctor   
+# Find Doctor   
 
 @app.route('/doctor/<int:did>', methods = ['GET'])
 @login_required 
@@ -792,12 +803,19 @@ def update_doctor_profile(did):
         if request.method == 'GET':
             return render_template('doctor/update_profile.html')
         else:
+            user_name = request.form['u_name']
+            user_password = request.form['u_password']
             doctor_name = request.form['d_name']
             doctor_desc = request.form['descprition']
-            doctor_email = request.form['email']
             doctor_contact_number = request.form['contact_info']
+            user_name = request.form['u_name']
+            user_password = request.form['u_password']
 
-            # validate
+            # validation
+            if validate_username(user_name) == None:
+                return render_template('doctor/update_profile.html')
+            if validate_password(user_password) == None:
+                return render_template('doctor/update_profile.html')
             if validate_name(doctor_name) == None:
                 return render_template('doctor/update_profile.html')
             if validate_description(doctor_desc) == None:
@@ -805,10 +823,13 @@ def update_doctor_profile(did):
             if validate_contact_number(doctor_contact_number) == None:
                 return render_template('doctor/update_profile.html')
 
-            current_user.doctor_relationship.doctor_name = request.form['d_name']
-            current_user.doctor_relationship.doctor_desc = request.form['descprition']
-            current_user.doctor_relationship.doctor_email = request.form['email']
-            current_user.doctor_relationship.doctor_contact_number = request.form['contact_info']
+            doctor = db.get_or_404(Doctor, current_user.doctor_relationship.doctor_id)
+            doctor.d.user_name = request.form['u_name']
+            doctor.d.user_password = request.form['u_password']
+            doctor.doctor_name = request.form['d_name']
+            doctor.doctor_desc = request.form['descprition']
+            doctor.doctor_email = request.form['email']
+            doctor.doctor_contact_number = request.form['contact_info']
             db.session.commit()
             return redirect(f'/doctor/{did}')
     else:
@@ -828,6 +849,8 @@ def view_patient_doctor(pid, did):
         past_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
         all_past_appointments = Appointment.query.filter(and_(Appointment.patient_id == pid, Appointment.date_time < date_today)).order_by(Appointment.date_time).all()
         upcoming_appointments = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid, Appointment.date_time >= date_today)).all()
+        age = relativedelta(date_today, patient.p_ref.patient_dob)
+        
         if past_appointments == []:
             last_visit = '--'
         elif len(past_appointments) == 1:
@@ -835,7 +858,25 @@ def view_patient_doctor(pid, did):
         else:
             last_visit = past_appointments[-1].date_time
 
-        return render_template('doctor/view-patient.html', patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments, all_past_appointments = all_past_appointments)
+        return render_template('doctor/view-patient.html', patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments, all_past_appointments = all_past_appointments, age = age, date_today = date_today)
+    else:
+        return redirect('/')
+
+@app.route('/doctor/<int:did>/patient/<int:pid>/send-message', methods = ['POST'])
+@login_required    
+def doctor_send_patient_message(did, pid):
+    if session['user_id']:
+        if current_user.user_role != 'Doctor':
+            return 'You are not authorized'
+        if current_user.doctor_relationship.doctor_id != did:
+            return 'You can not view this'
+        
+        patient = db.get_or_404(Patient, pid)
+        message = PatientDoctorNotifications(m_patient_id = patient.patient_id, m_doctor_id = current_user.doctor_relationship.doctor_id, message_type = f'Message from Dr. { current_user.doctor_relationship.doctor_name }', 
+                                             message_content = request.form['message'], role = 'Doctor')
+        db.session.add(message)
+        db.session.commit()
+        return redirect(f'/doctor/{did}')
     else:
         return redirect('/')
 
@@ -870,13 +911,13 @@ def ongoing_appointments(did, aid):
         last_visit = '--'
         age = relativedelta(date_today, patient.patient_dob) 
 
+        if past_appointments == []:
+            last_visit = '--'
+        elif len(past_appointments) == 1:
+            last_visit = past_appointments[0].date_time
+        else:
+            last_visit = past_appointments[-1].date_time
         if request.method == 'GET':
-            if past_appointments == []:
-                last_visit = '--'
-            elif len(past_appointments) == 1:
-                last_visit = past_appointments[0].date_time
-            else:
-                last_visit = past_appointments[-1].date_time
             return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
         else:
             treatment_details = request.form
@@ -889,20 +930,23 @@ def ongoing_appointments(did, aid):
 
             # validation
             if validate_treatment_details(diagnosis) == None:
-                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit)
+                print('Problem 1')
+                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(notes) == None:
-                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit)
+                print('Problem 2')
+                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(prescription) == None:
-                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit)
+                print('Problem 3')
+                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(tests) == None:
-                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit)
+                print('Problem 4')
+                return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
 
             appointment.slot_sch_appointment_rel.t.diagnosis = td['diagnosis'][0]
             appointment.slot_sch_appointment_rel.t.notes = td['notes'][0]
             appointment.slot_sch_appointment_rel.t.prescription = td['prescription'][0]
             appointment.slot_sch_appointment_rel.t.tests = td['tests'][0]
 
-            db.session.commit()
             diet_type = []
 
             for k in td:
@@ -925,6 +969,9 @@ def ongoing_appointments(did, aid):
                     else:
                         final_diet += d
 
+            appointment.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Pending', doctor_instructions = final_diet, patient_id = patient.patient_id, treatment_id = appointment.slot_sch_appointment_rel.t.treatment_id)
+            db.session.commit()
+
             return redirect(f'/doctor/{did}')
     else:
         return redirect('/')
@@ -941,7 +988,8 @@ def doctor_view_appointment(tid, did):
         treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
         patient = Patient.query.filter(Patient.patient_id == treatment.ap[0].p_ref.patient_id).first()
         age = relativedelta(date_today, patient.patient_dob)
-        dietician_notes = None
+        dietician_notes = DieticianNotes.query.filter(DieticianNotes.treatment_id == treatment.treatment_id).first()
+        print(dietician_notes)
         return render_template('doctor/view-appointment.html', treatment = treatment, patient = patient, dietician_notes = dietician_notes, date_today = date_today, age = age)
 
 @app.route('/doctor/update-treatment-details/<int:did>/<int:tid>', methods = ['GET', 'POST'])
@@ -955,8 +1003,16 @@ def update_treatment_details(tid, did):
         treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
         list_of_options = ['Completed', 'Booked', 'Cancelled'] 
         treatment_status = treatment.status
+
+        dn = DieticianNotes.query.filter(DieticianNotes.treatment_id == treatment.treatment_id).first()
+        if dn != None:
+            doctor_instructions = treatment.treatment_dn.doctor_instructions
+            di = []
+            for a in doctor_instructions.split(','):
+                di += [a.strip()]
+
         if request.method == 'GET':
-            return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+            return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status, di = di)
         else:
             new_data = Treatment.query.filter(Treatment.treatment_id == tid).first()
             diagnosis = request.form['diagnosis']
@@ -965,15 +1021,18 @@ def update_treatment_details(tid, did):
             notes = request.form['notes']
             tests = request.form['tests']
 
+            treatment_details = request.form
+            td = treatment_details.to_dict(flat=False)
+
             # validation
             if validate_treatment_details(diagnosis) == None:
-                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status, di = di)
             if validate_treatment_details(notes) == None:
-                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status, di = di)
             if validate_treatment_details(prescription) == None:
-                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status, di = di)
             if validate_treatment_details(tests) == None:
-                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status)
+                return render_template('doctor/update-treatment-details.html', treatment = treatment, list_of_options = list_of_options, treatment_status = treatment_status, di = di)
 
             new_data.diagnosis = request.form['diagnosis']
             new_data.status = request.form['status']
@@ -981,8 +1040,35 @@ def update_treatment_details(tid, did):
             new_data.notes = request.form['notes']
             new_data.tests = request.form['tests']
 
+            diet_type = []
+
+            for k in td:
+                if k == 'non-dairy':
+                    diet_type += [k]
+                elif k == 'dairy':
+                    diet_type += [k]
+                elif k == 'clear-liquid':
+                    diet_type += [k]
+                elif k == 'liquid':
+                    diet_type += [k]
+                elif k == 'restricted-normal':
+                    diet_type += [k]
+
+            final_diet = ''
+            if len(diet_type) > 1:
+                for d in diet_type:
+                    if diet_type.index(d) != len(diet_type)-1:
+                        final_diet += d + ', '
+                    else:
+                        final_diet += d
+            else:
+                final_diet = diet_type[0]
+
+            dn.status = 'Pending'
+            dn.doctor_instructions = final_diet
+
             # notify patient
-            message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { current_user.doctor_relationship.doctor_name }.", 
+            message = PatientDoctorNotifications(message_content = f"Hi, Dr. { current_user.doctor_relationship.doctor_name } has updated your treatment details.", 
                                                  message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ current_user.user_id }', 
                                                  m_patient_id = new_data.ap[0].p_ref.patient_id, appointment_id = new_data.ap[0].appointment_id)
             db.session.add(message)
@@ -1207,12 +1293,22 @@ def search_doctor_dash(did):
     else:
         return redirect('/')
     
-# Dietetics: dashboard
+# Find Dietetics
 
 @app.route('/dietetics/doctor/<int:did>')
 def dietetics_dashboard(did):
     return render_template('DieticianDash/dietician_dashboard.html')
-# Patient: dashborad - register - view_profile - update_profile 
+
+@app.route('/dietetician_notes/<int:did>/<int:dn_id>', methods = ['GET', 'POST'])
+def provide_dietician_notes(did, dn_id):
+    dn = db.get_or_404(DieticianNotes, dn_id)
+    patient = db.get_or_404(Patient, dn.patient_id)
+    age = relativedelta(date_today, patient.patient_dob)
+    return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+
+# Find Patient
+
+# dashborad - register - view_profile - update_profile 
 # book_appointment - confirm_appointment - cancel-appointment - reschedule-appointment
 # notification-d-availability - notification_page - tymessage - send-notific-to-doctor
 # view-doctor - view-dept - search
@@ -1311,10 +1407,34 @@ def update_patient_profile(pid):
             return 'You are not authorized'
         if current_user.patient_relationship.patient_id != pid:
             return 'You can not view this'
-        # patient = db.get_or_404(Patient, pid)
         if request.method == 'GET':
             return render_template('patient/update_profile.html')
         else:
+            # validation 
+            # patients can not change thier gender or dob.
+            user_name = request.form['u_name']
+            user_password = request.form['u_password']
+            patient_name = request.form['p_name']
+            contact_info = request.form['contact_info']
+            patient_email = request.form['email']
+            patient_height = request.form['height']
+            patient_weight = request.form['weight']
+            
+            if validate_username(user_name) == None:
+                return render_template('patient/update_profile.html')
+            if validate_password(user_password) == None:
+                return render_template('patient/update_profile.html')
+            if validate_name(patient_name) == None:
+                return render_template('patient/update_profile.html')
+            if validate_contact_number(contact_info) == None:
+                return render_template('patient/update_profile.html')
+            if validate_email(patient_email) == None:
+                return render_template('patient/update_profile.html')
+            if validate_only_text_fields(str(patient_height)) == False:
+                return render_template('patient/update_profile.html')
+            if validate_only_text_fields(str(patient_weight)) == False:
+                return render_template('patient/update_profile.html')
+
             patient = db.get_or_404(Patient, current_user.patient_relationship.patient_id)
             patient.p.user_name = request.form['u_name']
             patient.p.user_password = request.form['u_password']
@@ -1603,10 +1723,16 @@ def patient_send_message_to_doctor(pid, did, sid):
         patient = db.get_or_404(Patient, pid)
         doctor = db.get_or_404(Doctor, did)
         appointment = db.get_or_404(SlotSchedules, sid)
+        warning_message = None
         if request.method == 'GET':
-            return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment)
+            return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment, warning_message = None)
         else:
             message_content = request.form['message']
+
+            # validation
+            if validate_description(message_content) == None:
+                return render_template('patient/send_message_to_doctor.html', date_today = date_today, patient = patient, doctor = doctor, appointment = appointment, warning_message = True)
+            
             patient_message = PatientDoctorNotifications(m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id, message_type = 'Doctor_Notifications', 
                                                          message_content = message_content, role = 'Patient')    
             db.session.add(patient_message)

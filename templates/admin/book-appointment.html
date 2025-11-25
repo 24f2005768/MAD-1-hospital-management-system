@@ -24,7 +24,8 @@
                                 <a href = '/admin/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'></div>
+                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
+                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
@@ -48,23 +49,27 @@
             <div class = 'dash-info-cards'>
                 {% for d in departments %}
                     <div class = 'dash-info-card-details'>
-                        <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
+                        <a id = '{{ d.department_id }}' class = 'dash-info-card-details' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
                     </div>
                 {% endfor %}
+            </div>
+
+            <div id = 'click-to-choose'>
+                <p><em>Click on any department to view their doctors and their availablility</em></p>
             </div>
 
             <div>
             {% for dept in departments %}
                     {% if dept.doctors | length == 0 %}
                     <div class = '{{ dept.department_id }} all_doctors' style = 'display: none;'>
-                        <p>No doctors to show</p>
+                        <p><em>No doctors to show</em></p>
                     </div>
                     
                     {% else %}
                         {% for doctor in dept.doctors %}
                             <div class = '{{ doctor.dept.department_id }} all_doctors' style = 'display: none;'>
                                 <div class = 'heading-actions'>
-                                    <h3>{{ doctor.doctor_name }}</h3>
+                                    <h3>Dr. {{ doctor.doctor_name }}</h3>
 
                                     <div class = 'action-buttons'>
                                         {% if appointment_dict[doctor] != 0 %}
@@ -106,16 +111,20 @@
     </footer>
 
     <script>
+        var defaultDiv = document.getElementById('click-to-choose')
+
         function hideShowDept(dept_id) {
             var dept_doctors = document.getElementsByClassName(dept_id);
             var all_doc = document.getElementsByClassName('all_doctors');
             for (doc of all_doc) {
                 if (doc.classList.contains(dept_id)) {
                     doc.style.display = 'block';
+                    defaultDiv.style.display = 'none';
                 }
 
                 else {
                     doc.style.display = 'none';
+                    defaultDiv.style.display = 'none';
                 }
             }
         }
