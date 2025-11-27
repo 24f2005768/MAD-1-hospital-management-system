@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Appointment</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -39,46 +40,42 @@
     </header>
 
         <div class = 'main-content'>
-            <div class = 'flex-boxes'>
-                <div class = 'flex-headings'>
-                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Confirm Appointment</h2></div>
-                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+            <div class = 'heading-actions'>
+                <h2>Confirm Appointment</h2>
+
+                <div class = 'action-buttons'>
+                    <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
                 </div>
             </div>
 
-            <form action = '/admin/confirm-appointment/{{ doctor.doctor_id }}' method = 'POST'>
-                <div>
-                    <label for = 'patients_name'>Patient: </label>
-                    <select id = 'patients_name' name = 'patients_name'>
-                        {% for p in patients %}
-                            <option value = '{{ p.patient_id }}' name = 'patient-name'>{{ p.patient_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
+            <form action = '/admin/confirm-appointment/{{ patient.patient_id }}/{{ doctor.doctor_id }}' method = 'POST'>
                 <table>
                     <tr>
                         <th>Date</th>
-                        {% for s in slots %}
+                        {% for s in all_slots %}
                             <th>{{ s.slot_time }} ({{ s.slot_name }})</th>
                         {% endfor %}
                     </tr>
 
                     <tr>
-                        {% for d in list_of_next_7_dates %}
-                            <td>{{ d.strftime('%d/%m/%Y') }}</td>
-                                {% for s in slots %}
-                                    {% if da_dict[d][s] != None %}
-                                        <td><input type = 'radio' value = '{{ da_dict[d][s].schedule_id }}' name = 'time_slot'></td>
-                                    {% else %}
-                                        <td>-</td>
-                                    {% endif %}
-                                {% endfor %}
-                        </tr>
+                    {% for d in list_of_next_7_dates %}
+                        <td>{{ d.strftime('%d/%m/%Y') }}</td>
+                        {% for s in all_slots %}
+                            {% if slots[d][s] == -1 %}
+                                <td>-</td>
+                            {% elif slots[d][s][0] == 1 %}
+                                <td><i class="bi bi-clipboard-check"></i></td>
+                            {% elif slots[d][s][0] == 2 %}
+                                <td><i class="bi bi-clipboard-check"></i></td>
+                            {% elif slots[d][s][0] == 0 %}
+                                <td><input type = 'radio' value = '{{ slots[d][s][1].schedule_id }}' name = 'time_slot'></td>
+                            {% endif %}
                         {% endfor %}
+                    </tr>
+                    {% endfor %}            
                 </table>
+                <p><i class="bi bi-clipboard-check"></i> implies that the patient has already a booking on that slot.</p>
                 <input onclick = 'confirm_appointment_booking()' type="submit" value = "Book" class = "login-button">
-
             </form>
             {% if flag1 == True %}
                 <p class = 'error-message'>You have already booked an appointment with Dr. {{ selected_slot.slot_doctor.doctor_name }} on your selected slot.</p>

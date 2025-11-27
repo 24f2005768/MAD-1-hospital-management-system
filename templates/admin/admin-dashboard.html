@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -70,8 +71,8 @@
                 <h2>Patients</h2>
 
                 <div class = 'action-buttons'>
-                    <a href = '/admin/view-all-patients' class = 'buttons'>View All</a>
-                    <a href = '/register' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
+                    <a href = '/admin/view-all-patients' class = 'availabilty-button'>View All</a>
+                    <a href = '/register' class = 'booking-button'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -118,8 +119,8 @@
                 <h2>Appointments</h2>
 
                 <div class = 'action-buttons'>
-                    <a href = '/admin/view-all-appointments' class = 'buttons'>View All</a>
-                    <a href = '/admin/book-appointment' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
+                    <a href = '/admin/view-all-appointments' class = 'availabilty-button'>View All</a>
+                    <a href = '/admin/select-patient' class = 'booking-button'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -162,8 +163,8 @@
                 <h2>Doctors</h2>
 
                 <div class = 'action-buttons'>
-                    <a href = '/admin/view-all-doctors' class = 'buttons'>View All</a>
-                    <a href = '/admin/doctor/add' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
+                    <a href = '/admin/view-all-doctors' class = 'availabilty-button'>View All</a>
+                    <a href = '/admin/doctor/add' class = 'booking-button'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>
 
@@ -216,8 +217,8 @@
                 <h2>Departments</h2>
 
                 <div class = 'action-buttons'>
-                    <a href = '/all-dept'  class = 'buttons'>View All</a>
-                    <a href = '/add_dept' class = 'buttons'><i class="bi bi-plus"></i>Add</a>
+                    <a href = '/all-dept'  class = 'availabilty-button'>View All</a>
+                    <a href = '/add_dept' class = 'booking-button'><i class="bi bi-plus"></i>Add</a>
                 </div>
             </div>           
 

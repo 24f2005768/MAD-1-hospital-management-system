@@ -28,3 +28,10 @@ function hideShowAllDoctors() {
     this_doctor_appointments.style.display = 'none';
     all_doctor_appointments.style.display = 'block';
 }
+
+function ConfirmLogout() {
+    var result = confirm('Are you sure you want to log out?')
+    if (result == false) {
+        event.preventDefault();
+    }
+}

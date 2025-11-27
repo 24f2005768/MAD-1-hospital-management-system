@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notify Admin about Profile Change</title>
+    <title>Message Admin Page</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
@@ -14,15 +14,15 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/patient/{{ current_user.patient_relationship.patient_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
                     
-                    <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/search' method = 'POST'>
-                        <div class = 'flex-container'>  
-                            <div>                          
-                                <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
+                    <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/search' method = 'POST'>
+                        <div class = 'flex-container'>
+                            <div>
+                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
                             </div>
                             <div class = 'search-flex-container'>
                                 <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
@@ -40,7 +40,6 @@
     </header>
 
         <div class = 'main-content'>
-
             <div class = 'heading-actions'>
                 <h2>Send Message to Admin</h2>
 
@@ -52,22 +51,21 @@
             <div class = 'main-content' id = 'align-items-in-centre'>
                 <div class = 'wrapper'>
                     <div class = 'profile-picture-display'>
-                        <img src = '/static/images/{{ current_user.patient_relationship.patient_profile_picture }}.png' alt = 'Patient Profile Picture' width="170px">
-                        <p><strong>Patient Name:</strong> {{ current_user.patient_relationship.patient_name }}</p>
-                        <p><strong>DOB:</strong> {{ current_user.patient_relationship.patient_dob.strftime('%d/%m/%Y') }}</p>
-                        <p><strong>Age:</strong> {{ current_user.patient_relationship.patient_age }}</p>
-                        <p><strong>Email:</strong> {{ current_user.patient_relationship.patient_email }}</p>
-                        <p><strong>Contact Number:</strong> {{ current_user.patient_relationship.contact_info }}</p>
+                        <img src = '/static/images/{{ current_user.doctor_relationship.doctor_profile_picture }}.png' alt = 'Patient Profile Picture' width="170px">
+                        <p><strong>Doctor Name:</strong> {{ current_user.doctor_relationship.doctor_name }}</p>
+                        <p><strong>DOB:</strong> {{ current_user.doctor_relationship.doctor_dob.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Email:</strong> {{ current_user.doctor_relationship.doctor_email }}</p>
+                        <p><strong>Contact Number:</strong> {{ current_user.doctor_relationship.doctor_contact_number }}</p>
                     </div>
 
                     <div class = 'profile-content'>
                         <div class = 'message-container'>
                             <h3>Message</h3>
                             <div>
-                                <p><strong>Name:</strong> {{ current_user.patient_relationship.patient_name }}</p>
+                                <p><strong>Name:</strong> Dr. {{ current_user.doctor_relationship.doctor_name }}</p>
                                 <p><strong>Date:</strong> {{ date_today.strftime('%d/%m/%Y') }}</p>
                             
-                            <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/send-message-to-admin' method = 'POST'>
+                            <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/send-message-to-admin' method = 'POST'>
                                 <div class = 'update-form-details'>
                                     <label for = 'message'><strong>Message:</strong> </label>
                                     <input type = 'text' name = 'message' placeholder="Type Your Message" >

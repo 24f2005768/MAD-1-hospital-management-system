@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All appointments</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -38,78 +39,83 @@
         </div>
     </header>
     <div class = 'main-content'>
-        <div class = 'flex-boxes'>
-            <div class = 'flex-headings'>
-                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>All Appointments</h2></div>
-                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+        <div class = 'heading-actions'>
+            <h2>All Appointments</h2>
+
+            <div class = 'action-buttons'>
+                <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
         </div>
 
         <div class = 'heading-actions'>
-            <h2>Upcoming Appointments</h2>
-
-            <div class = 'action-buttons'>
-                <a href = '/book-appointment' class = 'buttons'>Add</a>
-            </div>
+            <h3>Upcoming Appointments</h3>
         </div>
 
-        <div class = 'scroll-appointments'>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>S. No.</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date</th>
-                    </tr>
-                    {% if upcoming_appointments | length > 0 %}
-                        {% for a in upcoming_appointments %}
+        {% if upcoming_appointments | length > 0 %}
+            <div class = 'scroll-appointments'>
+                <table>
+                    <tbody>
                         <tr>
-                            <td><a>{{ loop.index }}</a></td>
+                            <th>S. No.</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                        </tr>
+                        {% if upcoming_appointments | length > 0 %}
+                            {% for a in upcoming_appointments %}
+                            <tr>
+                                <td><a>{{ loop.index }}</a></td>
+                                <td>{{a.p_ref.patient_name}}</td>
+                                <td>{{a.d_ref.doctor_name}}</td>
+                                <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p><em>Nothing to show</em></p>
+        {% endif %}
+
+        <div class = 'heading-actions'>
+            <h3>Past Appointments</h3>
+        </div>
+
+        {% if past_appointments | length > 0 %}
+            <div class = 'scroll-appointments'>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Appointment ID</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+
+                        {% for a in past_appointments %}
+                        <tr>
+                            <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
                             <td>{{a.p_ref.patient_name}}</td>
                             <td>{{a.d_ref.doctor_name}}</td>
                             <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
+                            <td>{{a.t.status}}</td>
                         </tr>
                         {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class = 'heading-actions'>
-            <h2>Past Appointments</h2>
-        </div>
-
-        <div class = 'scroll-appointments'>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-
-                    {% for a in past_appointments %}
-                    <tr>
-                        <td><a href = '/admin/appointment/{{a.patient_id}}/{{a.doctor_id}}/{{a.appointment_id}}'>{{a.appointment_id}}</a></td>
-                        <td>{{a.p_ref.patient_name}}</td>
-                        <td>{{a.d_ref.doctor_name}}</td>
-                        <td>{{a.date_time.strftime('%d/%m/%Y')}}</td>
-                        <td>{{a.t.status}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p><em>Nothing to show</em></p>
+        {% endif %}
     </div>
 
     <footer>

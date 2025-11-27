@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -40,23 +40,31 @@
     </header>
 
         <div class = 'main-content'>
-            <div class = 'centered-headings'>
+            <div class = 'heading-actions'>
                 <h2>Book an Appointment</h2>
+
+                <div class = 'action-buttons'>
+                    <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
             </div>
 
             <div class = 'dash-info-cards'>
                 {% for d in departments %}
                     <div class = 'dash-info-card-details'>
-                        <a id = '{{ d.department_id }}' class = 'info-card-details clickable-links' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
+                        <a id = '{{ d.department_id }}' class = 'dash-info-card-details' onclick = "hideShowDept('{{d.department_id}}')">{{d.department_name}}</a>
                     </div>
                 {% endfor %}
             </div>
+
+            <div id = 'click-to-choose'>
+                <p><em>Click on any department to view their doctors and their availablility</em></p>
+            </div>           
 
             <div>
             {% for dept in departments %}
                     {% if dept.doctors | length == 0 %}
                     <div class = '{{ dept.department_id }} all_doctors' style = 'display: none;'>
-                        <p>No doctors to show</p>
+                        <p><em>No doctors to show</em></p>
                     </div>
                     
                     {% else %}
@@ -67,9 +75,9 @@
 
                                     <div class = 'action-buttons'>
                                         {% if appointment_dict[doctor] != 0 %}
-                                            <a class = 'buttons' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
+                                            <a class = 'booking-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ doctor.doctor_id }}'>Book</a>
                                         {% else %}
-                                            <a class = 'buttons' href = '/patient/{{ current_user.patient_relationship.patient_id }}/notify-availabililty/{{ doctor.doctor_id }}'>Notify Me</a>
+                                            <a class = 'booking-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/notify-availabililty/{{ doctor.doctor_id }}'>Notify Me</a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -106,5 +114,24 @@
         &copy;  2025 LDH Hospital
     </footer>
 
+    <script>
+        var defaultDiv = document.getElementById('click-to-choose')
+
+        function hideShowDept(dept_id) {
+            var dept_doctors = document.getElementsByClassName(dept_id);
+            var all_doc = document.getElementsByClassName('all_doctors');
+            for (doc of all_doc) {
+                if (doc.classList.contains(dept_id)) {
+                    doc.style.display = 'block';
+                    defaultDiv.style.display = 'none';
+                }
+
+                else {
+                    doc.style.display = 'none';
+                    defaultDiv.style.display = 'none';
+                }
+            }
+        }
+    </script>
 </body>
 </html>

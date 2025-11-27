@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -27,7 +28,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -36,10 +37,11 @@
         </div>
     </header>
         <div class = 'main-content'>
-            <div class = 'flex-boxes'>
-                <div class = 'flex-headings'>
-                    <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Notification Page</h2></div>
-                    <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+            <div class = 'heading-actions'>
+                <h2>Notification Page</h2>
+
+                <div class = 'action-buttons'>
+                    <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
                 </div>
             </div>
 

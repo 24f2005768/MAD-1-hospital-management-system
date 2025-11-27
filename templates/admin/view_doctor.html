@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -39,16 +40,17 @@
     </header>
 
     <div class = 'main-content'>
-        <div class = 'flex-boxes'>
-            <div class = 'flex-headings'>
-                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Doctor Details</h2></div>
-                <div style="position:absolute;"><button class = 'buttons back-button' onclick = 'history.back()'>Go Back</button></div>
+        <div class = 'heading-actions'>
+            <h1>Doctor Details</h1>
+
+            <div class = 'action-buttons'>
+                <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
         </div>
 
         <div class = 'flex-boxes'>
             <div class = 'flex-view-profile-content'>
-                <div class = 'flex-profile-photo'><p></p>
+                <div class = 'flex-profile-photo' style="margin-bottom: 25px;">
                     <img src = '/static/images/{{ doctor.doctor_profile_picture }}.png' alt = 'Doctor Image' width="170px">
                     <div class = 'profile-content-patient-info'>
                         <p><strong>Doctor Name:</strong> {{ doctor.doctor_name }}</p>
@@ -58,75 +60,83 @@
                         <p><strong>Contact Number:</strong> {{ doctor.doctor_contact_number }}</p>
                         <p><strong>Email:</strong> {{ doctor.doctor_email }}</p>
                         <a href = '/admin/doctor/update/{{doctor.doctor_id}}' class = 'update-button'>Update</a>
-                        <a onclick="confirmDelete()" href = '/admin/doctor/delete/{{doctor.doctor_id}}' class = 'delete-button'>Delete</a>
+                        {% if doctor.status == None %}
+                            <a onclick="confirmDelete()" href = '/admin/doctor/delete/{{doctor.doctor_id}}' class = 'delete-button'>Delete</a>
+                        {% else %}
+                            <a onclick="confirmUndoDelete()" href = '/admin/doctor/undo-delete/{{doctor.doctor_id}}' class = 'delete-button'>Undo Delete</a>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class = 'flex-profile-content'>
-                    <div class = 'flex-profile-content-buttons'>
-                        <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Upcoming Appointments</a></div>
-                        <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
-                        <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Check Availability</a></div>
+                    {% if doctor.status == None %}
+                        <div class = 'flex-profile-content-buttons'>
+                            <div class = 'button1' onclick ="viewPatientUpcomingAppointments()" id = 'upcoming' style="background-color: #2fbb8fa8;"><a>Upcoming Appointments</a></div>
+                            <div class = 'button1' onclick ="viewPatientPastAppointments()" id = 'past'><a>Past Appointments</a></div>
+                            <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Check Availability</a></div>
 
-                    </div>
+                        </div>
 
-                    <div id = 'view-upcoming-appointments'>
-                        {% if upcoming_appointments | length > 0 %} 
-                            <ol>
-                            {% for a in upcoming_appointments %}
-                                <li>
-                                    <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
-                                    <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
-                                    <p><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'><strong>Patient:</strong> {{ a.p_ref.patient_name }}</a></p>
-                                </li>
-                            {% endfor %}
-                            </ol>
-                        {% else %}
-                            <p><em>No upcoming appointments to show</em></p>
-                        {% endif %}
-                    </div>
+                        <div id = 'view-upcoming-appointments' class = 'scroll-appointments'>
+                            {% if upcoming_appointments | length > 0 %} 
+                                <ol>
+                                {% for a in upcoming_appointments %}
+                                    <li>
+                                        <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
+                                        <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p><strong>Patient:</strong> <a href = '/admin/patient/{{ a.p_ref.patient_id }}'>{{ a.p_ref.patient_name }}</a></p>
+                                    </li>
+                                {% endfor %}
+                                </ol>
+                            {% else %}
+                                <p><em>No upcoming appointments to show</em></p>
+                            {% endif %}
+                        </div>
 
-                    <div id = 'view-past-appointments' style="display: none;">
-                        {% if past_appointments | length > 0 %} 
-                            <ol>
-                            {% for a in past_appointments %}
-                                <li>
-                                    <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
-                                    <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
-                                    <p><strong>Patient:</strong> <a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'>{{ a.p_ref.patient_name }}</a></p>
-                                    <p><strong>Diagnosis:</strong> {{ a.t.diagnosis }}</p>
-                                    <p><strong>Tests:</strong> {{ a.t.notes }}</p>
-                                    <p><strong>Prescription:</strong> {{ a.t.prescription }}</p>
-                                    <p><strong>Tests:</strong> {{ a.t.tests }}</p>
-                                </li>
-                            {% endfor %}
-                            </ol>
-                        {% else %}
-                            <p><em>No past appointments to show</em></p>
-                        {% endif %}
-                    </div>
+                        <div id = 'view-past-appointments' style="display: none;" class="scroll-appointments">
+                            {% if past_appointments | length > 0 %} 
+                                <ol>
+                                {% for a in past_appointments %}
+                                    <li>
+                                        <p><strong><em>Appointment ID:</em></strong> {{ a.appointment_id }}</p>
+                                        <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p><strong>Patient:</strong> <a href = '/admin/patient/{{ a.p_ref.patient_id }}'>{{ a.p_ref.patient_name }}</a></p>
+                                        <p><strong>Diagnosis:</strong> {{ a.t.diagnosis }}</p>
+                                        <p><strong>Tests:</strong> {{ a.t.notes }}</p>
+                                        <p><strong>Prescription:</strong> {{ a.t.prescription }}</p>
+                                        <p><strong>Tests:</strong> {{ a.t.tests }}</p>
+                                    </li>
+                                {% endfor %}
+                                </ol>
+                            {% else %}
+                                <p><em>No past appointments to show</em></p>
+                            {% endif %}
+                        </div>
 
-                    <div id = 'send-message-to-patient' style="display: none;">
-                        {% if doctor_slots | length > 0 %}
-                            <table style="width: 100%;">
-                                <tbody>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Slot</th>
-                                    </tr>
-
-                                    {% for s in doctor_slots %}
+                        <div id = 'send-message-to-patient' style="display: none;" class = 'scroll-appointments'>
+                            {% if doctor_availability_list | length > 0 %}
+                                <table style="width: 100%;">
+                                    <tbody>
                                         <tr>
-                                            <td>{{ s.date }}</td>
-                                            <td>{{ s.s_sch.slot_time }}</td>
+                                            <th>Date</th>
+                                            <th>Slot</th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p><em>Availablility not provided</em></p>
-                        {% endif %}
-                    </div>
+
+                                        {% for s in doctor_availability_list %}
+                                            <tr>
+                                                <td>{{ s.date }}</td>
+                                                <td>{{ s.s_sch.slot_time }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p><em>Availablility not provided</em></p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p><em>Nothing to show</em></p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -173,7 +183,14 @@
         }
 
         function confirmDelete() {
-            var result = confirm('Are you sure you want to delete Patient Profile?')
+            var result = confirm('Are you sure you want to delete Doctor Profile?')
+            if (result == false) {
+                event.preventDefault();
+            }
+        }
+
+        function confirmUndoDelete() {
+            var result = confirm('Are you sure you want to undo delete Doctor Profile?')
             if (result == false) {
                 event.preventDefault();
             }

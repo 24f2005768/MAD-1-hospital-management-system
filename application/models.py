@@ -1,5 +1,6 @@
 from .database import db
 from datetime import datetime, timedelta, date
+import bcrypt
 
 # User Specific Tables: User, Patient, Doctor
 # Doctor Specific Tables: Appointment, Treatment, SlotSchedules
@@ -19,6 +20,8 @@ class User(db.Model):
     user_name = db.Column(db.String(32), nullable = False, unique = True)
     user_password = db.Column(db.String(32), nullable = False)
     user_role = db.Column(db.String)
+
+    # user_password = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt().decode('utf-8'))
 
     admin_relationship = db.relationship('Admin', back_populates = 'a', uselist = False)
     doctor_relationship = db.relationship('Doctor', back_populates = 'd', uselist = False)
@@ -48,6 +51,7 @@ class Department(db.Model):
     department_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     department_name = db.Column(db.String, nullable = False)
     department_description = db.Column(db.String)
+    status = db.Column(db.String) # DeletedbyAdmin
 
     department_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.name'))
     
@@ -64,6 +68,7 @@ class Doctor(db.Model):
     doctor_blacklisted = db.Column(db.Boolean, default = False)
     doctor_desc = db.Column(db.String)
     doctor_gender = db.Column(db.String)
+    status = db.Column(db.String) # DeletedbyAdmin
 
     doctor_profile_picture = db.Column(db.String, db.ForeignKey('profile_pictures.name'))
     department_id = db.Column(db.Integer, db.ForeignKey(Department.department_id))
@@ -90,6 +95,7 @@ class Patient(db.Model):
     patient_age = db.Column(db.Integer)
     patient_height = db.Column(db.String, default = '--')
     patient_weight = db.Column(db.String, default = '--')
+    status = db.Column(db.String) # DeletedbyAdmin
 
     patient_profile_picture = db.Column(db.String, db.ForeignKey('profile_pictures.name'))
     patient_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))

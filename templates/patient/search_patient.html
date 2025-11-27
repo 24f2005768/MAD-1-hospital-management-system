@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src = '/static/script.js'></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout'><i id = 'logout-button' class="bi bi-box-arrow-right"></i><span id = 'logout-button'>Logout</span></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
                             </div>
                         </div>
                     </form>
@@ -39,27 +40,17 @@
     </header>
 
         <div class = 'main-content'>
-            <h2 id = 'message'>Search results for: {{ input_value }}</h2>
 
-            <div class = 'info-cards'>
-                    <div class = 'info-card-details'>
-                        <p class = 'info-card-texts'>{{ doctors | length}}</p>
-                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Doctors</p>
-                    </div>
+            <div class = 'heading-actions'>
+                <h2>Search results for: {{ input_value }}</h2>
 
-                    <div class = 'info-card-details'>
-                        <p class = 'info-card-texts'>{{ departments | length}}</p>
-                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Departments</p>
-                    </div>
-
-                    <div class = 'info-card-details'>
-                        <p class = 'info-card-texts'>{{ patient_appointments | length}}</p>
-                        <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px">Appointments</p>
-                    </div>
+                <div class = 'action-buttons'>
+                    <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
+                </div>
             </div>
 
-            <div style ="margin-top: 50px;">
-                <h2>Doctors</h2>
+            <div style ="margin-top: 50px; width: 100%;">
+                <h2>Doctors ({{ doctors | length}})</h2>
                 {% if doctors | length == 0 %}
                     <p>No results found</p>
                 {% else %}
@@ -85,8 +76,8 @@
                 {% endif %}
             </div>
 
-            <div style ="margin-top: 50px;">
-                <h2>Departments</h2>
+            <div style ="margin-top: 50px; width: 100%;">
+                <h2>Departments ({{ departments | length}})</h2>
                 {% if departments | length == 0 %}
                     <p>No results found</p>
                 {% else %}
@@ -113,6 +104,7 @@
                 {% endif %}
 
             </div>
+
         </div>
     <footer>
         &copy;  2025 LDH Hospital
