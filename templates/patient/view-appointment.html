@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -55,8 +55,8 @@
                         <img src = '/static/images/{{ appointment.slot_doctor.doctor_profile_picture }}.png' alt = 'Doctor Profile Picture' width="170px">
                         <p><strong>Doctor:</strong> <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view_doctor/{{ doctor.doctor_id }}'>{{ appointment.slot_doctor.doctor_name }}</a></p>
                         <p><strong>Department:</strong> <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/view-dept/{{ doctor.dept.department_id }}'>{{ appointment.slot_doctor.dept.department_name }}</a></p>
-                        <a onclick="confirmation_message()" class = 'cancel-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/thank-you/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}'>Send a <i class="bi bi-heart-fill" style="color: red;"></i></a>
-                        <a onclick="confirmation_message()" class = 'booking-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ appointment.slot_doctor.doctor_id }}'>Book Again</a>
+                        <a class = 'cancel-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/thank-you/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}'>Send a <i class="bi bi-heart-fill" style="color: red;"></i></a>
+                        <a class = 'booking-button' href = '/patient/{{ current_user.patient_relationship.patient_id }}/confirm-appointment/{{ appointment.slot_doctor.doctor_id }}'>Book Again</a>
                     </div>
 
                     <div class = 'flex-profile-content'>
@@ -74,6 +74,16 @@
                             <p><strong>Doctor Notes:</strong> {{ appointment.slot_sch_appointment_rel.t.notes }}</p>
                             <p><strong>Prescription:</strong> {{ appointment.slot_sch_appointment_rel.t.prescription }}</p>
                             <p><strong>Tests:</strong> {{ appointment.slot_sch_appointment_rel.t.tests }}</p>
+
+
+                            {% if dn != None %}
+                                <fieldset>
+                                    <legend>Diet Plan</legend>
+                                    <p><strong>Morning Plan:</strong> {{ dn.morning_plan }}</p>                                                               
+                                    <p><strong>Afternoon Plan:</strong> {{ dn.afternoon_plan }}</p>                                                               
+                                    <p><strong>Evening Plan:</strong> {{ dn.evening_plan }}</p>                                                               
+                                </fieldset>
+                            {% endif %}
                         {% else %}
                             <p><em>Doctor is yet to provide appointment details</em></p>
                         {% endif %}
@@ -94,6 +104,14 @@
                                                         <p><strong>Notes:</strong> {{ a.slot_sch_appointment_rel.t.notes }}</p>
                                                         <p><strong>Tests:</strong> {{ a.slot_sch_appointment_rel.t.tests }}</p>
                                                         <p><strong>Prescription:</strong> {{ a.slot_sch_appointment_rel.t.prescription }}</p>
+
+                                                        {% if dn != None %}
+                                                            <div>
+                                                                <p><strong>Morning Plan: {{ dn.morning_plan }}</strong></p>                                                               
+                                                                <p><strong>Afternoon Plan: {{ dn.afternoon_plan }}</strong></p>                                                               
+                                                                <p><strong>Evening Plan: {{ dn.evening_plan }}</strong></p>                                                               
+                                                            </div>
+                                                        {% endif %}
                                                     </li>
                                                 {% endif %}
                                             {% endfor %}
@@ -108,7 +126,7 @@
                             <div class = 'message-container'>
                                 <h3>Message</h3>
                                 <div>
-                                    <p><strong>Name:</strong> {{ current_user.patient_relationship.patient_name }}</p>
+                                    <p><strong>Fron:</strong> {{ current_user.patient_relationship.patient_name }}</p>
                                     <p><strong>Date:</strong> {{ date_today.strftime('%d/%m/%Y') }}</p>
                                 
                                 <form action = '/patient/{{ current_user.patient_relationship.patient_id }}/messages/doctor/{{ appointment.slot_doctor.doctor_id }}/{{ appointment.schedule_id }}' method = 'POST'>
@@ -119,7 +137,7 @@
                                         title="Please add a valid input. You can use alphabets, numbers and some special characters -'" required>
                                     </div>
                                     
-                                    <input onclick = 'confirm_posting_message()' type ="submit" value = "Send" class = 'login-button'>
+                                    <input onclick = 'confirm_posting_message()' type ="submit" value = "Send" class = 'send-button'>
                                 
                                     {% if warning_message == True %}
                                         <p class = 'error_message'>Please enter a valid message</p>

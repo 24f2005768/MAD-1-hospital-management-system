@@ -35,3 +35,10 @@ function ConfirmLogout() {
         event.preventDefault();
     }
 }
+
+function confirm_cancel_or_reschedule_appointment() {
+    var result = confirm('Are you sure?');
+    if (result == false) {
+        event.preventDefault();
+    }
+}

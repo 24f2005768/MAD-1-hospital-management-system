@@ -7,6 +7,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import re 
 from pyisemail import is_email
+import bcrypt
 
 login_manager = LoginManager()
 login_manager.init_app(app)  
@@ -52,15 +53,15 @@ def index():
         user = User.query.filter(User.user_name == user_name).first()
         if user == None:
             return render_template('login_page.html', flag2 = True) # user is not registered
-
+        password_check = bcrypt.checkpw(user_password.encode('utf-8'), user.user_password)
         user_id = user.user_id
         session['user_id'] = user.user_id
 
-        if user_password == user.user_password and user.user_role == 'Admin': #user is admin
+        if password_check and user.user_role == 'Admin': #user is admin
             login_user(user)
             return redirect('/admin')
         
-        elif user_password == user.user_password and user.user_role == 'Doctor': #user is a doctor
+        elif password_check and user.user_role == 'Doctor': #user is a doctor
             # check if the user is blacklisted
             if (not user.doctor_relationship.doctor_blacklisted) and (user.doctor_relationship.status == None):
                 login_user(user)
@@ -75,7 +76,7 @@ def index():
             else:
                 return redirect(f'/dietetics/doctor/{d_id.doctor_id}')
             
-        elif user_password == user.user_password and user.user_role == 'Patient': #user is a patient
+        elif password_check and user.user_role == 'Patient': #user is a patient
             # check if the user is blacklisted
             if (not user.patient_relationship.patient_blacklisted) and (user.patient_relationship.status == None):
                 login_user(user)
@@ -101,7 +102,7 @@ def logout():
 def admin_dashboard():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         
         doctors = Doctor.query.filter(Doctor.status == None).all()
         patients = Patient.query.filter(Patient.status == None).all()
@@ -125,7 +126,7 @@ def admin_dashboard():
 def view_appointment_patient_doctor(pid, did, aid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         global date_today 
         patient = Patient.query.filter(Patient.patient_id == pid).first()
         age = relativedelta(date_today, patient.patient_dob)
@@ -149,7 +150,7 @@ def view_appointment_patient_doctor(pid, did, aid):
 def view_all_appointments():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         appointments = Appointment.query.all()
         global date_today 
         past_appointments = Appointment.query.filter(Appointment.date_time <= date_today).all()
@@ -163,9 +164,9 @@ def view_all_appointments():
 def admin_select_patient():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if request.method == 'GET':
-            patients = Patient.query.all()
+            patients = Patient.query.filter(Patient.status == None, Patient.patient_blacklisted == 0).order_by(Patient.patient_name).all()
             return render_template('/admin/select_patient.html', patients = patients)
         else:
             patient_id = request.form['patients_name']
@@ -179,12 +180,12 @@ def admin_select_patient():
 def admin_book_appointment(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         patient = db.get_or_404(Patient, pid)
         if request.method == 'GET':
             global date_today 
-            departments = Department.query.filter(Department.department_name != 'Dietetics').all()
-            doctors = Doctor.query.all()
+            departments = Department.query.filter(Department.department_name != 'Dietetics', Department.status == None).all()
+            doctors = Doctor.query.filter(Doctor.status == None, Doctor.doctor_blacklisted == 0).all()
             appointment_dict = {i:0  for i in doctors}
 
             for i in doctors:
@@ -206,68 +207,7 @@ def admin_book_appointment(pid):
 def admin_confirm_appointment(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'        
-        # global date_today 
-        # da_dict = {}
-        # doctor = db.get_or_404(Doctor, did)
-        # doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date, SlotSchedules.schedule_slot_id).all()
-        # list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
-        # flag1 = False #check for double booking
-        # slots = Slot.query.all()
-        # selected_slot = None
-        patients = Patient.query.order_by(Patient.patient_name).all()
-        # for d in list_of_next_7_dates:
-        #     da_dict[d] = {}
-        #     for s in slots:
-        #         query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_doctor_id == doctor.doctor_id).first()
-        #         da_dict[d][s] = query
-
-        # if request.method == 'GET':
-        #     return render_template('admin/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag1 = False, list_of_next_7_dates = list_of_next_7_dates, slots = slots, da_dict = da_dict, selected_slot = selected_slot, patients = patients)
-        # else: 
-            # patient_id = request.form['patients_name']
-            # patient = db.get_or_404(Patient, patient_id)
-        #     form_content = request.form 
-        #     form_content_to_dict = form_content.to_dict(flat = False)
-        #     list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
-
-        #     input_slot = request.form['time_slot']
-        #     selected_slot = db.get_or_404(SlotSchedules, int(input_slot))
-            
-        #     sister_slots = SlotSchedules.query.filter(SlotSchedules.schedule_slot_id == selected_slot.schedule_slot_id, 
-        #                                               SlotSchedules.date == selected_slot.date, SlotSchedules.slot_patient_id != None).all()
-            
-        #     if selected_slot.slot_patient_id == None:
-        #         selected_slot.slot_patient_id = patient.patient_id 
-        #         selected_slot.slot_sch_appointment_rel = Appointment(date_time = selected_slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-        #         selected_slot.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
-                
-        #         # notify patient
-        #         notification = PatientDoctorNotifications(role = 'Doctor', message_type = 'Appointment Booking Confirmation', 
-        #                                                   message_content = f'Hello, { patient.patient_name }! Your appointment with doctor { doctor.doctor_name } is on { selected_slot.date } ({ selected_slot.s_sch.slot_name })'
-        #                                                   ,m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id)
-        #         db.session.add(notification)
-                
-        #     if sister_slots != []:
-        #         for s in sister_slots:
-        #             if s.slot_patient_id == patient.patient_id:
-        #                 return render_template('admin/confirm-appointment.html', doctor = doctor, doctor_slots = doctor_slots, flag1 = True, list_of_next_7_dates = list_of_next_7_dates, 
-        #                                        slots = slots, da_dict = da_dict, selected_slot = selected_slot, patients = patients, patient = patient)
-                    
-        #         new_entry = SlotSchedules(date = selected_slot.date, slot_doctor_id = selected_slot.slot_doctor_id, slot_patient_id = patient.patient_id, schedule_slot_id = selected_slot.schedule_slot_id)
-        #         new_entry.slot_sch_appointment_rel = Appointment(date_time = selected_slot.date, doctor_id = doctor.doctor_id, patient_id = patient.patient_id)
-        #         new_entry.slot_sch_appointment_rel.t = Treatment(status = 'Booked')
-        #         db.session.add(new_entry)
-        #         db.session.commit()
-
-        #         notification = PatientDoctorNotifications(role = 'Doctor', message_type = 'Appointment Booking Confirmation', 
-        #                                                   message_content = f'Hello, { patient.patient_name }! Your appointment with Dr. { doctor.doctor_name } is on { new_entry.date } ({ new_entry.s_sch.slot_name })'
-        #                                                   ,m_doctor_id = doctor.doctor_id, m_patient_id = patient.patient_id)
-        #         db.session.add(notification)
-        #     db.session.commit()
-
-        #     return redirect('/admin')
-
+            return render_template('error.html', message = 'You are not authorized to view this content.')        
         global date_today 
         patient = db.get_or_404(Patient, pid)
         doctor = db.get_or_404(Doctor, did)
@@ -346,7 +286,7 @@ def admin_confirm_appointment(pid, did):
 def view_department(dept_id):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         global date_today
         department = Department.query.filter(Department.department_id == dept_id).first()
 
@@ -367,7 +307,7 @@ def view_department(dept_id):
 def view_all_departments():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         departments = Department.query.filter(Department.status == None).all()
         deleted_departments = Department.query.filter(Department.status != None).all()
         return render_template('admin/view-all-dept.html', departments = departments, deleted_departments = deleted_departments)
@@ -379,7 +319,7 @@ def view_all_departments():
 def add_department():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         
         if request.method == 'GET':
             return render_template('admin/add_department.html')
@@ -410,7 +350,7 @@ def add_department():
 def update_dept(dept_id):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if request.method == 'GET':
             department = db.get_or_404(Department, dept_id)
             return render_template('admin/update-department.html', department = department)
@@ -438,7 +378,7 @@ def update_dept(dept_id):
 def delete_dept(dept_id):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         department = db.get_or_404(Department, dept_id)
         department.status = 'Deleted by Admin'
         doctors = department.doctors
@@ -455,7 +395,7 @@ def delete_dept(dept_id):
 def undo_delete_dept(dept_id):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         department = db.get_or_404(Department, dept_id)
         department.status = None
         doctors = department.doctors
@@ -474,7 +414,7 @@ def undo_delete_dept(dept_id):
 def view_doctor(did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         doctor = db.get_or_404(Doctor, did)
         global date_today 
         past_appointments = Appointment.query.filter(and_(Appointment.date_time <= date_today, Appointment.doctor_id == doctor.doctor_id)).all()
@@ -499,7 +439,7 @@ def view_doctor(did):
 def view_all_doctors():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         doctors = Doctor.query.filter(Doctor.status == None).all()
         deleted_doctors = Doctor.query.filter(Doctor.status != None).all()
         return render_template('admin/view-all-doctors.html', doctors = doctors, deleted_doctors = deleted_doctors)
@@ -511,7 +451,7 @@ def view_all_doctors():
 def add_doctor():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         
         departments = Department.query.all()
         if request.method == 'GET':
@@ -577,26 +517,26 @@ def add_doctor():
 def update_doctor(did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         
+        departments = Department.query.all()
+        old_data = Doctor.query.filter_by(doctor_id = did).first()
         if request.method == 'GET':
-            old_data = Doctor.query.filter_by(doctor_id = did).first()
-            departments = Department.query.all()
             return render_template('admin/update_doctor.html',did = did, old_data = old_data, departments = departments)
         else:
             new_data = Doctor.query.filter_by(doctor_id = did).first()
-            doctor_name = request.form['d_name']
-            doctor_contact_number = request.form['contact_info']
-            doctor_email = request.form['email']
+            new_data.doctor_name = request.form['d_name']
+            new_data.doctor_contact_number = request.form['contact_info']
+            new_data.doctor_email = request.form['email']
             doctor_dob = request.form['d_dob']
-            doctor_gender = request.form['gender']
+            new_data.doctor_gender = request.form['gender']
 
             if validate_name(request.form['d_name']) == None:
-                return render_template('admin/add_doctor.html', departments = departments)
+                return render_template('admin/update_doctor.html',did = did, old_data = old_data, departments = departments)
             if validate_contact_number(request.form['contact_info']) == None:
-                return render_template('admin/add_doctor.html', departments = departments)
+                return render_template('admin/update_doctor.html',did = did, old_data = old_data, departments = departments)
             if validate_email(request.form['email']) == None:
-                return render_template('admin/add_doctor.html', departments = departments)
+                return render_template('admin/update_doctor.html',did = did, old_data = old_data, departments = departments)
             
             if request.form['d_dob'] != '':
                 new_data.doctor_dob = date.fromisoformat(doctor_dob)
@@ -608,8 +548,12 @@ def update_doctor(did):
             blacklisted = request.form['blacklist']
             if blacklisted == 'True':
                 new_data.doctor_blacklisted = True
-                notification = AdminDoctorNotifications(message_doctor_id = new_data.doctor_id,admin_doctor_message_type = 'Blacklisted Warning', admin_doctor_message_content = 'You have been temporarily blacklisted.')
+                notification = AdminDoctorNotifications(message_doctor_id = new_data.doctor_id, admin_doctor_message_type = 'Blacklisted Warning', admin_doctor_message_content = 'You have been temporarily blacklisted.')
                 db.session.add(notification)
+                all_doctor_appointments = Appointment.query.filter(Appointment.doctor_id == did).all()
+                for a in all_doctor_appointments:
+                    if a.t.status == 'Booked':
+                        a.t.status = 'Cancelled'
             else:
                 new_data.doctor_blacklisted = False
             db.session.commit()
@@ -622,7 +566,7 @@ def update_doctor(did):
 def delete_doctor(did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         doctor = db.get_or_404(Doctor, did)
         doctor.status = 'DeletedbyAdmin'
         db.session.commit()
@@ -635,7 +579,7 @@ def delete_doctor(did):
 def undo_delete_doctor(did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         doctor = db.get_or_404(Doctor, did)
         doctor.status = None
         db.session.commit()
@@ -648,7 +592,7 @@ def undo_delete_doctor(did):
 def check_availabilty(did):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         doctor_slots = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date >= date_today)).order_by(SlotSchedules.date).all()
         doctor = db.get_or_404(Doctor, did)
         return render_template('admin/check-availability.html', doctor_slots = doctor_slots, doctor = doctor)
@@ -657,12 +601,65 @@ def check_availabilty(did):
     
 # admin - patient: view - view_all - update - delete
 
+@app.route('/admin/register/patient', methods = ['GET', 'POST'])
+@login_required
+def admin_register_patient():
+    if request.method == 'GET':
+        return render_template('admin/register_patient.html')
+    else:
+        patient_name = request.form['p_name']
+        if validate_name(patient_name) == None:
+            return render_template('admin/register_patient.html')
+
+        if Patient.query.filter(Patient.patient_name == patient_name).first():
+            return render_template('exists.html') 
+        
+        # add as a user
+        user_name = request.form['u_name']
+        user_password = request.form['u_password']
+        if validate_username(user_name) == None:
+            return render_template('admin/register_patient.html') 
+        if validate_password(user_password) == None:
+            return render_template('admin/register_patient.html')
+
+        hashed_password = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt())
+        user = User(user_name = user_name, user_password = hashed_password, user_role = 'Patient')
+        db.session.add(user)
+
+        # add as a patient
+        contact_info = request.form['contact_info']
+        patient_email = request.form['email']
+        patient_dob = request.form['p_age']
+        patient_gender = request.form['gender']
+        patient_height = request.form['height']
+        patient_weight = request.form['weight']
+
+        if validate_contact_number(contact_info) == None:
+            return render_template('admin/register_patient.html')
+        if validate_email(patient_email) == None:
+            return render_template('admin/register_patient.html')
+        if validate_only_text_fields(str(patient_height)) == False:
+            return render_template('admin/register_patient.html')
+        if validate_only_text_fields(str(patient_weight)) == False:
+            return render_template('admin/register_patient.html')
+
+        patient_user_id = User.query.filter(User.user_name == user_name).first()
+        patient = Patient(patient_name = patient_name, contact_info = contact_info, patient_email = patient_email, patient_user_id = patient_user_id.user_id, 
+                          patient_dob = date.fromisoformat(patient_dob), patient_gender = patient_gender, patient_height = patient_height, patient_weight = patient_weight)
+        db.session.add(patient)
+        db.session.commit()
+
+        welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user.patient_relationship.patient_id)
+        db.session.add(welcome_notification)
+        return redirect('/admin') 
+
+
 @app.route('/admin/patient/<int:pid>', methods = ['GET'])
 @login_required
 def view_patient_admin(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         global date_today 
         patient = db.get_or_404(Patient, pid)
         past_appointments = Appointment.query.filter(and_(Appointment.date_time <= date_today, Appointment.patient_id == patient.patient_id)).all()
@@ -678,7 +675,7 @@ def view_patient_admin(pid):
 def admin_send_patient_message(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         patient = db.get_or_404(Patient, pid)
         message = AdminPatientNotifications(message_patient_id = patient.patient_id, admin_patient_message_type = 'Message from Admin', admin_patient_message_content = request.form['message'])
         db.session.add(message)
@@ -692,7 +689,7 @@ def admin_send_patient_message(pid):
 def view_all_patients():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         patients = Patient.query.filter(Patient.status == None).all()
         deleted_patients = Patient.query.filter(Patient.status != None).all()
         return render_template('admin/view-all-patients.html', patients = patients, deleted_patients = deleted_patients)
@@ -704,7 +701,7 @@ def view_all_patients():
 def update_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         old_data = db.get_or_404(Patient,pid)
         if request.method == 'GET':
             return render_template('admin/update_patient.html', pid = pid, old_data = old_data)
@@ -731,6 +728,11 @@ def update_patient(pid):
                 new_data.patient_blacklisted = True
                 notification = AdminPatientNotifications(message_patient_id = new_data.patient_id, admin_patient_message_type = 'Blacklisted Warning', admin_patient_message_content = 'You have been temporarily blacklisted.')
                 db.session.add(notification)
+                all_patient_appointments = Appointment.query.filter(Appointment.patient_id == pid).all()
+                for a in all_patient_appointments:
+                    if a.t.status == 'Booked':
+                        a.t.status = 'Cancelled'
+
             else:
                 new_data.patient_blacklisted = False
 
@@ -744,7 +746,7 @@ def update_patient(pid):
 def delete_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         patient = db.get_or_404(Patient, pid)
         patient.status = 'Deleted by Admin'
         db.session.commit()
@@ -757,7 +759,7 @@ def delete_patient(pid):
 def undo_delete_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         patient = db.get_or_404(Patient, pid)
         patient.status = None
         db.session.commit()
@@ -772,7 +774,7 @@ def undo_delete_patient(pid):
 def search():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if request.method == 'POST':
             input_value = request.form['query']
 
@@ -827,19 +829,19 @@ def search():
 def admin_notification_page():
     if session['user_id']:
         if current_user.user_role != 'Admin':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
 
-        unread_patient_notifications  = AdminPatientNotifications.query.filter(AdminPatientNotifications.admin_message_recieved == 0, AdminPatientNotifications.role == 'Patient').all()
-        read_patient_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.admin_message_recieved == 1, AdminPatientNotifications.role == 'Patient').all()
-        unread_doctor_notifications  = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.admin_message_recieved == 0, AdminDoctorNotifications.role == 'Patient').all()
-        read_doctor_notifications  = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.admin_message_recieved == 1, AdminDoctorNotifications.role == 'Patient').all()
+        unread_patient_notifications  = AdminPatientNotifications.query.filter(AdminPatientNotifications.admin_message_received == 0, AdminPatientNotifications.role == 'Patient').all()
+        read_patient_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.admin_message_received == 1, AdminPatientNotifications.role == 'Patient').all()
+        unread_doctor_notifications  = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.admin_message_received == 0, AdminDoctorNotifications.role == 'Doctor').all()
+        read_doctor_notifications  = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.admin_message_received == 1, AdminDoctorNotifications.role == 'Doctor').all()
 
         # Mark notifications as read
         for n in unread_patient_notifications:
-            n.admin_message_recieved = 1
+            n.admin_message_received = 1
 
         for n in unread_doctor_notifications:
-            n.admin_message_recieved = 1
+            n.admin_message_received = 1
 
         db.session.commit()
         return render_template('/admin/notification-page.html', unread_patient_notifications = unread_patient_notifications, read_patient_notifications = read_patient_notifications,
@@ -852,9 +854,9 @@ def admin_notification_page():
 def doctor_dashboard(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'GET':
             global date_today
             patients_list = []
@@ -910,9 +912,9 @@ def doctor_dashboard(did):
 def view_doctor_profile(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         return render_template('doctor/profile.html')
     else:
         return redirect('/')
@@ -922,9 +924,9 @@ def view_doctor_profile(did):
 def update_doctor_profile(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         
         if request.method == 'GET':
             return render_template('doctor/update_profile.html')
@@ -940,22 +942,30 @@ def update_doctor_profile(did):
             # validation
             if validate_username(user_name) == None:
                 return render_template('doctor/update_profile.html')
-            if validate_password(user_password) == None:
-                return render_template('doctor/update_profile.html')
+            
+            if user_password != '':
+                if validate_password(user_password) == None:
+                    return render_template('doctor/update_profile.html')
+            
             if validate_name(doctor_name) == None:
                 return render_template('doctor/update_profile.html')
+            
             if validate_description(doctor_desc) == None:
                 return render_template('doctor/update_profile.html')
+            
             if validate_contact_number(doctor_contact_number) == None:
                 return render_template('doctor/update_profile.html')
 
             doctor = db.get_or_404(Doctor, current_user.doctor_relationship.doctor_id)
             doctor.d.user_name = request.form['u_name']
-            doctor.d.user_password = request.form['u_password']
             doctor.doctor_name = request.form['d_name']
             doctor.doctor_desc = request.form['descprition']
             doctor.doctor_email = request.form['email']
             doctor.doctor_contact_number = request.form['contact_info']
+
+            if user_password != '':
+                hashed_password = bcrypt.hashpw(request.form['u_password'].encode('utf-8'), bcrypt.gensalt())
+                doctor.d.user_password = hashed_password
             db.session.commit()
             return redirect(f'/doctor/{did}')
     else:
@@ -966,15 +976,16 @@ def update_doctor_profile(did):
 def doctor_send_admin_messages(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         if request.method == 'GET':
             return render_template('doctor/admin_notify_profile_change.html', date_today = date_today)
         else:
             message_content = request.form['message']
-            message = AdminDoctorNotifications(admin_doctor_message_type = f'From Dr. {current_user.doctor_relationship.doctor_name}', admin_doctor_message_content = message_content)
+            message = AdminDoctorNotifications(admin_doctor_message_type = f'From Dr. {current_user.doctor_relationship.doctor_name}', admin_doctor_message_content = message_content, role = 'Doctor',
+                                               admin_doctor_message_id = did)
             db.session.add(message)
             db.session.commit()
             return redirect(f'/doctor/{did}')
@@ -985,9 +996,9 @@ def doctor_send_admin_messages(did):
 def view_patient_doctor(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
 
         patient = Appointment.query.filter(and_(Appointment.doctor_id == did, Appointment.patient_id == pid)).first()
@@ -1002,7 +1013,6 @@ def view_patient_doctor(pid, did):
             last_visit = past_appointments[0].date_time
         else:
             last_visit = past_appointments[-1].date_time
-        print(last_visit)
 
         return render_template('doctor/view-patient.html', patient = patient, past_appointments = past_appointments, last_visit = last_visit, upcoming_appointments = upcoming_appointments, all_past_appointments = all_past_appointments, age = age, date_today = date_today)
     else:
@@ -1013,9 +1023,9 @@ def view_patient_doctor(pid, did):
 def doctor_send_patient_message(did, pid):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         
         patient = db.get_or_404(Patient, pid)
         message = PatientDoctorNotifications(m_patient_id = patient.patient_id, m_doctor_id = current_user.doctor_relationship.doctor_id, message_type = f'Message from Dr. { current_user.doctor_relationship.doctor_name }', 
@@ -1031,9 +1041,9 @@ def doctor_send_patient_message(did, pid):
 def view_patients_by_slots(did, sid):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         
         slot = SlotSchedules.query.filter(SlotSchedules.schedule_id == sid).first()
         slot_date = slot.date
@@ -1047,9 +1057,9 @@ def view_patients_by_slots(did, sid):
 def ongoing_appointments(did, aid):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         appointment = SlotSchedules.query.filter(SlotSchedules.schedule_id == aid).first()
         patient = Patient.query.filter(Patient.patient_id == appointment.slot_patient_id).first()
@@ -1076,16 +1086,12 @@ def ongoing_appointments(did, aid):
 
             # validation
             if validate_treatment_details(diagnosis) == None:
-                print('Problem 1')
                 return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(notes) == None:
-                print('Problem 2')
                 return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(prescription) == None:
-                print('Problem 3')
                 return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
             if validate_treatment_details(tests) == None:
-                print('Problem 4')
                 return render_template('doctor/ongoing_treatment.html', patient = patient, appointment = appointment, last_visit = last_visit, age = age)
 
             appointment.slot_sch_appointment_rel.t.diagnosis = td['diagnosis'][0]
@@ -1116,6 +1122,7 @@ def ongoing_appointments(did, aid):
                         final_diet += d
 
             appointment.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Pending', doctor_instructions = final_diet, patient_id = patient.patient_id, treatment_id = appointment.slot_sch_appointment_rel.t.treatment_id)
+            appointment.slot_sch_appointment_rel.t.status = 'Completed'
             db.session.commit()
 
             return redirect(f'/doctor/{did}')
@@ -1127,9 +1134,9 @@ def ongoing_appointments(did, aid):
 def doctor_view_appointment(tid, did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
         patient = Patient.query.filter(Patient.patient_id == treatment.ap[0].p_ref.patient_id).first()
@@ -1143,9 +1150,9 @@ def doctor_view_appointment(tid, did):
 def update_treatment_details(tid, did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
         list_of_options = ['Completed', 'Booked', 'Cancelled'] 
         treatment_status = treatment.status
@@ -1212,11 +1219,15 @@ def update_treatment_details(tid, did):
 
             dn.status = 'Pending'
             dn.doctor_instructions = final_diet
+            
+            # marked_pending_for_dietetican
+            dn = DieticianNotes.query.filter(DieticianNotes.treatment_id == treatment.treatment_id).first()
+            dn.status = 'Pending'
 
             # notify patient
             message = PatientDoctorNotifications(message_content = f"Hi, Dr. { current_user.doctor_relationship.doctor_name } has updated your treatment details.", 
                                                  message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ current_user.user_id }', 
-                                                 m_patient_id = new_data.ap[0].p_ref.patient_id, appointment_id = new_data.ap[0].appointment_id, treatment_id = treatment.treatment_id)
+                                                 m_patient_id = new_data.ap[0].p_ref.patient_id, appointment_id = new_data.ap[0].appointment_id)
             db.session.add(message)
 
             db.session.commit()
@@ -1229,22 +1240,23 @@ def update_treatment_details(tid, did):
 def cancel_appointment_doctor(tid, did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         treatment = Treatment.query.filter(Treatment.treatment_id == tid).first()
         appointment = treatment.ap[0].appointment_sch
-        doctor = current_user.doctor_relationship.doctor_id
+        doctor = db.get_or_404(Doctor, did)
         patient = treatment.ap[0].p_ref
         if treatment.status == 'Booked':
-            treatment.status = 'Cancelled'
+            treatment.status = f'Cancelled by Dr. {doctor.doctor_name}'
+
         # notify the patient that the doctor has cancelled the appointment
         notification = PatientDoctorNotifications(role = 'Doctor', m_doctor_id = appointment.slot_doctor_id, m_patient_id = patient.patient_id,
                                                   message_type = 'Appointment Cancelled', 
                                                   message_content = f'Your appointment scheduled on { appointment.date } ({ appointment.s_sch.slot_name }) with Dr. { doctor.doctor_name } was cancelled.')
         db.session.add(notification)
         db.session.commit()
-        return redirect(f"/doctor/view-patient/{ patient.patient_id }/{ doctor.doctor_id }")
+        return redirect(f'/doctor/{did}')
     else:
         return redirect('/')
 
@@ -1253,25 +1265,26 @@ def cancel_appointment_doctor(tid, did):
 def doctor_notification_page(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today      
-        unread_admin_notifications = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.message_doctor_id == did, AdminDoctorNotifications.doctor_message_recieved == 0).order_by(desc(AdminDoctorNotifications.message_date_time)).all()
-        read_admin_notifications = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.message_doctor_id == did, AdminDoctorNotifications.doctor_message_recieved == 1).order_by(desc(AdminDoctorNotifications.message_date_time)).all()
-        unread_patient_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_doctor_id == did, PatientDoctorNotifications.role == 'Patient', PatientDoctorNotifications.doctor_message_recieved == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all() 
-        read_patient_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_doctor_id == did, PatientDoctorNotifications.role == 'Patient', PatientDoctorNotifications.doctor_message_recieved == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all() 
+        unread_admin_notifications = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.message_doctor_id == did, AdminDoctorNotifications.doctor_message_received == 0).order_by(desc(AdminDoctorNotifications.message_date_time)).all()
+        read_admin_notifications = AdminDoctorNotifications.query.filter(AdminDoctorNotifications.message_doctor_id == did, AdminDoctorNotifications.doctor_message_received == 1).order_by(desc(AdminDoctorNotifications.message_date_time)).all()
+        unread_patient_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_doctor_id == did, PatientDoctorNotifications.role == 'Patient', PatientDoctorNotifications.doctor_message_received == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all() 
+        read_patient_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_doctor_id == did, PatientDoctorNotifications.role == 'Patient', PatientDoctorNotifications.doctor_message_received == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all() 
         dietetics_dept = Department.query.filter(Department.department_name == 'Dietetics').first()
-        
+        likes_count = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.message_type == 'Thank_you_message').all()
+
         # marking unread notifications as read
         for message in unread_admin_notifications:
-            message.doctor_message_recieved = 1
+            message.doctor_message_received = 1
         
         for message in unread_patient_notifications:
-            message.doctor_message_recieved = 1
+            message.doctor_message_received = 1
         db.session.commit()
 
-        return render_template('doctor/doctor_notification_page.html', date_today = date_today, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, read_patient_notifications = read_patient_notifications, unread_patient_notifications = unread_patient_notifications, dietetics_dept = dietetics_dept)
+        return render_template('doctor/doctor_notification_page.html', date_today = date_today, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, read_patient_notifications = read_patient_notifications, unread_patient_notifications = unread_patient_notifications, dietetics_dept = dietetics_dept, likes_count = likes_count)
     else:
         return redirect('/')
 
@@ -1280,27 +1293,26 @@ def doctor_notification_page(did):
 def provide_availability(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'GET':
             doctor = db.get_or_404(Doctor, did)
             list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(8)]
             slots = Slot.query.all()
-
+            global date_today
             appointments_dict = {}
             for d in list_of_next_7_dates:
                 appointments_dict[d] = {}
                 for s in slots:
                     query = SlotSchedules.query.filter(SlotSchedules.date == d, SlotSchedules.schedule_slot_id == s.slot_id, SlotSchedules.slot_doctor_id == doctor.doctor_id).first()
                     appointments_dict[d][s] = query
-            return render_template('/doctor/provide_availability.html', appointments_dict = appointments_dict, doctor = doctor, slots = slots, list_of_next_7_dates = list_of_next_7_dates)
+            return render_template('/doctor/provide_availability.html', date_today = date_today, appointments_dict = appointments_dict, doctor = doctor, slots = slots, list_of_next_7_dates = list_of_next_7_dates)
         
         else:
             doctor = db.get_or_404(Doctor, did)
             availability = request.form
             a = availability.to_dict(flat=False)
-            print(a)
             slots = Slot.query.all()
 
             past_state = SlotSchedules.query.filter(and_(SlotSchedules.date > date_today, SlotSchedules.slot_doctor_id == did)).all()
@@ -1320,7 +1332,7 @@ def provide_availability(did):
                     if i in present_state_list:
                         unchanged_list += [i]
 
-                cancel_list = [] #mark an existing appointments as cancelled
+                cancel_list = [] #mark existing appointments as cancelled
                 for i in past_state_list:
                     if i not in present_state_list:
                         cancel_list += [i]
@@ -1332,9 +1344,9 @@ def provide_availability(did):
                     delete_slots_with_no_patients = SlotSchedules.query.filter(and_(SlotSchedules.slot_doctor_id == did, SlotSchedules.date == c[1], SlotSchedules.schedule_slot_id == c[0]), SlotSchedules.slot_patient_id == None).all()
                     for d in delete_slots_with_no_patients:
                         db.session.delete(d)
-
                 for c in cancel_appointments:
-                    c.status = 'Cancelled'
+                    if c.slot_patient_id != None:
+                        c.slot_sch_appointment_rel.t.status = f'Cancelled by Dr. { current_user.doctor_relationship.doctor_name }'
 
                 new_list = [] #query into db
                 for i in present_state_list:
@@ -1353,7 +1365,7 @@ def provide_availability(did):
 
             else: # new data 
                 # check if there is any patient in waiting list
-                waiting_list = AvailibilityNotifications.query.filter(AvailibilityNotifications.notif_doctor_id == did, AvailibilityNotifications.starting_date >= date_today).all()
+                waiting_list = AvailabilityNotifications.query.filter(AvailabilityNotifications.notif_doctor_id == did, AvailabilityNotifications.date >= date_today).all()
                 for s in a.keys():
                     slot_id = Slot.query.filter(Slot.slot_id == s).first()
                     for x in a[s]:
@@ -1366,7 +1378,8 @@ def provide_availability(did):
 
                         if waiting_list != []:
                             for row in waiting_list:
-                                if slot.date == row.starting_date:
+                                print(row.date)
+                                if slot.date >= row.date:                                    
                                     row.doctor_available = True
             db.session.commit()
             return redirect(f'/doctor/{ doctor.doctor_id }')
@@ -1378,34 +1391,12 @@ def provide_availability(did):
 def search_doctor_dash(did):
     if session['user_id']:
         if current_user.user_role != 'Doctor':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.doctor_relationship.doctor_id != did:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'POST':
             doctor = db.get_or_404(Doctor, did)
             input_value = request.form['query']
-
-            # appointments_by_doctor = Appointment.query.filter(Appointment.doctor_id == did).all()
-            # patients = [] #list of all patients which has booked an appointment with the doctor
-            # helper_list = [] 
-            # search_function = []
-            # appointments_by_patient_name = []
-
-            # doctors = Doctor.query.filter(or_(Doctor.doctor_name.like(f'%{input_value}%'), Doctor.doctor_contact_number.like(f'%{input_value}%'))).all()
-            # departments = Department.query.filter(Department.department_name.like(f'%{input_value}%')).all()
-
-            # for p in appointments_by_doctor:
-            #     if p.p_ref.patient_name not in helper_list:
-            #         patients += [p]
-            #         helper_list += [p.p_ref.patient_name]
-
-            # for p in patients:
-            #     search_list = Patient.query.filter(or_(Patient.patient_name.like(f'%{input_value}%'), Patient.contact_info.like(f'%{input_value}%'))).all()
-            #     if search_list != []:
-            #         search_function += search_list
-            
-            # for p in search_function:
-            #     appointments_by_patient_name += Appointment.query.filter(Appointment.patient_id == p.patient_id).all()
 
             appointments_by_doctor = Appointment.query.filter(Appointment.doctor_id == did).all()
             patients = [] #list of all patients which has booked an appointment with the doctor
@@ -1442,38 +1433,83 @@ def search_doctor_dash(did):
 # Find Dietetics
 
 @app.route('/dietetics/doctor/<int:did>')
+@login_required
 def dietetics_dashboard(did):
     pending_dn = DieticianNotes.query.filter(DieticianNotes.status == 'Pending').all()
     completed_dn = DieticianNotes.query.filter(DieticianNotes.status != 'Pending').all()
-    return render_template('DieticianDash/dietician_dashboard.html', pending_dn = pending_dn, completed_dn = completed_dn)
+    appointments_by_doctor = DieticianNotes.query.all()
+    patients = [] #list of all patients which has booked an appointment with the doctor
+    helper_list = [] 
+    for p in appointments_by_doctor:
+        if p.dn_treatment.ap[0].p_ref.patient_name not in helper_list:
+            patients += [p]
+            helper_list += [p.dn_treatment.ap[0].p_ref.patient_name]
+
+    return render_template('DieticianDash/dietician_dashboard.html', pending_dn = pending_dn, completed_dn = completed_dn, patients = patients)
 
 @app.route('/dietetician_notes/<int:did>/<int:dn_id>', methods = ['GET', 'POST'])
+@login_required
 def provide_dietician_notes(did, dn_id):
     dn = db.get_or_404(DieticianNotes, dn_id)
     patient = db.get_or_404(Patient, dn.patient_id)
     age = relativedelta(date_today, patient.patient_dob)
-    return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+
+    if request.method == 'GET':
+        return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+    else:
+        morning_plan = request.form['morning_plan']
+        afternoon_plan = request.form['afternoon_plan']
+        evening_plan = request.form['evening_plan']
+
+        if validate_treatment_details(morning_plan) == None:
+            return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+        if validate_treatment_details(afternoon_plan) == None:
+            return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+        if validate_treatment_details(evening_plan) == None:
+            return render_template('DieticianDash/provide_notes.html', dn = dn, patient = patient, age = age)
+        
+        dn.morning_plan = morning_plan
+        dn.afternoon_plan = afternoon_plan
+        dn.evening_plan = evening_plan
+        dn.status = 'Completed'
+        db.session.commit()
+    return redirect(f'/dietetics/doctor/{ current_user.doctor_relationship.doctor_id }')
+
+@app.route('/dietetician_notes/view/<int:did>/<int:dn_id>', methods = ['GET', 'POST'])
+@login_required
+def view_dietician_notes(did, dn_id):
+    dn = db.get_or_404(DieticianNotes, dn_id)
+    patient = db.get_or_404(Patient, dn.patient_id)
+    age = relativedelta(date_today, patient.patient_dob)
+    return render_template('DieticianDash/view_notes.html', dn = dn, patient = patient, age = age)
+
+@app.route('/dietetician/doctor/<int:did>/doctor-profile', methods = ['GET'])
+@login_required 
+def view_dietetician_profile(did):
+    if session['user_id']:
+        if current_user.user_role != 'Doctor':
+            return render_template('error.html', message = 'You are not authorized to view this content.')
+        if current_user.doctor_relationship.doctor_id != did:
+            return render_template('error.html', message = 'You can not view this content.')
+        return render_template('DieticianDash/profile.html')
+    else:
+        return redirect('/')
 
 # Find Patient
-
-# dashborad - register - view_profile - update_profile 
-# book_appointment - confirm_appointment - cancel-appointment - reschedule-appointment
-# notification-d-availability - notification_page - tymessage - send-notific-to-doctor
-# view-doctor - view-dept - search
 
 @app.route('/patient/<int:pid>', methods = ['GET'])
 @login_required
 def patient_dashboard(pid):
     if session.get('user_id'):
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'GET':
             global date_today
             appointments_this_week = []
-            doctors = Doctor.query.all()
-            departments = Department.query.filter(Department.department_name != 'Dietetics').all()
+            doctors = Doctor.query.filter(Doctor.status == None).all()
+            departments = Department.query.filter(Department.department_name != 'Dietetics', Department.status == None).all()
             past_appointments = SlotSchedules.query.filter(and_(SlotSchedules.slot_patient_id == pid, SlotSchedules.date < date_today)).order_by(desc(SlotSchedules.date)).all()
             appointments_today = SlotSchedules.query.filter(and_(SlotSchedules.date == date_today, SlotSchedules.slot_patient_id == pid)).order_by(SlotSchedules.schedule_slot_id).all()
             list_of_next_7_dates = [(date_today + timedelta(days = i)) for i in range(1,8)]
@@ -1510,7 +1546,8 @@ def register_patient():
         if validate_password(user_password) == None:
             return render_template('patient/register_patient.html')
 
-        user = User(user_name = user_name, user_password = user_password, user_role = 'Patient')
+        hashed_password = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt())
+        user = User(user_name = user_name, user_password = hashed_password, user_role = 'Patient')
         db.session.add(user)
 
         # add as a patient
@@ -1536,7 +1573,7 @@ def register_patient():
         db.session.add(patient)
         db.session.commit()
 
-        welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user.patient_relationship.patient_id)
+        welcome_notification = AdminPatientNotifications(admin_patient_message_type = 'Welcome Message', admin_patient_message_content = f'Hello, { user.patient_relationship.patient_name }! Thank you for choosing LDH Hospital.', message_patient_id = user.patient_relationship.patient_id, role = 'Patient')
         db.session.add(welcome_notification)
         return redirect(f'/patient/{ patient_user_id.patient_relationship.patient_id }') 
 
@@ -1545,9 +1582,9 @@ def register_patient():
 def view_profile_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         age = relativedelta(date_today, current_user.patient_relationship.patient_dob)
         return render_template('patient/patient_profile.html', age = age)
     else:
@@ -1558,9 +1595,9 @@ def view_profile_patient(pid):
 def update_patient_profile(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'GET':
             return render_template('patient/update_profile.html')
         else:
@@ -1573,30 +1610,40 @@ def update_patient_profile(pid):
             patient_email = request.form['email']
             patient_height = request.form['height']
             patient_weight = request.form['weight']
-            
+
             if validate_username(user_name) == None:
                 return render_template('patient/update_profile.html')
-            if validate_password(user_password) == None:
-                return render_template('patient/update_profile.html')
+            
+            if user_password != '':
+                if validate_password(user_password) == None:
+                    return render_template('patient/update_profile.html')
+                
             if validate_name(patient_name) == None:
                 return render_template('patient/update_profile.html')
+            
             if validate_contact_number(contact_info) == None:
                 return render_template('patient/update_profile.html')
+            
             if validate_email(patient_email) == None:
                 return render_template('patient/update_profile.html')
+            
             if validate_only_text_fields(str(patient_height)) == False:
                 return render_template('patient/update_profile.html')
+            
             if validate_only_text_fields(str(patient_weight)) == False:
                 return render_template('patient/update_profile.html')
 
             patient = db.get_or_404(Patient, current_user.patient_relationship.patient_id)
             patient.p.user_name = request.form['u_name']
-            patient.p.user_password = request.form['u_password']
             patient.patient_name = request.form['p_name']
             patient.patient_email = request.form['email']
             patient.contact_info = request.form['contact_info']
             patient.patient_height = request.form['height']
             patient.patient_weight = request.form['weight']
+            
+            if user_password != '':
+                hashed_password = bcrypt.hashpw(request.form['u_password'].encode('utf-8'), bcrypt.gensalt())
+                patient.p.user_password = hashed_password
             db.session.commit()
         return redirect(f'/patient/{ patient.patient_id }')
     else:
@@ -1607,14 +1654,14 @@ def update_patient_profile(pid):
 def book_appointment(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         if request.method == 'GET':
             global date_today 
             # departments = Department.query.filter(Department.department_name != 'Dietetics').all()
-            departments = Department.query.filter(Department.department_name != 'Dietetics').all()
-            doctors = Doctor.query.all()
+            departments = Department.query.filter(Department.department_name != 'Dietetics', Department.status == None).all()
+            doctors = Doctor.query.filter(Doctor.status == None).all()
             appointment_dict = {i:0  for i in doctors}
 
             for i in doctors:
@@ -1636,9 +1683,9 @@ def book_appointment(pid):
 def confirm_appointment(pid,did):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         
         global date_today 
         doctor = db.get_or_404(Doctor, did)
@@ -1710,9 +1757,9 @@ def confirm_appointment(pid,did):
 def cancel_appointment_patient(pid, sid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         # patient = db.get_or_404(Patient, pid)
         appointment = db.get_or_404(SlotSchedules, sid)
         if appointment.slot_sch_appointment_rel.t.status == 'Booked':
@@ -1732,9 +1779,9 @@ def cancel_appointment_patient(pid, sid):
 def reschedule_appointment(pid, did, sid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         doctor = db.get_or_404(Doctor, did)
         reschedule_this_appointment = db.get_or_404(SlotSchedules, sid)
         all_slots = Slot.query.all()
@@ -1803,9 +1850,9 @@ def reschedule_appointment(pid, did, sid):
 def patient_send_admin_messages(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         if request.method == 'GET':
             return render_template('patient/admin_notify_profile_change.html', date_today = date_today)
@@ -1821,13 +1868,13 @@ def patient_send_admin_messages(pid):
 def notify_patient_doctor_availability(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         patient = db.get_or_404(Patient, pid)
         doctor = db.get_or_404(Doctor, did)
-        notification = AvailibilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, starting_date = date_today)
+        notification = AvailabilityNotifications(notif_doctor_id = doctor.doctor_id, notif_patient_id = patient.patient_id, date = date_today)
         db.session.add(notification)
         db.session.commit()
         return redirect(f"/book-appointment/{ patient.patient_id }")
@@ -1839,27 +1886,27 @@ def notify_patient_doctor_availability(pid, did):
 def notification_page_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         patient = db.get_or_404(Patient, pid)
-        unread_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 0).order_by(desc(AdminPatientNotifications.message_date_time)).all()
-        read_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_recieved == 1).order_by(desc(AdminPatientNotifications.message_date_time)).all()
-        unread_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
-        read_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_recieved == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
-        unread_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 0).order_by(desc(AvailibilityNotifications.message_date_time)).all()
-        read_availibility_notifications = AvailibilityNotifications.query.filter(AvailibilityNotifications.starting_date >= date_today, AvailibilityNotifications.notif_patient_id == pid, AvailibilityNotifications.patient_message_recieved == 1).order_by(desc(AvailibilityNotifications.message_date_time)).all()
+        unread_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_received == 0).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+        read_admin_notifications = AdminPatientNotifications.query.filter(AdminPatientNotifications.message_patient_id == pid, AdminPatientNotifications.patient_message_received == 1).order_by(desc(AdminPatientNotifications.message_date_time)).all()
+        unread_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_received == 0).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+        read_doctor_notifications = PatientDoctorNotifications.query.filter(PatientDoctorNotifications.m_patient_id == pid, PatientDoctorNotifications.role == 'Doctor', PatientDoctorNotifications.patient_message_received == 1).order_by(desc(PatientDoctorNotifications.message_date_time)).all()
+        unread_availibility_notifications = AvailabilityNotifications.query.filter(AvailabilityNotifications.date >= date_today, AvailabilityNotifications.notif_patient_id == pid, AvailabilityNotifications.patient_message_received == 0, AvailabilityNotifications.doctor_available == 1).order_by(desc(AvailabilityNotifications.date)).all()
+        read_availibility_notifications = AvailabilityNotifications.query.filter(AvailabilityNotifications.date >= date_today, AvailabilityNotifications.notif_patient_id == pid, AvailabilityNotifications.patient_message_received == 1, AvailabilityNotifications.doctor_available == 1).order_by(desc(AvailabilityNotifications.date)).all()
 
         # Mark notifications as read
         for n in unread_doctor_notifications:
-            n.patient_message_recieved = 1
+            n.patient_message_received = 1
 
         for n in unread_admin_notifications:
-            n.patient_message_recieved = 1
+            n.patient_message_received = 1
 
         for n in unread_availibility_notifications:
-            n.patient_message_recieved = 1
+            n.patient_message_received = 1
 
         db.session.commit()
         return render_template('patient/patient_notification_page.html', patient = patient, unread_admin_notifications = unread_admin_notifications, read_admin_notifications = read_admin_notifications, unread_availibility_notifications = unread_availibility_notifications, read_availibility_notifications = read_availibility_notifications, unread_doctor_notifications = unread_doctor_notifications, read_doctor_notifications = read_doctor_notifications)
@@ -1871,9 +1918,9 @@ def notification_page_patient(pid):
 def send_thank_you_messages(pid, did, sid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         patient = db.get_or_404(Patient, pid)
         doctor = db.get_or_404(Doctor, did)
         appointment = db.get_or_404(SlotSchedules, sid)
@@ -1889,9 +1936,9 @@ def send_thank_you_messages(pid, did, sid):
 def patient_send_message_to_doctor(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         patient = db.get_or_404(Patient, pid)
         doctor = db.get_or_404(Doctor, did)
@@ -1919,14 +1966,16 @@ def patient_send_message_to_doctor(pid, did):
 def view_appointment_patient(pid, sid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         global date_today
         appointment = db.get_or_404(SlotSchedules, sid)
         doctor = appointment.slot_doctor
         past_appointments = SlotSchedules.query.filter(SlotSchedules.slot_patient_id == pid, SlotSchedules.slot_doctor_id == doctor.doctor_id, SlotSchedules.date < date_today).all()
-        return render_template('patient/view-appointment.html', doctor = doctor, appointment = appointment, past_appointments = past_appointments, date_today  = date_today)
+        dn = DieticianNotes.query.filter(DieticianNotes.treatment_id == appointment.slot_sch_appointment_rel.t.treatment_id).first()
+        print(dn)
+        return render_template('patient/view-appointment.html', doctor = doctor, appointment = appointment, past_appointments = past_appointments, date_today  = date_today, dn = dn)
     else:
         return redirect('/')
 
@@ -1935,9 +1984,9 @@ def view_appointment_patient(pid, sid):
 def patient_view_doctor(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         
         global date_today
         patient = db.get_or_404(Patient, pid)
@@ -1974,9 +2023,9 @@ def patient_view_doctor(pid, did):
 def patient_view_dept(pid, did):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         patient = db.get_or_404(Patient, pid)
         department = db.get_or_404(Department, did)
         past_appointments = {i: {} for i in department.doctors }
@@ -1998,9 +2047,9 @@ def patient_view_dept(pid, did):
 def search_patient(pid):
     if session['user_id']:
         if current_user.user_role != 'Patient':
-            return 'You are not authorized'
+            return render_template('error.html', message = 'You are not authorized to view this content.')
         if current_user.patient_relationship.patient_id != pid:
-            return 'You can not view this'
+            return render_template('error.html', message = 'You can not view this content.')
         patient = db.get_or_404(Patient, current_user.patient_relationship.patient_id)
         input_value = request.form['query']
 

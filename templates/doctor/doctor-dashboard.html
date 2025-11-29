@@ -65,7 +65,7 @@
                 </div>
         </div>
 
-        <div style ="margin-top: 50px;" id = 'appointments'>
+        <div style ="margin-top: 50px; width: 100%;" id = 'appointments'>
             <div class = 'heading-actions'>
                 <h2>Appointments</h2>
             </div>
@@ -86,17 +86,23 @@
                                 <tr>
                                     <th>S. No.</th>
                                     <th>Patient Name</th>
+                                    <th>Status</th>
                                     <th>Slot</th>
                                     <th>Treatment Details</th>
+                                    <th>Cancel</th>
                                 </tr>
 
                                 {% for a in appointments_today %}
+                                    {% if a.slot_sch_appointment_rel.t.status != 'Completed' %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
                                         <td>{{ a.slot_patient.patient_name }}</td>
+                                        <td>{{ a.slot_sch_appointment_rel.t.status }}</td>
                                         <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
                                         <td><a style="text-decoration: none;" href = '/doctor/ongoing_appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.schedule_id }}'>Add</a></td>
+                                        <td><a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/doctor/cancel-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.slot_sch_appointment_rel.t.treatment_id }}'>Cancel</a></td>
                                     </tr>
+                                    {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -113,7 +119,9 @@
                                     <th>S. No.</th>
                                     <th>Date</th>
                                     <th>Patient Name</th>
+                                    <th>Status</th>
                                     <th>Slot</th>
+                                    <th>Cancel</th>
                                 </tr>
 
                                 {% for a in appointments_this_week %}
@@ -121,7 +129,9 @@
                                         <td>{{ loop.index }}</td>
                                         <td>{{ a.date.strftime('%d/%m/%Y') }}</td>
                                         <td>{{ a.slot_patient.patient_name }}</td>
+                                        <td>{{ a.slot_sch_appointment_rel.t.status }}</td>
                                         <td>{{ a.s_sch.slot_time }} ({{ a.s_sch.slot_name }})</td>
+                                        <td><a onclick = 'confirm_cancel_or_reschedule_appointment()' href = '/doctor/cancel-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.slot_sch_appointment_rel.t.treatment_id }}'>Cancel</a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -157,7 +167,7 @@
             </div>
         </div>
 
-        <div style = 'margin-top: 50px;' id = 'availabilty'>
+        <div style = 'margin-top: 50px; width: 100%;' id = 'availabilty'>
             <div class = 'heading-actions'>
                 <h2>Availablility</h2>
 

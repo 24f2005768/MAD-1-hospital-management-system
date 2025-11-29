@@ -31,7 +31,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>                            
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -107,7 +107,7 @@
                                         <p><strong><i><a href = '/patient/view-appointment/{{ current_user.patient_relationship.patient_id }}/{{ a.schedule_id }}'>{{ a.date.strftime('%d/%m/%Y') }}</a></i></strong></p>
                                         {% if a.slot_sch_appointment_rel.t.status == 'Booked' %}
                                             <div class = 'action-buttons'>
-                                                <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'cancel-button'>Cancel</a>
+                                                <a onclick="confirm_cancel_or_reschedule_appointment()" href = '/patient/{{ current_user.patient_relationship.patient_id }}/cancel-appointment/{{ a.schedule_id }}' class = 'cancel-button'>Cancel</a>
                                                 <a href = '/patient/{{ current_user.patient_relationship.patient_id }}/reschedule-appointment/doctor/{{ a.slot_doctor_id }}/{{ a.schedule_id }}' class = 'availabilty-button'>Reschedule</a>
                                             </div>
                                         {% endif %}
@@ -155,7 +155,7 @@
                 {% for d in departments %}
                     <div class = 'dash-info-card-details'>
                         <img src = '/static/images/{{ d.department_profile_picture }}.png' height="50px" alt = 'Department Picture' onclick = "hideShowDept('{{ d.department_id }}')">
-                        <a id = '{{ d.department_id }}' onclick = "hideShowDept('{{ d.department_id }}')">{{d.department_name}}</a>
+                        <a id = '{{ d.department_id }}' onclick = "hideShowDept('{{ d.department_id }}')" style="cursor: pointer;">{{d.department_name}}</a>
                     </div>
                 {% endfor %}
             </div>

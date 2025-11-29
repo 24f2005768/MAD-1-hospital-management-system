@@ -14,26 +14,15 @@
 <body>
     <header>
         <div class = 'heading-actions'>
-            <h1><a class = 'page_heading_hyperlink' href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
+            <h1><a class = 'page_heading_hyperlink' href = '/dietetics/doctor/{{ current_user.doctor_relationship.doctor_id }}'>LDH Hospital</a></h1>
 
             <div class = 'action-buttons'>
                 <div class = 'search_bar'>
-                    
-                    <form action = '' method = 'POST'>
-                        <div class = 'flex-container'>
-                            <div>
-                                <a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/notification-page'><i id = 'notification-bell' class="bi bi-bell-fill"></i></a>
-                            </div>
-                            <div class = 'search-flex-container'>
-                                <div><input type = 'text' placeholder ="Enter Number or Name" name = 'query' id = 'search_bar'
-                                    pattern="[\w ]{1,}" title="Please add a valid input. You can only use numbers and alphabets"></div>
-                                <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
-                            </div>
-                            <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
-                            </div>
+                    <div class = 'flex-container'>
+                        <div>
+                            <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,7 +33,7 @@
         <div class = 'dash-info-cards'>
 
                 <div class = 'dash-info-card-details'>
-                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile'>Profile</a></p>
+                    <p style="margin-top: 0px; font-size: 15px; margin-bottom: 0px"><a href = '/dietetician/doctor/{{ current_user.doctor_relationship.doctor_id }}/doctor-profile'>Profile</a></p>
                 </div>
 
                 <div class = 'dash-info-card-details'>
@@ -69,32 +58,78 @@
                 </div>
 
                 <div id = 'view-upcoming-appointments'>
-                    <table>
+                    {% if pending_dn | length > 0 %}
+                        <table class="table-margins">
+                            <tbody>
+                                <tr>
+                                    <th>S. No.</th>
+                                    <th>Patient Name</th>
+                                    <th>Provide Notes</th>
+                                </tr>
+
+                                {% for p in pending_dn %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ p.dn_treatment.ap[0].p_ref.patient_name }}</td>
+                                        <td><a href = '/dietetician_notes/{{ current_user.doctor_relationship.doctor_id }}/{{ p.d_notes_id }}'>Provide</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p><em>Nothing to show</em></p>
+                    {% endif %}
+                </div>
+
+                <div id = 'view-past-appointments' style="display: none;">
+                    <table class = table-margins>
                         <tbody>
                             <tr>
                                 <th>S. No.</th>
                                 <th>Patient Name</th>
-                                <th>Provide Notes</th>
+                                <th>View Notes</th>
                             </tr>
 
-                            {% for p in pending_dn %}
+                            {% for p in completed_dn %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
                                     <td>{{ p.dn_treatment.ap[0].p_ref.patient_name }}</td>
-                                    <td>Provide</td>
+                                    <td><a href = '/dietetician_notes/view/{{ current_user.doctor_relationship.doctor_id }}/{{ p.d_notes_id }}'>View</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-
-                <div id = 'view-past-appointments' style="display: none;">2</div>
             </div>
+        </div>
 
         <div style ="margin-top: 50px; width: 100%;" id = 'patients'>
             <div class = 'heading-actions'>
                 <h2>Patients</h2>
             </div>
+
+
+                <table class="table-margins">
+                    <tbody>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Gender</th>
+                            <th>Patient Age</th>
+                            <th>Height in cm</th>
+                            <th>Weight in kg</th>
+                        </tr>
+                        
+                        {% for p in patients %}
+                            <tr>
+                                <td>{{ p.dn_treatment.ap[0].p_ref.patient_name }}</td>
+                                <td>{{ p.dn_treatment.ap[0].p_ref.patient_gender }}</td>
+                                <td>{{ p.dn_treatment.ap[0].p_ref.patient_dob }}</td>
+                                <td>{{ p.dn_treatment.ap[0].p_ref.patient_height }}</td>
+                                <td>{{ p.dn_treatment.ap[0].p_ref.patient_weight }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
         </div>
         
     </div>
@@ -106,51 +141,29 @@
     <script>
         var view_upcoming_appointments = document.getElementById('view-upcoming-appointments')
         var view_past_appointments = document.getElementById('view-past-appointments')
-        var send_message_to_patient = document.getElementById('send-message-to-patient')
         var upcoming_color_change = document.getElementById('upcoming')
         var past_color_change = document.getElementById('past')
-        var message_color_change = document.getElementById('message')
 
         function viewPatientUpcomingAppointments() {
             view_upcoming_appointments.style.display = 'block';
             view_past_appointments.style.display = 'none';
-            send_message_to_patient.style.display = 'none';
 
             upcoming_color_change.style.backgroundColor = '#2fbb8fa8'
             past_color_change.style.backgroundColor = '#269873a8'
-            message_color_change.style.backgroundColor = '#269873a8'
 
             upcoming_color_change.style.fontWeight = '600'
             past_color_change.style.fontWeight = 'normal'
-            message_color_change.style.fontWeight = 'normal'
         }
 
         function viewPatientPastAppointments() {
             view_upcoming_appointments.style.display = 'none';
             view_past_appointments.style.display = 'block';
-            send_message_to_patient.style.display = 'none';
 
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#2fbb8fa8'
-            message_color_change.style.backgroundColor = '#269873a8'
 
             upcoming_color_change.style.fontWeight = 'normal'
             past_color_change.style.fontWeight = '600'
-            message_color_change.style.fontWeight = 'normal'
-        }
-
-        function sendMessageToPatient() {
-            view_upcoming_appointments.style.display = 'none';
-            view_past_appointments.style.display = 'none';
-            send_message_to_patient.style.display = 'block';
-
-            upcoming_color_change.style.backgroundColor = '#269873a8'
-            past_color_change.style.backgroundColor = '#269873a8'
-            message_color_change.style.backgroundColor = '#2fbb8fa8'
-
-            upcoming_color_change.style.fontWeight = 'normal'
-            past_color_change.style.fontWeight = 'normal'
-            message_color_change.style.fontWeight = '600'
         }
     </script>
 

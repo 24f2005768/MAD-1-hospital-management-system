@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -74,7 +74,7 @@
                             <div class = 'button1' onclick ="sendMessageToPatient()" id = 'message'><a>Send a Message</a></div>
                         </div>
 
-                        <div id = 'view-upcoming-appointments' style="margin-top: 10px;">
+                        <div id = 'view-upcoming-appointments' style="margin-top: 10px;" class="scroll-appointments">
                             <h3 style = 'text-align: center;'>Upcoming Appointments</h3>
 
                             <div class = 'show-appointments scroll-appointments'>
@@ -84,9 +84,6 @@
                                             <li>
                                                 <div class = 'list-items'>
                                                     <p><strong><i>{{ a.date_time.strftime('%d/%m/%Y') }}</i></strong></p>
-                                                    <div class = 'action-buttons'>
-                                                        <a class = 'cancel-button' href = '/doctor/cancel-appointment/{{ current_user.doctor_relationship.doctor_id }}/{{ a.t.treatment_id }}'>Cancel</a>
-                                                    </div>
                                                 </div>
                                                 <p>Slot: {{ a.appointment_sch.s_sch.slot_time }} ({{ a.appointment_sch.s_sch.slot_name }})</p>
                                                 <p>Status: {{ a.t.status }}</p>                        
@@ -100,7 +97,7 @@
                             </div>
 
                             <h3 style = 'text-align: center;'>Past Appointments</h3>
-                            <div class = 'show-appointments scroll-appointments'>
+                            <div class = 'show-appointments'>
                                 <ol>
                                     {% for a in past_appointments %}
                                     <li>
@@ -121,7 +118,7 @@
                                     {% for a in all_past_appointments %}
                                     <li>
                                         <p><strong><em>Dr. {{ a.d_ref.doctor_name }}</em></strong></p>
-                                        <p>{{ a.date_time.strftime('%d/%m/%Y') }}</p>
+                                        <p>Date: {{ a.date_time.strftime('%d/%m/%Y') }}</p>
                                         <p>Diagnosis: {{ a.t.diagnosis }}</p>
                                         <p>Notes: {{ a.t.notes }}</p>
                                         <p>Prescription: {{ a.t.prescription }}</p>
@@ -141,7 +138,7 @@
                                 
                                 <form action = '/doctor/{{ current_user.doctor_relationship.doctor_id }}/patient/{{ patient.p_ref.patient_id }}/send-message' method = 'POST'>
                                     <div class = 'update-form-details'>
-                                        <label for = 'message'>Type Your Message: </label>
+                                        <label for = 'message'><strong>Message:</strong> </label>
                                         <input type = 'text' name = 'message' placeholder="Type Your Message" >
                                     </div>
                                     

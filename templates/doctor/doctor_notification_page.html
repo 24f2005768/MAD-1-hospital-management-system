@@ -34,7 +34,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -48,7 +48,8 @@
         <div class = 'heading-actions'>
             <h2>Notification Page</h2>
 
-            <div class = 'action-buttons'>
+            <div class = 'action-buttons' style="display: flex; justify-content: center; align-items: center;">
+                <div><i class="bi bi-heart-fill" style="color: red;"></i><span style="margin-left: 5px; margin-right: 5px;">{{ likes_count | length }}</span></div>
                 <div><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
         </div>

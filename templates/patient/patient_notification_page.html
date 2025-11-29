@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -83,7 +83,7 @@
                             {% endfor %}
                         </ol>
                     {% else %}
-                        p><em>No read notifications to show</em></p>
+                        <p><em>No read notifications to show</em></p>
                     {% endif %}
                 </div>
 
@@ -145,7 +145,7 @@
                             {% for a in unread_availibility_notifications %}
                                 <li>
                                     <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
-                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                    <p>Date: {{ a.date.strftime('%d/%m/%Y')}}</p>
                                 </li>
                             {% endfor %}
                         </ol>
@@ -160,7 +160,7 @@
                             {% for a in read_availibility_notifications %}
                                 <li>
                                     <p><em><strong>Dr. {{ a.notif_doctor.doctor_name }} has provided availabilty. Book Now!</strong></em></p>
-                                    <p>Date: {{ a.message_date_time.strftime('%d/%m/%Y')}}</p>
+                                    <p>Date: {{ a.date.strftime('%d/%m/%Y')}}</p>
                                 </li>
                             {% endfor %}
                         </ol>

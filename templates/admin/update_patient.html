@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -42,13 +42,14 @@
     <div class = 'main-content'>
         <div class = 'flex-boxes'>
             <div class = 'flex-headings'>
-                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Update Patient</h2></div>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'></h2></div>
                 <div style="position:absolute;"><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
             </div>
         </div>
 
         <div class = 'login-container'>
             <form action = '/admin/patient/update/{{ pid }}' method = 'POST'>
+                <h1>Update Patient</h1>
                 <div class = 'update-form-details'>
                     <div><label for = 'u_id'>User ID</label></div>
                     <div>
@@ -71,10 +72,24 @@
                     <div><label for = 'gender'>Gender</label></div>
                     <div>
                         <select name = 'gender' class = 'dept-dropdown'>
-                            <option value = 'Male'>Male</option>
-                            <option value = 'Female'>Female</option>
-                            <option value = 'prefer_not_to_say'>Prefer not say</option>
-                        </select>
+                            {% if old_data.patient_gender == 'Male' %}
+                                <option value = 'Male' selected>Male</option>
+                                <option value = 'Female'>Female</option>
+                                <option value = 'prefer_not_to_say'>Prefer not say</option>
+                            {% endif %}
+
+                            {% if old_data.patient_gender == 'Female' %}
+                                <option value = 'Male' selected>Female</option>
+                                <option value = 'Female'>Female</option>
+                                <option value = 'prefer_not_to_say'>Prefer not say</option>
+                            {% endif %}
+
+                            {% if old_data.patient_gender == 'prefer_not_to_say' %}
+                                <option value = 'Male' selected>Prefer Not To Say</option>
+                                <option value = 'Male'>Male</option>
+                                <option value = 'Female'>Female</option>
+                            {% endif %}
+                            </select>
                     </div>
                 </div>
 
@@ -116,7 +131,7 @@
                         <div><input type = 'radio' id = 'option2' name = 'blacklist' value = 'False' checked/></div>
                         <div><label for = 'option2'>False</label><br></div>
                     {% else %}
-                        <div><input type = 'radio' id = 'option2' name = 'blacklist' value = 'False' checked/></div>
+                        <div><input type = 'radio' id = 'option2' name = 'blacklist' value = 'False'/></div>
                         <div><label for = 'option2'>False</label><br></div>
                     {% endif %}
                 </div>

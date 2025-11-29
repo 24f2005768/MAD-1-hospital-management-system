@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -57,7 +57,7 @@
                         <label for = 'patients_name'>Patient: </label>
                         <select id = 'patients_name' name = 'patients_name' class="input_fields">
                             {% for p in patients %}
-                                <option value = '{{ p.patient_id }}' name = 'patient-name'>{{ p.patient_name }}</option>
+                                <option value = '{{ p.patient_id }}' name = 'patient-name'>{{ p.patient_name }}, ID: {{ p.patient_user_id }}</option>
                             {% endfor %}
                         </select>
                     </div>

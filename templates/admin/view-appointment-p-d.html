@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div class = 'flex-profile-photo' id = 'patient-profile' style="display: none;">
+                <div class = 'flex-profile-photo' id = 'patient-profile' style="display: none;" >
                     <img src = '/static/images/{{ patient.patient_profile_picture }}.png' alt = 'Patient Image' width="200px" height="200px">
                     <div class = 'profile-content-patient-info'>
 
@@ -214,7 +214,6 @@
             view_upcoming_appointments.style.display = 'none';
             view_past_appointments.style.display = 'none';
             send_message_to_patient.style.display = 'block';
-            send_message_to_patient.style.marginTop = '25px';
 
             upcoming_color_change.style.backgroundColor = '#269873a8'
             past_color_change.style.backgroundColor = '#269873a8'

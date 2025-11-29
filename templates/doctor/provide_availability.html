@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -50,7 +50,8 @@
                 </div>
             </div>
             <div>
-                <form action = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' method="POST">                  
+                <form action = '/doctor/provide_slots/{{ current_user.doctor_relationship.doctor_id }}' method="POST">    
+                    <p><em>You can not modify today's availabilty</em></p>              
                     <table>
                         <tbody>
                             <tr>
@@ -62,14 +63,26 @@
 
                             <tr>
                                 {% for d in list_of_next_7_dates %}
+                                    {% if d == date_today %}
                                         <td>{{ d.strftime('%d/%m/%Y') }}</td>
                                         {% for s in slots %}
                                             {% if appointments_dict[d][s] != None %}
-                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' checked>{{ s.slot_time }}</td>
+                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' checked disabled>{{ s.slot_time }}</td>
                                             {% else %}
-                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}'>{{ s.slot_time }}</td>
+                                                <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' disabled>{{ s.slot_time }}</td>
                                             {% endif %}
                                         {% endfor %}
+                                    {% else %}
+
+                                    <td>{{ d.strftime('%d/%m/%Y') }}</td>
+                                    {% for s in slots %}
+                                        {% if appointments_dict[d][s] != None %}
+                                            <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}' checked>{{ s.slot_time }}</td>
+                                        {% else %}
+                                            <td><input type = 'checkbox' value = '{{ d }}' name = '{{ s.slot_id }}'>{{ s.slot_time }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                             </tr>
                                 {% endfor %}
                         </tbody>

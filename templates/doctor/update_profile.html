@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -61,7 +61,7 @@
 
                     <div class = 'update-form-details'>
                         <label for = 'u_password'>Password</label>
-                        <input class = 'input_fields' type = 'text' name = 'u_password' value = '{{ current_user.user_password }}' placeholder = "User Password"
+                        <input class = 'input_fields' type = 'text' name = 'u_password' placeholder = "Password"
                         maxlength="32" pattern="[\w@#$&.\-]{5,32}"
                         title="Please enter a valid password. Your password should have a minimum length of 5, and a maximum length of 32. You can only use these special characters @#$&.-_" 
                         />

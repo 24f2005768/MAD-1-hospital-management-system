@@ -1,0 +1,11 @@
+bcrypt==5.0.0
+Flask==3.1.1
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+Jinja2==3.1.6
+pyIsEmail==2.0.1
+python-dateutil==2.9.0.post0
+SQLAlchemy==2.0.41
+sqlalchemy-orm==1.2.10
+types-python-dateutil==2.9.0.20241206
+Werkzeug==3.1.3

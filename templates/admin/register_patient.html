@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Patient</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class = 'heading-actions'>
+            <h1><a class = 'page_heading_hyperlink' href = ''>LDH Hospital</a></h1>
+    </header>
+
+    <div class = 'main-content'>
+        <div class = 'flex-boxes'>
+            <div class = 'flex-headings'>
+                <div id = 'center-heading' style="width: 60%;"><h2 id = 'center-heading'>Register Patient</h2></div>
+                <div style="position:absolute;"><button class = 'back-button' onclick = 'history.back()'>Go Back</button></div>
+            </div>
+        </div>
+
+        <div class = 'login-container'>
+            
+            <div></div>
+            <form action = '/admin/register/patient' method = 'POST'>
+                <div class = 'update-form-details'>
+                    <div><label for = 'u_name'>Username</label></div>
+                    <div>
+                        <input  class = 'input_fields' type = 'text' name = 'u_name' 
+                        placeholder ="Username*" 
+                        maxlength="32" pattern="[\w@#$&.\-]{1,32}"
+                        title="Please enter a valid username. Your username should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_" required>
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'u_password'>Password</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'text' name = 'u_password' 
+                        placeholder = "Password*" 
+                        maxlength="32" pattern="[\w@#$&.\-]{6,32}"
+                        title="Please enter a valid password. Your password should have a minimum length of 6, and a maximum length of 32. You can only use these special characters @#$&.-_" required />
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'p_name'>Name</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'text' name = 'p_name' 
+                        placeholder = "Patient's name*" 
+                        maxlength="64" pattern="[\a ]{1,64}"
+                        title="Please enter a valid name. Your name should have a maximum length of 64 and you can only use alphabets and space" required />
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'gender'>Gender</label></div>
+                    <div>
+                        <select name = 'gender' class = 'dept-dropdown'>
+                            <option value = 'Male'>Male</option>
+                            <option value = 'Female'>Female</option>
+                            <option value = 'prefer_not_to_say'>Prefer not say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'p_age'>DOB</label></div>
+                    <div><input class = 'input_fields' type = 'date' name = 'p_age' 
+                        placeholder = "Date of Birth*" required/></div>
+                </div>
+                
+                <div class = 'update-form-details'>
+                    <div><label for = 'contact_info'>Contact Number</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'tel' name = 'contact_info' 
+                        maxlength="10" minlength="10" pattern="[\d]{10}"
+                        title="Please enter a valid 10 digit number"
+                        placeholder = "Contact number*" required />
+                    </div>
+                </div>
+                
+                <div class = 'update-form-details'>
+                    <div><label for = 'email'>Email</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'email' name = 'email' 
+                        placeholder = "Email"/>
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'height'>Height in cm</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'number' name = 'height' 
+                        pattern="[\d]{1,}"
+                        title="Please enter a valid height"
+                        placeholder = "Height in cm" min="0"/>
+                    </div>
+                </div>
+
+                <div class = 'update-form-details'>
+                    <div><label for = 'weight'>Weight in kg</label></div>
+                    <div>
+                        <input class = 'input_fields' type = 'number' name = 'weight' 
+                        pattern="[\d]{1,}"
+                        title="Please enter a valid weight"
+                        placeholder = "Weight in kg" min="0"/>
+                    </div>
+                </div>
+
+                <input type = 'submit' value = 'Submit' class = 'login-button'>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy;  2025 LDH Hospital
+    </footer>
+</body>
+</html>

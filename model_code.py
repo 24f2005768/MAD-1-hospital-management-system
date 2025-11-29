@@ -2,60 +2,58 @@ from app import *
 
 # # if database file is deleted, run this file to populate db
 
-# , patient_height = , patient_weight = , patient_blood_pressure = , patient_blood_sugar_level =
-# patients 
 
-user1 = User(user_name = 'Shr_arya', user_password = '921369', user_role = 'Patient')
+user1 = User(user_name = 'Shr_arya', user_password = bcrypt.hashpw('aryaa'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user1.patient_relationship = Patient(patient_name = 'Arya Sharma', contact_info = '1783731407', patient_email = 'a@email.com', patient_age = 18, patient_gender = 'Male' , patient_height = 186, patient_weight = 65, patient_dob = date(2007, 10, 3))
 user1.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user2 = User(user_name = 'Little_deer', user_password = 'kriti', user_role = 'Patient')
+user2 = User(user_name = 'Little_deer', user_password = bcrypt.hashpw('kriti'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user2.patient_relationship = Patient(patient_name = 'Kriti Tiwari', contact_info = '4191156744', patient_email = 'k@email.com', patient_age = 21, patient_gender = 'Female', patient_height = 168, patient_weight = 60, patient_dob = date(2004, 9, 18))
 user2.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
-user3 = User(user_name = 'Mummy', user_password = 'mommy', user_role = 'Patient')
+user3 = User(user_name = 'Saroj', user_password = bcrypt.hashpw('saroj'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user3.patient_relationship = Patient(patient_name = 'Saroj Mishra', contact_info = '5865194463', patient_email = 's@email.com', patient_age = 47, patient_gender = 'Female', patient_height = 162, patient_weight = 75, patient_dob = date(1976, 6, 22))
 user3.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
-user4 = User(user_name = 'Aadi', user_password = 'aaditya', user_role = 'Patient')
+user4 = User(user_name = 'Aadi', user_password = bcrypt.hashpw('aaditya'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user4.patient_relationship = Patient(patient_name = 'Aadi Trivedi', contact_info = '8030974434', patient_email = 'a@email.com', patient_age = 20, patient_gender = 'Male', patient_height = 183, patient_weight = 64, patient_dob = date(2005, 10, 4))
 user4.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user5 = User(user_name = 'Shruti', user_password = 'shruti', user_role = 'Patient')
+user5 = User(user_name = 'Shruti', user_password = bcrypt.hashpw('shruti'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user5.patient_relationship = Patient(patient_name = 'Shruti Hasan', contact_info = '2155059723', patient_email = 'sh@email.com', patient_age = 24, patient_gender = 'Female', patient_height = 170, patient_weight = 65, patient_dob = date(2001, 8, 10))
 user5.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
-user6 = User(user_name = 'Dheeraj', user_password = 'dheeraj', user_role = 'Patient')
+user6 = User(user_name = 'Dheeraj', user_password = bcrypt.hashpw('dheeraj'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user6.patient_relationship = Patient(patient_name = 'Dheeraj Chauhan', contact_info = '5207633762', patient_email = 'dc@gmail.com', patient_age = 41, patient_gender = 'Male', patient_height = 155, patient_weight = 52, patient_dob = date(1984, 3, 11)) 
 user6.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user7 = User(user_name = 'Jason', user_password = 'jason', user_role = 'Patient')
+user7 = User(user_name = 'Jason', user_password = bcrypt.hashpw('jason'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user7.patient_relationship = Patient(patient_name = 'Jason Perry', contact_info = '4240629978', patient_email = 'jp@gmail.com', patient_age = 32, patient_gender = 'Male', patient_height = 166, patient_weight = 68, patient_dob = date(2013, 4, 13)) 
 user7.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user8 = User(user_name = 'Tom', user_password = 'tommy', user_role = 'Patient')
+user8 = User(user_name = 'Tom', user_password = bcrypt.hashpw('tommy'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user8.patient_relationship = Patient(patient_name = 'Tom Hilfiger', contact_info = '9355035218', patient_email = 'th@gmail.com', patient_age = 22, patient_gender = 'Male', patient_height = 175, patient_weight = 98, patient_dob = date(2003, 5, 4)) 
 user8.patient_relationship.patient_pfp = ProfilePictures(name = 'male_patient', role = 'Patient')
 
-user9 = User(user_name = 'Viena', user_password = 'vienaa', user_role = 'Patient')
+user9 = User(user_name = 'Viena', user_password = bcrypt.hashpw('viena'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user9.patient_relationship = Patient(patient_name = 'Viena Skye', contact_info = '9576063488', patient_email = 'vs@gmail.com', patient_age = 31, patient_gender = 'Female', patient_height = 140, patient_weight = 70, patient_dob = date(1994, 10, 7)) 
 user9.patient_relationship.patient_pfp = ProfilePictures(name = 'female_patient', role = 'Patient')
 
 # for pediatrics
 
-user10 = User(user_name = 'Kashish', user_password = 'kashish', user_role = 'Patient')
+user10 = User(user_name = 'Kashish', user_password = bcrypt.hashpw('kashish'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user10.patient_relationship = Patient(patient_name = 'Kashish Mathur', contact_info = '1149508564', patient_email = 'km@gmail.com', patient_age = 11, patient_gender = 'Female', patient_height = 149, patient_weight = 82, patient_dob = date(2014, 11, 6)) 
 user10.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
 
-user11 = User(user_name = 'Rudraksh', user_password = 'rudraksh', user_role = 'Patient')
+user11 = User(user_name = 'Rudraksh', user_password = bcrypt.hashpw('rudraksh'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user11.patient_relationship = Patient(patient_name = 'Rudraksh Patel', contact_info = '3127523027', patient_email = 'rp@gmail.com', patient_age = 1, patient_gender = 'Male', patient_height = 56, patient_weight = 4.5, patient_dob = date(2024, 9, 4)) 
 user11.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
 
-user12 = User(user_name = 'Vipul', user_password = 'vipul', user_role = 'Patient')
+user12 = User(user_name = 'Vipul', user_password = bcrypt.hashpw('vipul'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user12.patient_relationship = Patient(patient_name = 'Vipul Raj', contact_info = '1024037587', patient_email = 'vr@gmail.com', patient_age = 15, patient_gender = 'Male', patient_height = 130, patient_weight = 48, patient_dob = date(2010, 1, 4)) 
 user12.patient_relationship.patient_pfp = ProfilePictures(name = 'boy', role = 'Patient')
 
-user13 = User(user_name = 'Anamika', user_password = 'anamika', user_role = 'Patient')
+user13 = User(user_name = 'Anamika', user_password = bcrypt.hashpw('anamika'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Patient')
 user13.patient_relationship = Patient(patient_name = 'Anamika Sen', contact_info = '9040428872', patient_email = 'as@gmail.com', patient_age = 7, patient_gender = 'Female', patient_height = 100, patient_weight = 25, patient_dob = date(2018, 7, 30)) 
 user13.patient_relationship.patient_pfp = ProfilePictures(name = 'girl', role = 'Patient')
 
@@ -127,61 +125,66 @@ db.session.add(welcome_notification)
 
 # # doctors and departments 
 
-dept1 = Department(department_name = 'Cardiology', department_description = 'LDH offers a comprehensive cardiology program dedicated to the prevention, diagnosis, and treatment of a full spectrum of heart-related conditions. We provide a complete breadth of both invasive and noninvasive cardiovascular services, supported by ongoing research initiatives. Our highly skilled clinicians specialize in managing complex cases, delivering individualized treatment plans tailored to each patient"s unique needs. This patient-centered approach ensures that every individual receives the most advanced and appropriate care for their specific cardiovascular health journey.')
+dept1 = Department(department_name = 'Cardiology')
 dept1.department_pfp = ProfilePictures(name = 'Cardiology', role = 'Department')
 db.session.add(dept1)
 
-user1 = User(user_name = 'Ganesh_heart', user_password = 'ganesh', user_role = 'Doctor')
+user1 = User(user_name = 'Ganesh_heart', user_password = bcrypt.hashpw('ganesh'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user1.doctor_relationship = Doctor(doctor_name = 'Ganesh Rathi', doctor_contact_number = '5746160792', doctor_gender = 'Male', doctor_dob = date(1978, 3, 12),
-                                   doctor_email = 'g@email.com', department_id = 1, doctor_desc = "Dr. Ganesh is a board-certified cardiologist with over 25 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Ganesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
+                                   doctor_email = 'g@email.com', department_id = 1)
 user1.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
 
-user2 = User(user_name = 'Vignesh_heart', user_password = 'vignesh', user_role = 'Doctor')
+user2 = User(user_name = 'Vignesh_heart', user_password = bcrypt.hashpw('vignesh'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user2.doctor_relationship = Doctor(doctor_name = 'Vignesh Kumar', doctor_contact_number = '8166956143', doctor_gender = 'Male', doctor_dob = date(1966, 2, 14),
-                                   doctor_email = 'v@email.com', department_id = 1, doctor_desc = "Dr. Vignesh is a board-certified cardiologist with over 7 years of experience specializing in interventional cardiology. He is highly skilled in performing complex coronary interventions and has a special clinical interest in preventive cardiology and heart disease management in women. Dr. Vignesh is dedicated to providing compassionate, patient-centered care, developing personalized treatment plans to help his patients achieve their best possible heart health.")
+                                   doctor_email = 'v@email.com', department_id = 1)
 user2.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
 
 
-dept2 = Department(department_name = 'Pediatrics', department_description = "LDH offers a comprehensive pediatrics program and dedicated pediatricians, all of whom are board-certified and have pursued advanced training in specialized fields such as cardiology and dermatology. This unique combination of general pediatrics and specialized knowledge allows our team to work collaboratively, offering comprehensive care for your child. Together, our pediatricians and pediatric specialists are equipped to accurately diagnose, effectively treat, and proactively help prevent a wide spectrum of childhood conditions, illnesses, and injuries, ensuring the highest standard of health from infancy through adolescence.")
+dept2 = Department(department_name = 'Pediatrics')
 dept2.department_pfp = ProfilePictures(name = 'Pediatrics', role = 'Department')
 db.session.add(dept2)
 
-user3 = User(user_name = 'Preeti_pediatrics', user_password = 'preeti', user_role = 'Doctor')
+user3 = User(user_name = 'Preeti_pediatrics', user_password = bcrypt.hashpw('preeti'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user3.doctor_relationship = Doctor(doctor_name = 'Preeti Rai', doctor_contact_number = '9370595052', doctor_gender = 'Female', doctor_dob = date(1988, 3, 17),
-                                   doctor_email = 'p@email.com', department_id = 2, doctor_desc = "Dr. Preeti is a board-certified pediatrician with over 19 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for her warm and compassionate approach, she specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Preeti believes in building strong, trusting relationships with both her young patients and their families to foster a lifetime of good health.")
+                                   doctor_email = 'p@email.com', department_id = 2)
 user3.doctor_relationship.doctor_pfp = ProfilePictures(name = 'FemaleDoctor1', role = 'Doctor')
 
-user4 = User(user_name = 'Raju_pediatrics', user_password = 'raju', user_role = 'Doctor')
+user4 = User(user_name = 'Raju_pediatrics', user_password = bcrypt.hashpw('rajuu'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user4.doctor_relationship = Doctor(doctor_name = 'Raju Desai', doctor_contact_number = '7996673737', doctor_gender = 'Male', doctor_dob = date(1973, 5, 8),
-                                   doctor_email = 'r@email.com', department_id = 2, doctor_desc = "Dr. Raju is a board-certified pediatrician with over 10 years of experience dedicated to the health and well-being of children, from newborns to young adults. Known for his warm and compassionate approach, he specializes in preventive care, childhood immunizations, and the management of common childhood illnesses like asthma and allergies. Dr. Raju believes in building strong, trusting relationships with both his young patients and their families to foster a lifetime of good health.")
+                                   doctor_email = 'r@email.com', department_id = 2)
 user4.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
 
 
-dept3 = Department(department_name = 'General Surgery', department_description = "LDH's General Surgery department is comprised of highly experienced senior surgeons and a specialized clinical team dedicated to achieving optimal patient outcomes. We utilize a modern approach, employing advanced surgical techniques and technology to ensure precision and promote excellent surgical results. Our expertise encompasses the comprehensive care of a wide range of acute and complex conditions, including diseases of the oesophagus, stomach, colon, liver, gallbladder, bile ducts, abdomen, and thyroid gland, as well as the repair of hernias. You can trust our skilled team to provide compassionate and effective surgical solutions.")
+dept3 = Department(department_name = 'General Surgery')
 dept3.department_pfp = ProfilePictures(name = 'General Surgery', role = 'Department')
 db.session.add(dept3)
 
-user5 = User(user_name = 'Dev_surgery', user_password = 'dev', user_role = 'Doctor')
+user5 = User(user_name = 'Dev_surgery', user_password = bcrypt.hashpw('devvvv'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user5.doctor_relationship = Doctor(doctor_name = 'Dev Sharma', doctor_contact_number = '1059832795', doctor_gender = 'Male', doctor_dob = date(1998, 4, 10),
-                                   doctor_email = 'd@email.com', department_id = 3, doctor_desc = "Dr. Dev is a board-certified General Surgeon with over 15 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Dev is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
+                                   doctor_email = 'd@email.com', department_id = 3)
 user5.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
 
-user6 = User(user_name = 'Vikas_surgery', user_password = 'vikas', user_role = 'Doctor')
+user6 = User(user_name = 'Vikas_surgery', user_password = bcrypt.hashpw('vikas'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user6.doctor_relationship = Doctor(doctor_name = 'Vikas Jindal', doctor_contact_number = '2073880656', doctor_gender = 'Male', doctor_dob = date(1980, 6, 12),
-                                   doctor_email = 'vk@email.com', department_id = 3, doctor_desc = "Dr. Vikas is a board-certified General Surgeon with over 13 years of experience performing a wide range of abdominal procedures. His clinical expertise includes minimally invasive surgery for conditions of the gallbladder, colon, and hernias, with a dedicated focus on patient safety and achieving optimal recovery outcomes. Dr. Vikas is committed to providing clear communication and compassionate care, ensuring his patients feel confident and well-informed at every step of their surgical journey.")
+                                   doctor_email = 'vk@email.com', department_id = 3)
 user6.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
 
-dept4 = Department(department_name = 'Gastrology', department_description = "LDH's Gastrology department is dedicated to providing high-quality, comprehensive care for a wide spectrum of gastrointestinal conditions, including colon cancer, acid reflux, and other complex digestive disorders. We offer a full range of advanced diagnostic and therapeutic procedures to accurately identify and effectively manage issues affecting your digestive health. Our expertise also extends to personalized nutritional guidance, ensuring a holistic approach to your well-being. You can trust our specialized team to deliver exceptional, patient-centered care for all your digestive health needs.")
+dept4 = Department(department_name = 'Gastrology')
 dept4.department_pfp = ProfilePictures(name = 'Gastrology', role = 'Department')
 db.session.add(dept4)
 
-dept5 = Department(department_name = 'Dietetics', department_description = '')
+user8 = User(user_name = 'Rohit_gastrlogy', user_password = bcrypt.hashpw('rohit'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
+user8.doctor_relationship = Doctor(doctor_name = 'Rohit Sharma', doctor_contact_number = '1234567890', doctor_gender = 'Male', doctor_dob = date(1998, 2, 9),
+                                   doctor_email = 'r@email.com', department_id = 4)
+user8.doctor_relationship.doctor_pfp = ProfilePictures(name = 'MaleDoctor', role = 'Doctor')
+
+dept5 = Department(department_name = 'Dietetics')
 dept5.department_pfp = ProfilePictures(name = 'Dietetics', role = 'Department')
 db.session.add(dept5)
 
-user7 = User(user_name = 'Tanuja_dietetics', user_password = 'tanuja', user_role = 'Doctor')
+user7 = User(user_name = 'Tanuja_dietetics', user_password = bcrypt.hashpw('tanuja'.encode('utf-8'), bcrypt.gensalt()), user_role = 'Doctor')
 user7.doctor_relationship = Doctor(doctor_name = 'Tanuja Rathore', doctor_contact_number = '8336977903', doctor_gender = 'Female', doctor_dob = date(1988, 3, 17),
-                                   doctor_email = 't@email.com', department_id = 5, doctor_desc = "")
+                                   doctor_email = 't@email.com', department_id = 5)
 user7.doctor_relationship.doctor_pfp = ProfilePictures(name = 'FemaleDoctor1', role = 'Doctor')
 
 db.session.add(user1)
@@ -191,6 +194,7 @@ db.session.add(user4)
 db.session.add(user5)
 db.session.add(user6)
 db.session.add(user7)
+db.session.add(user8)
 db.session.commit()
 
 doctors = Doctor.query.all()
@@ -246,7 +250,10 @@ book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient4.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
-book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot1)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
 db.session.add(message)
@@ -255,7 +262,10 @@ book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient5.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient5.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
-book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient5.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient5.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot2)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
 db.session.add(message)
@@ -264,7 +274,10 @@ book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient3.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient3.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
-book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient3.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient3.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot3)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
 db.session.add(message)
@@ -288,7 +301,10 @@ book_slot1 = available_slots[0]
 book_slot1.slot_patient_id = patient2.patient_id
 book_slot1.slot_sch_appointment_rel = Appointment(date_time = available_slots[0].date, doctor_id = doctor.doctor_id, patient_id = patient2.patient_id)
 book_slot1.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Chest Pain', prescription = 'Tablets', notes = 'Patient is experiencing chest pain since 5 days', tests = '--', status = 'Completed')
-book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient2.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot1.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient2.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot1)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot1.slot_patient_id)
 db.session.add(message)
@@ -297,7 +313,10 @@ book_slot2 = available_slots[1]
 book_slot2.slot_patient_id = patient1.patient_id
 book_slot2.slot_sch_appointment_rel = Appointment(date_time = available_slots[1].date, doctor_id = doctor.doctor_id, patient_id = patient1.patient_id)
 book_slot2.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Follow up', prescription = '--', notes = 'Follow up after surgery', tests = '--', status = 'Completed')
-book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient1.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot2.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient1.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot2)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot2.slot_patient_id)
 db.session.add(message)
@@ -306,7 +325,10 @@ book_slot3 = available_slots[2]
 book_slot3.slot_patient_id = patient4.patient_id
 book_slot3.slot_sch_appointment_rel = Appointment(date_time = available_slots[2].date, doctor_id = doctor.doctor_id, patient_id = patient4.patient_id)
 book_slot3.slot_sch_appointment_rel.t = Treatment(diagnosis = 'Regular Checkup', prescription = 'Tablets', notes = 'Regular Checkup', tests = '--', status = 'Completed')
-book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', morning_plan = 'Non-oily food', afternoon_plan = 'Non-oily food', evening_plan = 'Non-oily food')
+book_slot3.slot_sch_appointment_rel.t.treatment_dn = DieticianNotes(status = 'Completed', patient_id = patient4.patient_id, doctor_instructions = 'restricted-normal', 
+                                                                    morning_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    afternoon_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 
+                                                                    evening_plan = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
 db.session.add(book_slot3)
 message = PatientDoctorNotifications(message_content = f"Hi, now you can check your treatment details for today's appointment with { doctor.doctor_name }.", message_type = 'Treatment Details', role = 'Doctor', m_doctor_id = f'{ doctor.doctor_id }', m_patient_id = book_slot3.slot_patient_id)
 db.session.add(message)

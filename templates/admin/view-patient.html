@@ -30,7 +30,7 @@
                                 <div><button type="submit" id = 'search-icon'><i class="bi bi-search"></i></button></div>
                             </div>
                             <div>
-                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" onclick="ConfirmLogout()"></i></a>
+                                <a href = '/logout' onclick="ConfirmLogout()"><i id = 'logout-button' class="bi bi-box-arrow-right" style="font-size: 23px;" ></i></a>
                             </div>
                         </div>
                     </form>
@@ -53,6 +53,7 @@
                 <div class = 'flex-profile-photo'>
                     <img src = '/static/images/{{ patient.patient_profile_picture }}.png' alt = 'Patient Image' width="170px">
                     <div class = 'profile-content-patient-info' style="margin-bottom: 25px;">
+                        <p><strong>ID:</strong> {{ patient.patient_user_id }}</p>
                         <p><strong>Patient Name:</strong> {{ patient.patient_name }}</p>
                         <p><strong>DOB:</strong> {{ patient.patient_dob.strftime('%d/%m/%Y') }}</p>
                         <p><strong>Age:</strong> {{ age.years }} years, {{ age.months }} months, {{ age.days }} days</p>
@@ -84,7 +85,7 @@
                                         <li>
                                             <p><em><strong>Appointment ID:</strong></em> {{ a.appointment_id }}</p>
                                             <p><strong>Date:</strong> {{ a.date_time.strftime('%d/%m/%Y') }}</p>
-                                            <p><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'><strong>Doctor:</strong> {{ a.d_ref.doctor_name }}</a></p>
+                                            <p><strong>Doctor:</strong><a href = '/admin/doctor/{{ a.d_ref.doctor_id }}'> {{ a.d_ref.doctor_name }}</a></p>
                                             <p><strong>Status:</strong> {{ a.t.status }}</p>
                                         </li>
                                     {% endfor %}
@@ -118,12 +119,12 @@
                             <div class = 'message-container'>
                                 <h3>Message</h3>
                                 <div>
-                                    <p>To: {{ patient.patient_name }}</p>
-                                    <p>Date: {{ date_today.strftime('%d/%m/%Y') }}</p>
+                                    <p><strong>To:</strong> {{ patient.patient_name }}</p>
+                                    <p><strong>Date:</strong> {{ date_today.strftime('%d/%m/%Y') }}</p>
                                 
                                 <form action = '/admin/patient/{{ patient.patient_id }}/send-message' method = 'POST'>
                                     <div class = 'update-form-details'>
-                                        <label for = 'message'>Type Your Message: </label>
+                                        <label for = 'message'><strong>Message:</strong> </label>
                                         <input type = 'text' name = 'message' placeholder="Type Your Message" >
                                     </div>
                                     

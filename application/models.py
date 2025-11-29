@@ -5,14 +5,14 @@ import bcrypt
 # User Specific Tables: User, Patient, Doctor
 # Doctor Specific Tables: Appointment, Treatment, SlotSchedules
 # Slots
-# Patient-Doctor Notification Tables: AvailibilityNotifications, PatientDoctorNotifications
+# Patient-Doctor Notification Tables: AvailabilityNotifications, PatientDoctorNotifications
 # Patient-Admin Notification Tables: AdminPatientNotifications
 # Doctor-Admin Notification Tables: AdminDoctorNotifications
 # ProfilePictures
 
-# relationshps
-#  User - Doctor, User - Patient, User - Admin, Appointment - Treatment : One-to-one
-#  Department - Doctor : One-to-many
+# One-to-One relationships: User-Admin, User-Doctor, User-Patient, Appointment-Treatment, Treatment-DieticianNotes, Appointment-SlotSchedules
+# One-to-Many relationships: ProfilePictures-Department, ProfilePictures-Doctor, ProfilePictures-Patients, Slot-SlotSchedules, Patient-AvailabilityNotifications, 
+# Doctor-AvailabilityNotifications, Doctor-PatientDoctorNotifications, Patient-PatientDoctorNotifications, Doctor-AdminDoctorNotifications , Patient-AdminPatientNotifications 
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -20,8 +20,6 @@ class User(db.Model):
     user_name = db.Column(db.String(32), nullable = False, unique = True)
     user_password = db.Column(db.String(32), nullable = False)
     user_role = db.Column(db.String)
-
-    # user_password = bcrypt.hashpw(user_password.encode('utf-8'), bcrypt.gensalt().decode('utf-8'))
 
     admin_relationship = db.relationship('Admin', back_populates = 'a', uselist = False)
     doctor_relationship = db.relationship('Doctor', back_populates = 'd', uselist = False)
@@ -50,7 +48,7 @@ class Department(db.Model):
     __tablename__ = 'department'
     department_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     department_name = db.Column(db.String, nullable = False)
-    department_description = db.Column(db.String)
+    department_description = db.Column(db.String, default = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum')
     status = db.Column(db.String) # DeletedbyAdmin
 
     department_profile_picture = db.Column(db.Integer, db.ForeignKey('profile_pictures.name'))
@@ -66,7 +64,7 @@ class Doctor(db.Model):
     doctor_email = db.Column(db.String)
     doctor_dob = db.Column(db.Date, nullable = False)
     doctor_blacklisted = db.Column(db.Boolean, default = False)
-    doctor_desc = db.Column(db.String)
+    doctor_desc = db.Column(db.String, default = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum')
     doctor_gender = db.Column(db.String)
     status = db.Column(db.String) # DeletedbyAdmin
 
@@ -78,7 +76,7 @@ class Doctor(db.Model):
     d = db.relationship('User', back_populates = 'doctor_relationship')
     appointment_d = db.relationship('Appointment', back_populates = 'd_ref')
     doctor_slot = db.relationship('SlotSchedules', back_populates = 'slot_doctor')
-    doctor_notif = db.relationship('AvailibilityNotifications', back_populates = 'notif_doctor')
+    doctor_notif = db.relationship('AvailabilityNotifications', back_populates = 'notif_doctor')
     doctor_pfp = db.relationship('ProfilePictures', back_populates = 'pfp_doctor')
     doctor_pdn = db.relationship('PatientDoctorNotifications', back_populates = 'pdn_doctor')
     doctor_adn = db.relationship('AdminDoctorNotifications', back_populates = 'adn_doctor')
@@ -103,7 +101,7 @@ class Patient(db.Model):
     p = db.relationship('User', back_populates = 'patient_relationship')
     appointment_p = db.relationship('Appointment', back_populates = 'p_ref', uselist = False)
     patient_slot = db.relationship('SlotSchedules', back_populates = 'slot_patient')
-    patient_notif = db.relationship('AvailibilityNotifications', back_populates = 'notif_patient')
+    patient_notif = db.relationship('AvailabilityNotifications', back_populates = 'notif_patient')
     patient_pfp = db.relationship('ProfilePictures', back_populates = 'pfp_patient')
     patient_pdn = db.relationship('PatientDoctorNotifications', back_populates = 'pdn_patient')
     patient_apn = db.relationship('AdminPatientNotifications', back_populates = 'apn_patient')
@@ -158,13 +156,12 @@ class SlotSchedules(db.Model):
     s_sch = db.relationship('Slot', back_populates = 's_schedule')
     slot_sch_appointment_rel = db.relationship('Appointment', back_populates = 'appointment_sch', uselist = False)
 
-class AvailibilityNotifications(db.Model):
-    __tablename__ = 'availibility_notifications'
+class AvailabilityNotifications(db.Model):
+    __tablename__ = 'availability_notifications'
     notification_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    starting_date = db.Column(db.Date, default = datetime.now)
-    patient_message_recieved = db.Column(db.Boolean, default = False)
+    date = db.Column(db.Date, default = datetime.now)
+    patient_message_received = db.Column(db.Boolean, default = False)
     doctor_available = db.Column(db.Boolean, default = False)
-    message_date_time = db.Column(db.DateTime, default = datetime.now)
 
     notif_doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.doctor_id'))
     notif_patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
@@ -188,8 +185,8 @@ class PatientDoctorNotifications(db.Model):
     message_type = db.Column(db.String) #Doctor_Notifications, Thank_you_message: Messages from patients; TreatmentDetails; AppointmentCancelled
     message_content = db.Column(db.String)
     role = db.Column(db.String) #message sent from 
-    patient_message_recieved = db.Column(db.Boolean, default = False)
-    doctor_message_recieved = db.Column(db.Boolean, default = False)
+    patient_message_received = db.Column(db.Boolean, default = False)
+    doctor_message_received = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)
     appointment_id = db.Column(db.Integer)
 
@@ -204,8 +201,8 @@ class AdminPatientNotifications(db.Model):
     admin_patient_message_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     admin_patient_message_type = db.Column(db.String) #WelcomeMessage, 
     admin_patient_message_content = db.Column(db.String)
-    patient_message_recieved = db.Column(db.Boolean, default = False)
-    admin_message_recieved = db.Column(db.Boolean, default = False)
+    patient_message_received = db.Column(db.Boolean, default = False)
+    admin_message_received = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)
     role = db.Column(db.String) #message sent from      Admin, Patient
 
@@ -218,8 +215,8 @@ class AdminDoctorNotifications(db.Model):
     admin_doctor_message_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     admin_doctor_message_type = db.Column(db.String)
     admin_doctor_message_content = db.Column(db.String)
-    doctor_message_recieved = db.Column(db.Boolean, default = False)
-    admin_message_recieved = db.Column(db.Boolean, default = False)
+    doctor_message_received = db.Column(db.Boolean, default = False)
+    admin_message_received = db.Column(db.Boolean, default = False)
     message_date_time = db.Column(db.DateTime, default = datetime.now)
     role = db.Column(db.String) #message sent from      Admin, Doctor
 
@@ -233,9 +230,9 @@ class DieticianNotes(db.Model):
     status = db.Column(db.String, default = 'Pending')
     doctor_instructions = db.Column(db.String)
     patient_id = db.Column(db.String)
-    morning_plan = db.Column(db.String)
-    afternoon_plan = db.Column(db.String)
-    evening_plan = db.Column(db.String)
+    morning_plan = db.Column(db.String, default = 'Will be provided soon')
+    afternoon_plan = db.Column(db.String, default = 'Will be provided soon')
+    evening_plan = db.Column(db.String, default = 'Will be provided soon')
     additional_notes = db.Column(db.String)
 
     treatment_id = db.Column(db.Integer, db.ForeignKey('treatment.treatment_id'))

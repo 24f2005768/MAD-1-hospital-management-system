@@ -1,6 +1,11 @@
 # MAD-1-project
 A Flask app for hospitals, doctors and patients to easily manage appointments and treatments.
 
+## Instructions for running the app:
+- install all the dependencies from the `requirements.txt` file.
+- run the `create_app.py` to initialize the database and create the predefined admin.
+- run the app by running the `app.py` file.
+
 Issues:
 1. Change in model: doctor - appointments relationship, removed `uselist = False` because (doctor-appointment) is not one-to-one. A doctor can have many appointments, hence it is a one-to-many relationship.
 
